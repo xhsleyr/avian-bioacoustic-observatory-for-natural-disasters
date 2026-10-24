@@ -272,38 +272,86 @@ st.markdown("""
         border: 1px solid #e63946;
     }
 
-    /* Center-aligned Radio Filters */
-    div[data-testid="stRadio"] {
-        text-align: center !important;
-        margin: 0 auto 20px auto !important;
+    /* Perfectly Centered Radio Filters */
+    [data-testid="stElementContainer"]:has([data-testid="stRadio"]) {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        margin: 0 auto 22px auto !important;
     }
-    div[data-testid="stRadio"] > label {
+    div[data-testid="stRadio"] {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+    }
+    div[data-testid="stRadio"] > label,
+    div[data-testid="stRadio"] [data-testid="stWidgetLabel"] {
         font-size: 13px !important;
-        letter-spacing: 0.10em !important;
+        letter-spacing: 0.12em !important;
         text-transform: uppercase !important;
         color: var(--ceti-text-dark) !important;
         font-weight: 700 !important;
-        margin-bottom: 12px !important;
-        display: block !important;
+        margin-bottom: 14px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
         text-align: center !important;
+        width: 100% !important;
+    }
+    div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] {
+        text-align: center !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+    }
+    div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p {
+        text-align: center !important;
+        margin: 0 auto !important;
+        width: 100% !important;
     }
     div[data-testid="stRadio"] div[role="radiogroup"] {
+        display: flex !important;
         justify-content: center !important;
-        gap: 12px !important;
+        align-items: center !important;
+        gap: 14px !important;
         flex-wrap: wrap !important;
+        width: 100% !important;
+        margin: 0 auto !important;
     }
-    div[data-testid="stRadio"] div[role="radiogroup"] > label {
+    div[data-testid="stRadio"] div[role="radiogroup"] > label,
+    div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] {
         background-color: #ffffff !important;
         border: 1px solid var(--ceti-border-light) !important;
         border-radius: 100px !important;
-        padding: 9px 24px !important;
+        padding: 10px 26px !important;
         cursor: pointer !important;
         transition: all 0.2s ease !important;
         white-space: nowrap !important;
-        font-size: 13.5px !important;
+        font-size: 14px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important;
     }
-    div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
+    div[data-testid="stRadio"] div[role="radiogroup"] > label:hover,
+    div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:hover {
         border-color: var(--ceti-primary-accent) !important;
+    }
+    div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked),
+    div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:has(input:checked) {
+        background-color: var(--ceti-primary-accent) !important;
+        color: #ffffff !important;
+        border-color: var(--ceti-primary-accent) !important;
+        box-shadow: 0 4px 14px rgba(71, 73, 254, 0.25) !important;
+    }
+    div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) *,
+    div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:has(input:checked) * {
+        color: #ffffff !important;
     }
 
     /* Centered Selectbox */
