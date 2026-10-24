@@ -3,6 +3,9 @@ streamlit>=1.30.0
 plotly>=5.18.0
 matplotlib>=3.8.0
 
+# Pin pyarrow for NumPy 1.x / Librosa compatibility
+pyarrow<18.0.0
+
 # Audio Processing & Feature Extraction
 librosa>=0.10.1
 soundfile>=0.12.1
