@@ -314,28 +314,130 @@ st.markdown("""
         color: #ffffff !important;
     }
 
-    /* Centered Selectbox */
+    /* ========================================================
+       macOS Native Selectbox & Popover System
+       ======================================================== */
     div[data-testid="stSelectbox"] {
-        margin: 0 auto !important;
+        max-width: 680px !important;
+        margin: 0 auto 28px auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
     }
 
-    div[data-testid="stSelectbox"] label {
-        font-size: 13.5px !important;
-        letter-spacing: 0.10em !important;
+    div[data-testid="stSelectbox"] label,
+    div[data-testid="stSelectbox"] [data-testid="stWidgetLabel"] {
+        font-size: 13px !important;
+        letter-spacing: 0.12em !important;
         text-transform: uppercase !important;
         color: var(--intera-accent) !important;
         font-weight: 700 !important;
         text-align: center !important;
-        display: block !important;
-        margin-bottom: 8px !important;
+        display: flex !important;
+        justify-content: center !important;
+        width: 100% !important;
+        margin-bottom: 10px !important;
+    }
+
+    div[data-testid="stSelectbox"] [data-testid="stMarkdownContainer"] {
+        text-align: center !important;
+        width: 100% !important;
     }
 
     div[data-testid="stSelectbox"] div[data-baseweb="select"] {
-        border-radius: 0px !important;
-        border: 1px solid var(--intera-border) !important;
-        background-color: #ffffff !important;
-        color: #000000 !important;
+        width: 100% !important;
+        border-radius: 10px !important;
+    }
+
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+        background: rgba(255, 255, 255, 0.82) !important;
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+        border: 1px solid rgba(0, 0, 0, 0.14) !important;
+        border-radius: 10px !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+        padding: 4px 14px !important;
+        min-height: 44px !important;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        cursor: pointer !important;
+    }
+
+    /* macOS Selectbox Hover State */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:hover {
+        background: #ffffff !important;
+        border-color: rgba(71, 73, 254, 0.55) !important;
+        box-shadow: 0 4px 18px rgba(71, 73, 254, 0.15), 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* macOS Selectbox Focus / Open State */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] > div:focus-within {
+        border-color: var(--intera-accent) !important;
+        box-shadow: 0 0 0 3.5px rgba(71, 73, 254, 0.22), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+        background: #ffffff !important;
+    }
+
+    /* Chevron Icon in selectbox */
+    div[data-testid="stSelectbox"] div[data-baseweb="select"] svg {
+        transition: transform 0.2s ease, stroke 0.2s ease !important;
+        color: #4e5a7c !important;
+    }
+
+    div[data-testid="stSelectbox"] div[data-baseweb="select"]:hover svg {
+        color: var(--intera-accent) !important;
+    }
+
+    /* macOS Floating Dropdown Menu (BaseWeb Popover) */
+    div[data-baseweb="popover"] {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 16px 40px -6px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
+        z-index: 999999 !important;
+    }
+
+    div[data-baseweb="popover"] ul,
+    div[data-baseweb="popover"] [data-baseweb="menu"] {
+        background: rgba(255, 255, 255, 0.94) !important;
+        backdrop-filter: blur(24px) saturate(190%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+        border-radius: 12px !important;
+        padding: 6px !important;
+        border: none !important;
+    }
+
+    div[data-baseweb="popover"] li[role="option"],
+    div[data-baseweb="popover"] [data-baseweb="menu"] li {
+        border-radius: 7px !important;
+        padding: 9px 14px !important;
+        margin: 2px 0 !important;
         font-size: 14.5px !important;
+        color: #1d1d1f !important;
+        transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease !important;
+        cursor: pointer !important;
+    }
+
+    /* macOS Blue Highlight Hover on Menu Options */
+    div[data-baseweb="popover"] li[role="option"]:hover,
+    div[data-baseweb="popover"] [data-baseweb="menu"] li:hover {
+        background: var(--intera-accent) !important;
+        color: #ffffff !important;
+    }
+
+    div[data-baseweb="popover"] li[role="option"]:hover *,
+    div[data-baseweb="popover"] [data-baseweb="menu"] li:hover * {
+        color: #ffffff !important;
+    }
+
+    div[data-baseweb="popover"] li[aria-selected="true"],
+    div[data-baseweb="popover"] [data-baseweb="menu"] li[aria-selected="true"] {
+        background: rgba(71, 73, 254, 0.12) !important;
+        font-weight: 700 !important;
+        color: var(--intera-accent) !important;
+    }
+
+    div[data-baseweb="popover"] li[aria-selected="true"]:hover {
+        background: var(--intera-accent) !important;
+        color: #ffffff !important;
     }
 
     /* Architectural Content Cards */
@@ -895,11 +997,13 @@ else:
         os.path.basename(p): p for p in sample_files
     }
     
-    col_sel_l, col_sel_m, col_sel_r = st.columns([1, 2.8, 1])
+    col_sel_l, col_sel_m, col_sel_r = st.columns([1, 3.2, 1])
     with col_sel_m:
         selected_sample_name = st.selectbox(
             "Select Calibrated Laboratory Reference:",
             options=list(sample_names.keys()),
+            index=None,
+            placeholder="Choose a calibrated biological benchmark...",
             format_func=lambda x: {
                 "calm_robin_song.wav": "OBS-01 // European Robin (Erithacus rubecula) — Melodic Baseline Song",
                 "elevated_warning_call.wav": "OBS-02 // Song Sparrow (Melospiza melodia) — Elevated Agitation Call",
