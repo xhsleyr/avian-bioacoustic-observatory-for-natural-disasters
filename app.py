@@ -1,7 +1,7 @@
 """Avian Early Warning System (AEWS) - Web Application.
 
-A bioacoustic intelligence platform that identifies bird species across 6,500+ global
-species using Cornell BirdNET and analyzes vocalizations to predict natural disaster indicators.
+A bioacoustic intelligence platform that verifies avian biometrics, detects human mimicry,
+identifies species using Cornell BirdNET, and predicts natural disaster indicators.
 """
 
 import os
@@ -14,6 +14,7 @@ from plotly.subplots import make_subplots
 from src.audio_processor import load_audio, extract_acoustic_features
 from src.distress_engine import compute_distress_index
 from src.species_classifier import identify_species
+from src.spoof_detector import evaluate_avian_authenticity
 
 # Page configuration
 st.set_page_config(
@@ -179,26 +180,22 @@ with st.sidebar:
     st.caption("Final Year Engineering Project")
     st.divider()
 
-    st.markdown("### 🌐 Global Model")
+    st.markdown("### 🛡️ Anti-Spoofing Layer")
+    st.info("Detects **human whistling mimicry** & artificial noise to prevent civil false alarms.")
+
+    st.divider()
+    st.markdown("### 🌐 Global Classifier")
     st.info("🤖 **Cornell BirdNET v2.4**\n\nSupports **6,522 global bird species** via ONNX inference.")
 
     st.divider()
-    st.markdown("### 🔬 Disaster Indicators")
-    st.markdown("""
-    * **Seismic P-waves:** Sudden shrieking / vocal freeze.
-    * **Storm Infrasound (<20 Hz):** Elevated call rate & flock panic.
-    * **Barometric Drop:** Sustained agitation chatter.
-    """)
-
-    st.divider()
     st.markdown("### ⚙️ Engine Status")
-    st.success("Local Neural Inference: Active")
-    st.caption("Hardware: Apple Silicon M1 (Zero Cloud Cost)")
+    st.success("Anti-Spoofing Shield: Active")
+    st.success("Local Neural Model: Active (M1)")
 
 
 # --- MAIN INTERFACE ---
 st.markdown('<div class="main-title">🦅 Avian Vocal Bioacoustics & Natural Disaster Early Warning</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Upload or test bird vocalizations to classify among 6,522 global species using Cornell BirdNET and predict early natural disaster indicators.</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Upload or test bird vocalizations to verify avian biometrics, classify species (BirdNET 6.5K), and predict early natural disaster indicators.</div>', unsafe_allow_html=True)
 
 # Select Input Mode
 input_mode = st.radio(
@@ -232,7 +229,8 @@ else:
             format_func=lambda x: {
                 "calm_robin_song.wav": "🟢 Calm Robin Whistle (Baseline Normal)",
                 "elevated_warning_call.wav": "🟡 Elevated Warning Call (Agitation Alert)",
-                "critical_disaster_panic.wav": "🔴 Critical Disaster Panic Screech (Pre-Tremor Panic)"
+                "critical_disaster_panic.wav": "🔴 Critical Disaster Panic Screech (Pre-Tremor Panic)",
+                "human_whistling_mimic.wav": "👤 Human Whistle / Mimicry Attempt (Anti-Spoofing Test)"
             }.get(x, x)
         )
     
@@ -246,15 +244,32 @@ if audio_data is not None:
     st.subheader(f"Audio Source: `{audio_label}`")
     st.audio(audio_data)
 
-    with st.spinner("Classifying with Cornell BirdNET (6,522 Species) & computing distress indices..."):
+    with st.spinner("Executing bioacoustic biometrics verification & BirdNET classification..."):
         y, sr, duration = load_audio(audio_data)
         features = extract_acoustic_features(y, sr)
         results = compute_distress_index(features)
         species_info = identify_species(audio_data, features, top_k=5)
+        spoof_info = evaluate_avian_authenticity(y, sr, species_info, features)
 
     prim_sp = species_info["primary_species"]
 
-    # 1. Species Identification Card
+    # 1. Anti-Spoofing & Biometric Verification Shield
+    shield_color = spoof_info["status_color"]
+    st.markdown(f"""
+    <div style="background-color: {shield_color}; border-radius: 8px; padding: 14px 18px; color: white; margin-top: 10px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="margin: 0; color: white;">🛡️ {spoof_info['status_label']}</h4>
+            <span style="background: rgba(0,0,0,0.25); padding: 3px 8px; border-radius: 6px; font-size: 0.82rem;">
+                Confidence: {spoof_info['birdnet_conf']}%
+            </span>
+        </div>
+        <p style="margin: 6px 0 0 0; font-size: 0.92rem; opacity: 0.95;">
+            {spoof_info['status_summary']}
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 2. Species Identification Card
     st.markdown(f"""
     <div class="species-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
@@ -274,16 +289,19 @@ if audio_data is not None:
     </div>
     """, unsafe_allow_html=True)
 
-    # 2. Early Warning Status Card
-    threat_bg = results["threat_color"]
-    st.markdown(f"""
-    <div style="background-color: {threat_bg}; border-radius: 8px; padding: 18px 22px; color: white; margin-top: 5px; margin-bottom: 25px;">
-        <h3 style="margin: 0; color: white; font-size: 1.4rem;">{results['alert_title']}</h3>
-        <p style="margin-top: 8px; margin-bottom: 0; font-size: 1rem; opacity: 0.95;">{results['alert_summary']}</p>
-    </div>
-    """, unsafe_allow_html=True)
+    # 3. Early Warning Status Card (Suppressed if spoofed)
+    if spoof_info["suppress_alarm"]:
+        st.warning("⚠️ **DISASTER EARLY WARNING SUPPRESSED:** Signal does not originate from an authentic wild bird. Warning triggers are locked to prevent civil false alarms.")
+    else:
+        threat_bg = results["threat_color"]
+        st.markdown(f"""
+        <div style="background-color: {threat_bg}; border-radius: 8px; padding: 18px 22px; color: white; margin-top: 5px; margin-bottom: 25px;">
+            <h3 style="margin: 0; color: white; font-size: 1.4rem;">{results['alert_title']}</h3>
+            <p style="margin-top: 8px; margin-bottom: 0; font-size: 1rem; opacity: 0.95;">{results['alert_summary']}</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-    # 3. Key Metrics Row
+    # 4. Key Metrics Row
     col_gauge, col_stats = st.columns([1, 1.2])
 
     with col_gauge:
@@ -298,15 +316,16 @@ if audio_data is not None:
             st.metric("Call Burst Rate", f"{features['call_rate']:.2f} calls/sec", delta=f"{results['sub_scores']['call_rate']}% density")
         with c2:
             st.metric("Noise Harshness (Flatness)", f"{features['spectral_flatness']['mean']:.4f}", delta=f"{results['sub_scores']['flatness']}% chaos")
-            st.metric("Duration Analyzed", f"{features['duration']:.2f} sec", delta=f"{features['total_onsets']} bursts")
+            st.metric("Breath Air Ratio (0-600Hz)", f"{spoof_info['breath_ratio']}%", delta="Human Breath" if spoof_info['breath_ratio'] > 20 else "Avian Syrinx")
 
     st.divider()
 
-    # 4. Interactive Visualizers
-    tab_spec, tab_wave, tab_species, tab_table = st.tabs([
+    # 5. Interactive Visualizers
+    tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_table = st.tabs([
         "📊 Mel-Spectrogram Heatmap",
         "📈 Waveform & Call Onsets",
         "🐦 Top Candidate Species (BirdNET 6K)",
+        "🛡️ Anti-Spoofing Biometrics",
         "📋 Diagnostic Factor Breakdown"
     ])
 
@@ -327,6 +346,19 @@ if audio_data is not None:
                 st.progress(min(1.0, cand['confidence'] / 100.0))
                 st.caption(f"Confidence: **{cand['confidence']}%**")
             st.divider()
+
+    with tab_anti_spoof:
+        st.markdown("#### Biometric Verification & False Alarm Diagnostics")
+        st.write(f"**Authenticity Determination:** {'✅ Authentic Avian' if spoof_info['is_authentic'] else '❌ Rejected (Human Mimicry / Spoofing)'}")
+        st.write(f"**Spoofing Likelihood Score:** `{spoof_info['spoof_score']} / 100`")
+        st.write(f"**Sub-600Hz Breath Turbulence Ratio:** `{spoof_info['breath_ratio']}%` (Threshold: > 28% indicates human exhalation)")
+        
+        if spoof_info["spoof_factors"]:
+            st.markdown("##### Detected Anti-Spoofing Flags:")
+            for factor in spoof_info["spoof_factors"]:
+                st.warning(f"• {factor}")
+        else:
+            st.success("• No human oral formants or breath turbulence detected. Syrinx acoustic signature verified.")
 
     with tab_table:
         st.markdown("#### Detailed Acoustic Diagnostic Metrics")

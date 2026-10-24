@@ -8,15 +8,19 @@
 ---
 
 ## 1. Project Goal & Scientific Foundation
-Develop an acoustic early-warning system that identifies bird species across **6,522 global species** and analyzes vocalizations from audio files to detect abnormal collective distress, acoustic panic, or sudden flock dispersion indicators preceding natural disasters (e.g., seismic P-waves, severe storms, cyclones).
+Develop an acoustic early-warning system that identifies bird species across **6,522 global species**, verifies biological authenticity via an **Anti-Spoofing & Biometric Shield**, and analyzes authentic vocalizations to detect abnormal collective distress, acoustic panic, or sudden flock dispersion indicators preceding natural disasters (e.g., seismic P-waves, severe storms, cyclones).
 
-### Multi-Factor Acoustic Distress Index (ADI):
-1. **Cornell BirdNET Global Classifier:** Identifies species across 6,522 global species from sliding 3s audio windows with 50% overlap.
-2. **Species-Adaptive Baseline:** Calibrates detected frequency against the identified bird's natural pitch range.
-3. **Spectral Centroid Shift (Pitch):** Normal songs occupy balanced frequency bands; alarm calls undergo rapid upward pitch shifts.
-4. **Call Rate & Temporal Density:** Frantic bursts and elevated call repetitions vs rhythmic melodies.
-5. **Harmonicity vs Noise (Spectral Flatness):** Measures chaotic harsh screeching vs clean harmonic song.
-6. **Energy Modulation (RMS & Onset Strengths):** Sudden acoustic spikes and dispersion calls.
+### Multi-Factor Pipeline:
+1. **🛡️ Bioacoustic Anti-Spoofing Shield:**
+   - Detects explicit non-bird and human classes ('Human whistle', 'Human vocal', 'Engine', 'Siren').
+   - Checks for sub-600 Hz human exhalation breath turbulence.
+   - Evaluates human oral whistling frequency ceiling (< 3,000 Hz).
+   - Suppresses Disaster Warnings on unverified/spoofed audio to prevent civil false alarms.
+2. **🤖 Cornell BirdNET Global Classifier:**
+   - Identifies species across 6,522 global species using 3-second overlapping sliding windows (50% overlap @ 48 kHz).
+3. **🚨 Acoustic Distress Index (ADI 0 - 100):**
+   - Evaluates Pitch Elevation, Vocal Burst Density, Noise Harshness, and Energy Volatility.
+   - Classifies threat into Normal 🟢, Elevated Alert 🟡, and Critical Early Warning 🔴.
 
 ---
 
@@ -27,7 +31,7 @@ Birds Interaction and Communication/
 ├── PROJECT_STATE.md        # Persistent project memory and progress tracker
 ├── README.md               # User guide & project presentation documentation
 ├── requirements.txt        # Python dependencies
-├── app.py                  # Streamlit Web Application with Species Identification Card
+├── app.py                  # Streamlit Web Application with Anti-Spoofing & Species Card
 ├── models/
 │   ├── birdnet_model.onnx                      # Cornell BirdNET Global ONNX weights (49.3 MB)
 │   └── BirdNET_GLOBAL_6K_V2.4_Labels.txt       # 6,522 Species labels (Common & Scientific names)
@@ -35,9 +39,10 @@ Birds Interaction and Communication/
 │   ├── __init__.py
 │   ├── audio_processor.py      # Audio loading, VAD masking, Mel-spectrogram & feature extraction
 │   ├── distress_engine.py      # Acoustic Distress Index (ADI) calculation & warning logic
-│   └── species_classifier.py   # Cornell BirdNET 6,522 Species Engine & Disaster sensitivity heuristics
+│   ├── species_classifier.py   # Cornell BirdNET 6,522 Species Engine & Disaster sensitivity heuristics
+│   └── spoof_detector.py       # Bioacoustic Anti-Spoofing Shield & false-alarm suppression
 └── data/
-    └── samples/            # Benchmark audio samples (Normal, Elevated, Critical)
+    └── samples/            # Benchmark audio samples (Normal, Elevated, Critical, Human Mimic)
 ```
 
 ---
@@ -61,15 +66,21 @@ Birds Interaction and Communication/
   - Slices audio into 3-second overlapping windows (50% overlap @ 48 kHz).
   - Max-pooling confidence aggregation across audio recordings.
   - Avian disaster-sensitivity heuristic taxonomy mapping.
-- [x] **Milestone 4: Streamlit Web Dashboard (`app.py`)**
+- [x] **Milestone 4: Bioacoustic Anti-Spoofing Shield (`src/spoof_detector.py`)**
+  - Identifies human oral whistling mimicry, human speech, and artificial sirens.
+  - Low-frequency breath turbulence ratio (0 - 600 Hz) detector.
+  - Automatic false-alarm suppression mechanism for civil early-warning safety.
+- [x] **Milestone 5: Streamlit Web Dashboard (`app.py`)**
+  - Anti-Spoofing Biometric Verification Shield banner.
   - Bird Species Identification card displaying Common Name, Scientific Name, Match Confidence %, and Disaster Sensitivity.
-  - File uploader and Preset Benchmark demo selector with instant 1-click loading.
+  - File uploader and 4 Preset Benchmark demo selector with instant 1-click loading.
   - Interactive Plotly Gauge indicator.
   - Interactive Heatmap Mel-Spectrogram and Waveform with Onset burst markers.
   - Top 5 Candidate Species breakdown with probability bars.
+  - Dedicated Anti-Spoofing Biometrics diagnostic tab.
   - Diagnostic factor analysis table.
-- [x] **Milestone 5: Sample Testing & Evaluation Documentation**
-  - Verified on calibrated benchmark samples.
+- [x] **Milestone 6: Sample Testing & Evaluation Documentation**
+  - Verified on 4 calibrated benchmark samples (Normal Robin, Alert Tit, Critical Pipit, and Human Whistle).
   - Created [`README.md`](file:///Users/xhselyr/My%20Projects/Birds%20Interaction%20and%20Communication/README.md) with architectural diagrams and run instructions.
 
 ---
