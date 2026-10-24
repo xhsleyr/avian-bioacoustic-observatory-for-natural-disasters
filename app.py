@@ -71,9 +71,9 @@ st.markdown("""
         --intera-accent: #4749fe;
         --intera-hover: #000000;
         --intera-bg: #ffffff;
-        --intera-text-body: #4e5a7c;
+        --intera-text-body: #000000;
         --intera-text-dark: #000000;
-        --intera-text-muted: #8c93a8;
+        --intera-text-muted: #000000;
         --intera-border: #e2e5ec;
         --intera-cyan: #befff7;
     }
@@ -87,7 +87,7 @@ st.markdown("""
 
     html, body, .stApp {
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif !important;
-        color: #1e293b !important;
+        color: #000000 !important;
     }
 
     /* Human Editorial Display Serifs: Story Headings, Scientific Nomenclature */
@@ -97,7 +97,7 @@ st.markdown("""
         font-family: -apple-system-ui-serif, 'Newsreader', 'Charter', 'Iowan Old Style', 'Palatino', Georgia, 'Times New Roman', serif !important;
         font-weight: 600 !important;
         line-height: 1.18 !important;
-        color: #0f172a !important;
+        color: #000000 !important;
         letter-spacing: -0.025em !important;
     }
 
@@ -106,7 +106,8 @@ st.markdown("""
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", -apple-system-ui-serif, Georgia, serif !important;
         font-size: 1.15rem !important;
         line-height: 1.68 !important;
-        color: #334155 !important;
+        color: #000000 !important;
+        font-weight: 450 !important;
     }
 
     /* macOS Native UI: Buttons, Tabs, Dropdowns, Badges, Metrics */
@@ -317,8 +318,12 @@ st.markdown("""
         display: flex;
         gap: 28px;
         font-size: 13.5px;
-        color: var(--intera-text-muted);
+        color: #000000 !important;
+        font-weight: 600 !important;
         flex-wrap: wrap;
+    }
+    .intera-nav span {
+        color: #000000 !important;
     }
 
     /* Project CETI Editorial Hero Section */
@@ -366,10 +371,10 @@ st.markdown("""
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif !important;
         font-size: 1.2rem !important;
         line-height: 1.68 !important;
-        color: #1e293b !important;
+        color: #000000 !important;
         max-width: 820px !important;
         margin: 0 auto !important;
-        font-weight: 450 !important;
+        font-weight: 500 !important;
     }
 
     /* Perfectly Centered Mode Switcher */
@@ -546,7 +551,7 @@ st.markdown("""
     /* Chevron Icon in selectbox */
     div[data-testid="stSelectbox"] div[data-baseweb="select"] svg {
         transition: transform 0.2s ease, stroke 0.2s ease !important;
-        color: #4e5a7c !important;
+        color: #000000 !important;
     }
 
     div[data-testid="stSelectbox"] div[data-baseweb="select"]:hover svg {
@@ -650,8 +655,9 @@ st.markdown("""
     }
 
     .intera-empty-desc {
-        color: #4e5a7c !important;
+        color: #000000 !important;
         font-size: clamp(1.02rem, 1.9vw, 1.18rem) !important;
+        font-weight: 500 !important;
         max-width: 680px !important;
         margin: 0 auto 26px auto !important;
         line-height: 1.65 !important;
@@ -768,7 +774,8 @@ st.markdown("""
         font-size: 13px !important;
         letter-spacing: 0.08em !important;
         text-transform: uppercase !important;
-        color: var(--intera-text-muted) !important;
+        color: #000000 !important;
+        font-weight: 700 !important;
         border-radius: 0px !important;
         padding: 12px 6px !important;
         background: transparent !important;
@@ -799,7 +806,8 @@ st.markdown("""
 
     .species-hero-desc {
         font-size: 1.2rem;
-        color: #374151;
+        color: #000000;
+        font-weight: 450;
         line-height: 1.7;
         margin-bottom: 18px;
     }
@@ -831,8 +839,9 @@ st.markdown("""
     }
     .stressor-context {
         font-size: 0.92rem;
-        color: #6b7280;
-        line-height: 1.4;
+        color: #000000;
+        font-weight: 500;
+        line-height: 1.45;
         margin-top: 3px;
     }
     .stressor-bar-track {
@@ -861,7 +870,8 @@ st.markdown("""
         font-size: 13px !important;
         letter-spacing: 0.07em !important;
         text-transform: uppercase !important;
-        color: var(--intera-text-muted) !important;
+        color: #000000 !important;
+        font-weight: 700 !important;
         line-height: 1.35 !important;
         font-weight: 700 !important;
     }
@@ -876,7 +886,8 @@ st.markdown("""
         font-size: 13px !important;
         text-transform: uppercase !important;
         letter-spacing: 0.07em !important;
-        color: var(--intera-text-muted) !important;
+        color: #000000 !important;
+        font-weight: 700 !important;
         border-bottom: 2px solid var(--intera-border) !important;
         padding: 12px 16px !important;
         text-align: left !important;
@@ -885,7 +896,8 @@ st.markdown("""
     tbody tr td {
         border-bottom: 1px solid #f4f5f8 !important;
         padding: 13px 16px !important;
-        color: #181b22 !important;
+        color: #000000 !important;
+        font-weight: 500 !important;
     }
 
     audio {
@@ -1413,8 +1425,8 @@ def cached_fetch_visuals(common_name: str, scientific_name: str):
 
 # --- PLOTLY VISUALIZATIONS (HUMAN EDITORIAL PRECISION) ---
 def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
-    """Create a refined semi-circular bioacoustic distress gauge indicator."""
-    bar_color = "#00c49f" if adi_score < 38.0 else ("#f4a261" if adi_score < 70.0 else "#e63946")
+    """Create a refined semi-circular bioacoustic distress gauge indicator with solid black high-contrast typography."""
+    bar_color = "#00876c" if adi_score < 38.0 else ("#d97706" if adi_score < 70.0 else "#e63946")
 
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
@@ -1422,41 +1434,41 @@ def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
         domain={'x': [0, 1], 'y': [0, 1]},
         title={
             'text': "ACOUSTIC DISTRESS INDEX (ADI)",
-            'font': {'size': 13, 'color': "#8c93a8", 'family': "Times New Roman, Times, serif"}
+            'font': {'size': 14, 'color': "#000000", 'family': "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Arial, sans-serif"}
         },
         number={
             'suffix': "%",
-            'font': {'size': 54, 'color': "#000000", 'family': "Times New Roman, Times, serif"}
+            'font': {'size': 56, 'color': "#000000", 'family': "-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif"}
         },
         gauge={
             'axis': {
                 'range': [0, 100],
-                'tickwidth': 1,
-                'tickcolor': "#cbd5e1",
-                'tickfont': {'family': "Times New Roman, serif", 'size': 11, 'color': "#94a3b8"},
+                'tickwidth': 1.5,
+                'tickcolor': "#000000",
+                'tickfont': {'family': "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif", 'size': 12, 'color': "#000000"},
                 'tickvals': [0, 25, 50, 75, 100]
             },
-            'bar': {'color': bar_color, 'thickness': 0.32},
+            'bar': {'color': bar_color, 'thickness': 0.35},
             'bgcolor': "#ffffff",
-            'borderwidth': 1,
-            'bordercolor': "#e2e5ec",
+            'borderwidth': 1.5,
+            'bordercolor': "#cbd5e1",
             'steps': [
-                {'range': [0, 38], 'color': 'rgba(0, 196, 159, 0.14)'},
-                {'range': [38, 70], 'color': 'rgba(244, 162, 97, 0.16)'},
-                {'range': [70, 100], 'color': 'rgba(230, 57, 70, 0.20)'}
+                {'range': [0, 38], 'color': 'rgba(0, 196, 159, 0.22)'},
+                {'range': [38, 70], 'color': 'rgba(244, 162, 97, 0.25)'},
+                {'range': [70, 100], 'color': 'rgba(230, 57, 70, 0.28)'}
             ],
             'threshold': {
-                'line': {'color': "#000000", 'width': 3},
-                'thickness': 0.82,
+                'line': {'color': "#000000", 'width': 3.5},
+                'thickness': 0.85,
                 'value': 70.0
             }
         }
     ))
     fig.update_layout(
-        height=260,
+        height=265,
         margin=dict(l=15, r=15, t=32, b=10),
         paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(family="Times New Roman, Times, serif")
+        font=dict(family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif", color="#000000")
     )
     return fig
 
@@ -1612,11 +1624,13 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         showlegend=True,
-        font=dict(family="Times New Roman, Times, serif")
+        font=dict(family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif", color="#000000")
     )
-    fig.update_xaxes(title_text="Time (seconds)", row=2, col=1, gridcolor="#f4f5f8")
-    fig.update_yaxes(title_text="Amplitude", row=1, col=1, gridcolor="#f4f5f8")
-    fig.update_yaxes(title_text="Centroid (Hz)", row=2, col=1, gridcolor="#f4f5f8")
+    fig.update_xaxes(title_text="Time (seconds)", title_font=dict(color="#000000", size=13), tickfont=dict(color="#000000", size=11), row=2, col=1, gridcolor="rgba(0,0,0,0.08)")
+    fig.update_yaxes(title_text="Amplitude", title_font=dict(color="#000000", size=13), tickfont=dict(color="#000000", size=11), row=1, col=1, gridcolor="rgba(0,0,0,0.08)")
+    fig.update_yaxes(title_text="Centroid (Hz)", title_font=dict(color="#000000", size=13), tickfont=dict(color="#000000", size=11), row=2, col=1, gridcolor="rgba(0,0,0,0.08)")
+    for ann in fig['layout']['annotations']:
+        ann['font'] = dict(family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif", size=14, color="#000000")
 
     return fig
 
@@ -1677,7 +1691,7 @@ if input_mode == "Upload Field Recording":
             <div style="font-size: 1.15rem; font-weight: 700; color: #1e1b4b; letter-spacing: 0.05em; text-transform: uppercase;">
                 Upload Bioacoustic Recording
             </div>
-            <div style="font-size: 14px; color: #64748b; margin-top: 4px; max-width: 440px; line-height: 1.5;">
+            <div style="font-size: 14px; color: #000000; font-weight: 500; margin-top: 4px; max-width: 440px; line-height: 1.5;">
                 Drop high-fidelity avian audio files (.wav, .mp3, .ogg, .flac up to 25 MB) for automated BirdNET classification and syrinx verification.
             </div>
         </div>
@@ -1765,7 +1779,7 @@ if audio_data is not None:
                 {safe_audio_label}
             </div>
         </div>
-        <div style="font-size: 14px; color: #8c93a8;">
+        <div style="font-size: 14px; color: #000000; font-weight: 600;">
             Duration: <strong>{duration:.2f}s</strong> &bull; Sampling Rate: <strong>{sr:,} Hz</strong>
         </div>
     </div>
@@ -1780,11 +1794,11 @@ if audio_data is not None:
                 <span class="intera-pill intera-pill-verified">
                     {ICON_SHIELD} {safe_spoof_label}
                 </span>
-                <span style="font-size: 13.5px; color: #8c93a8;">
+                <span style="font-size: 13.5px; color: #000000; font-weight: 600;">
                     Cornell BirdNET Confidence: <strong>{spoof_info['birdnet_conf']}%</strong> &bull; Syrinx Harmonics Verified
                 </span>
             </div>
-            <p style="margin: 10px 0 0 0; font-size: 1.1rem; color: #4e5a7c; line-height: 1.6;">
+            <p style="margin: 10px 0 0 0; font-size: 1.1rem; color: #000000; font-weight: 500; line-height: 1.6;">
                 {safe_spoof_summary}
             </p>
         </div>
@@ -1800,7 +1814,7 @@ if audio_data is not None:
                     Adversarial Non-Avian Acoustic Mimicry
                 </span>
             </div>
-            <p style="margin: 10px 0 0 0; font-size: 1.1rem; color: #4e5a7c; line-height: 1.6;">
+            <p style="margin: 10px 0 0 0; font-size: 1.1rem; color: #000000; font-weight: 500; line-height: 1.6;">
                 {safe_spoof_summary}
             </p>
         </div>
@@ -1822,7 +1836,7 @@ if audio_data is not None:
                 st.markdown(f"""
                 <div class="photo-mat-frame">
                     <img src="{photo_uri}" alt="{safe_com_name}" style="width: 100%; height: 260px; display: block; object-fit: cover; border-radius: 2px;" />
-                    <div style="font-size: 11.5px; color: #6b7280; margin-top: 10px; text-align: center; font-style: italic; line-height: 1.4;">
+                    <div style="font-size: 12.5px; color: #000000; margin-top: 10px; text-align: center; font-weight: 600; line-height: 1.4;">
                         Specimen Photographic Archive: {safe_com_name} ({safe_source})
                     </div>
                 </div>
@@ -1834,7 +1848,7 @@ if audio_data is not None:
                     <span style="background-color: #4749fe; color: #ffffff; font-size: 12px; padding: 4px 14px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700;">
                         Cornell BirdNET &bull; {prim_sp['confidence']}% Acoustic Match
                     </span>
-                    <span style="font-size: 13px; color: #8c93a8;">6,522 Species Global Taxonomy</span>
+                    <span style="font-size: 13px; color: #000000; font-weight: 700;">6,522 Species Global Taxonomy</span>
                 </div>
                 <div class="species-hero-title">{safe_com_name}</div>
                 <div class="species-hero-sci">{safe_sci_name}</div>
@@ -1842,11 +1856,11 @@ if audio_data is not None:
                     {safe_desc}
                 </div>
                 <div style="border-top: 1px solid #e2e5ec; padding-top: 16px; margin-top: 16px; font-size: 1.05rem;">
-                    <p style="margin: 0 0 8px 0; color: #4e5a7c;">
+                    <p style="margin: 0 0 8px 0; color: #000000; font-weight: 500;">
                         <strong>Acoustic State:</strong> {prim_sp['pitch_status']} &bull; Pitch Centroid: <strong>{prim_sp['detected_pitch']:.0f} Hz</strong>
                     </p>
                     <p style="margin: 4px 0 0 0; color: #4749fe; font-weight: 700;">
-                        <strong>Disaster Sensitivity Profile:</strong> <span style="font-weight: 400; color: #4e5a7c;">{prim_sp['disaster_sensitivity']}</span>
+                        <strong>Disaster Sensitivity Profile:</strong> <span style="font-weight: 500; color: #000000;">{prim_sp['disaster_sensitivity']}</span>
                     </p>
                 </div>
                 """, unsafe_allow_html=True)
@@ -1857,7 +1871,7 @@ if audio_data is not None:
                 Non-Avian Acoustic Spectrum
             </span>
             <div class="species-hero-title" style="margin-top: 10px;">{safe_com_name}</div>
-            <p style="font-size: 1.15rem; color: #4e5a7c; margin-top: 12px; line-height: 1.65;">
+            <p style="font-size: 1.15rem; color: #000000; font-weight: 500; margin-top: 12px; line-height: 1.65;">
                 Acoustic energy distribution exhibits vocal tract resonant formants and low-frequency breath turbulence typical of human oral whistling, rather than avian syrinx biphonation.
             </p>
         </div>
@@ -1870,7 +1884,7 @@ if audio_data is not None:
             <h3 style="font-size: 1.85rem; color: #e63946; margin: 0 0 8px 0;">
                 {ICON_ALERT} Civil Early-Warning Trigger Suppressed
             </h3>
-            <p style="color: #4e5a7c; font-size: 1.12rem; margin: 0; line-height: 1.6;">
+            <p style="color: #000000; font-size: 1.12rem; margin: 0; font-weight: 500; line-height: 1.6;">
                 Because human vocal mimicry or non-avian ambient disturbance was identified, automated disaster triggers have been disarmed to prevent civil false alarms.
             </p>
         </div>
@@ -1905,11 +1919,11 @@ if audio_data is not None:
             gauge_fig = create_gauge_chart(results["adi"], results["threat_color"])
             st.plotly_chart(gauge_fig, width="stretch")
             st.markdown(f"""
-            <div style="text-align: center; margin-top: -6px; padding-bottom: 8px;">
-                <div style="font-size: 14px; font-weight: 700; color: {adi_tier_color}; letter-spacing: 0.05em; text-transform: uppercase;">
-                    {adi_tier_label}
+            <div style="text-align: center; margin-top: -4px; padding-bottom: 8px;">
+                <div style="font-size: 14.5px; font-weight: 800; color: #000000; letter-spacing: 0.05em; text-transform: uppercase;">
+                    <span style="color: {adi_tier_color}; margin-right: 4px;">●</span> {adi_tier_label}
                 </div>
-                <div style="font-size: 13px; color: #6b7280; margin-top: 4px; line-height: 1.45; font-style: italic;">
+                <div style="font-size: 13.5px; color: #000000; margin-top: 5px; line-height: 1.5; font-weight: 500;">
                     {adi_tier_desc}
                 </div>
             </div>
