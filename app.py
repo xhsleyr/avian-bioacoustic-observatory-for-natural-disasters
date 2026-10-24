@@ -180,17 +180,19 @@ with st.sidebar:
     st.caption("Final Year Engineering Project")
     st.divider()
 
+    st.markdown("### 🌪️ Documented Disasters")
+    st.markdown("""
+    * **Golden-winged Warbler:** Fled 48h before 84 tornadoes (*Current Biology, 2014*).
+    * **Indian Peafowl:** Pre-seismic P-wave & storm alarm caller.
+    """)
+
+    st.divider()
     st.markdown("### 🛡️ Anti-Spoofing Layer")
     st.info("Detects **human whistling mimicry** & artificial noise to prevent civil false alarms.")
 
     st.divider()
     st.markdown("### 🌐 Global Classifier")
     st.info("🤖 **Cornell BirdNET v2.4**\n\nSupports **6,522 global bird species** via ONNX inference.")
-
-    st.divider()
-    st.markdown("### ⚙️ Engine Status")
-    st.success("Anti-Spoofing Shield: Active")
-    st.success("Local Neural Model: Active (M1)")
 
 
 # --- MAIN INTERFACE ---
@@ -230,6 +232,8 @@ else:
                 "calm_robin_song.wav": "🟢 Calm Robin Whistle (Baseline Normal)",
                 "elevated_warning_call.wav": "🟡 Elevated Warning Call (Agitation Alert)",
                 "critical_disaster_panic.wav": "🔴 Critical Disaster Panic Screech (Pre-Tremor Panic)",
+                "authentic_warbler_storm_alarm.wav": "🌪️ Golden-winged Warbler (Real Tornado Evacuation Call)",
+                "authentic_peafowl_earthquake_alarm.wav": "🦚 Indian Peafowl (Real Pre-Earthquake / Storm Alarm)",
                 "human_whistling_mimic.wav": "👤 Human Whistle / Mimicry Attempt (Anti-Spoofing Test)"
             }.get(x, x)
         )

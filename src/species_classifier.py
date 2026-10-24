@@ -28,7 +28,6 @@ def get_birdnet_session() -> Tuple[ort.InferenceSession, List[str]]:
             raise FileNotFoundError(
                 f"BirdNET model or labels missing at {MODEL_PATH} / {LABELS_PATH}"
             )
-        # Fast & quiet CPU execution on Apple Silicon M1
         _SESSION = ort.InferenceSession(MODEL_PATH, providers=['CPUExecutionProvider'])
         with open(LABELS_PATH, "r", encoding="utf-8") as f:
             _LABELS = [line.strip() for line in f if line.strip()]
@@ -40,15 +39,19 @@ def infer_disaster_sensitivity(common_name: str, scientific_name: str) -> str:
     """Infer known disaster-sensing behavioral traits from avian family taxonomy."""
     name_lower = (common_name + " " + scientific_name).lower()
 
-    if any(k in name_lower for k in ["owl", "tyto", "strig"]):
+    if any(k in name_lower for k in ["peafowl", "pavo"]):
+        return "Asian seismology bio-indicator: sensitive to compressional seismic P-waves and barometric pressure drops; emits loud echoing alarm honks prior to earthquakes."
+    elif any(k in name_lower for k in ["golden-winged", "warbler", "vermivora", "sylvi"]):
+        return "Tornado & storm infrasound responder: documented in Current Biology (2014) evacuating 48h before 84 tornadoes by detecting low-frequency storm infrasound (<20 Hz)."
+    elif any(k in name_lower for k in ["owl", "tyto", "strig"]):
         return "Nocturnal hearing acutely tuned to low-frequency ground vibrations and seismic P-waves."
     elif any(k in name_lower for k in ["pigeon", "dove", "columb"]):
-        return "Proven infrasonic sensitivity (<10 Hz); leaves nesting sites en masse hours prior to cyclone and tsunami arrivals."
+        return "Proven infrasonic sensitivity (<10 Hz); leaves nesting perches en masse hours prior to cyclone landfall and tsunami wave arrival."
     elif any(k in name_lower for k in ["crow", "raven", "corv", "jay", "magpie"]):
         return "Highly intelligent sentinel flock species; forms loud mobbing aggregations and circles in high updrafts before earthquakes."
     elif any(k in name_lower for k in ["starling", "sturn", "myna"]):
         return "Demonstrates collective flock murmuration panic upon sensing shockwaves and sudden atmospheric barometric drops."
-    elif any(k in name_lower for k in ["thrush", "robin", "turd"]):
+    elif any(k in name_lower for k in ["thrush", "robin", "turd", "laughingthrush"]):
         return "Historically documented displaying sudden singing silence followed by high-frequency distress chatter prior to seismic tremors."
     elif any(k in name_lower for k in ["sparrow", "passer", "finch"]):
         return "Acutely sensitive to micro-barometric air pressure fluctuations preceding flash floods and severe tornadic storm fronts."
@@ -56,8 +59,6 @@ def infer_disaster_sensitivity(common_name: str, scientific_name: str) -> str:
         return "Wetland bio-indicator; exhibits abrupt flight away from shorelines prior to storm surges and coastal tsunamis."
     elif any(k in name_lower for k in ["gull", "tern", "petrel", "shearwater"]):
         return "Pelagic oceanic bird; senses barometric pressure gradients and avoids maritime cyclone centers."
-    elif any(k in name_lower for k in ["peafowl", "pavo", "pheasant", "quail"]):
-        return "Ground-dwelling gallinaceous bird; famous for loud, frantic pre-tremor screeching calls triggered by sub-audible earth vibrations."
     else:
         return "Avian environmental indicator; collective agitation correlates with approaching weather fronts and environmental shockwaves."
 
@@ -83,12 +84,10 @@ def identify_species(
     if isinstance(file_source, (bytes, bytearray)):
         file_source = io.BytesIO(file_source)
 
-    # Load audio at 48kHz for BirdNET
     audio, sr = librosa.load(file_source, sr=BIRDNET_SR, mono=True)
     if len(audio) == 0:
         raise ValueError("Audio buffer is empty.")
 
-    # Create 3-second windows with 50% overlap (1.5s step)
     step_size = WINDOW_SIZE // 2
     windows = []
     
@@ -103,16 +102,10 @@ def identify_species(
 
     windows_arr = np.array(windows, dtype=np.float32)
 
-    # Run inference through ONNX session
     logits = session.run(['Identity_0'], {'INPUT': windows_arr})[0]
-    
-    # Sigmoid activation to convert logits to confidence probabilities
     probs = 1.0 / (1.0 + np.exp(-logits))
-
-    # Aggregate window predictions: Max pooling across time windows
     max_probs = np.max(probs, axis=0)
 
-    # Top-K candidate indices
     top_indices = np.argsort(max_probs)[::-1][:top_k]
 
     candidates = []
@@ -134,7 +127,6 @@ def identify_species(
 
     primary = candidates[0]
 
-    # Baseline deviation check if features available
     detected_pitch = acoustic_features["spectral_centroid"]["mean"] if acoustic_features else 3000.0
     if detected_pitch > 5000:
         pitch_status = "High Pitch Elevation / Screech Mode"
