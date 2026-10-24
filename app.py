@@ -1765,8 +1765,8 @@ if audio_data is not None:
     safe_audio_label = html.escape(str(audio_label))
     safe_com_name = html.escape(str(prim_sp['common_name']))
     safe_sci_name = html.escape(str(prim_sp['scientific_name']))
-    safe_spoof_label = html.escape(str(spoof_info['status_label']))
-    safe_spoof_summary = html.escape(str(spoof_info['status_summary']))
+    safe_spoof_label = html.escape(str(spoof_info.get('status_label', 'Authentic')))
+    safe_spoof_summary = html.escape(str(spoof_info.get('status_summary', '')))
 
     # Acoustic Feed Header
     st.markdown(f"""
@@ -1795,7 +1795,7 @@ if audio_data is not None:
                     {ICON_SHIELD} {safe_spoof_label}
                 </span>
                 <span style="font-size: 13.5px; color: #000000; font-weight: 600;">
-                    Cornell BirdNET Confidence: <strong>{spoof_info['birdnet_conf']}%</strong> &bull; Syrinx Harmonics Verified
+                    Cornell BirdNET Confidence: <strong>{spoof_info.get('birdnet_conf', 0.0)}%</strong> &bull; Syrinx Harmonics Verified
                 </span>
             </div>
             <p style="margin: 10px 0 0 0; font-size: 1.1rem; color: #000000; font-weight: 500; line-height: 1.6;">
@@ -1891,7 +1891,7 @@ if audio_data is not None:
                 {detected_non_bird_title}
             </div>
             <p style="font-size: 1.15rem; color: #000000; font-weight: 500; margin-top: 10px; line-height: 1.65;">
-                {html.escape(spoof_info['status_summary'])}
+                {html.escape(spoof_info.get('status_summary', ''))}
             </p>
             <div style="margin-top: 14px; border-top: 1px solid #e2e5ec; padding-top: 14px; font-size: 0.98rem; color: #000000;">
                 <strong>Biometric Rejection Criteria Triggered:</strong>
@@ -2021,7 +2021,7 @@ if audio_data is not None:
                 <div class="stressor-bar-track">
                     <div class="stressor-bar-fill" style="width: {100.0 if spoof_info['is_authentic'] else 20.0}%; background-color: {'#10b981' if spoof_info['is_authentic'] else '#e63946'};"></div>
                 </div>
-                <div class="stressor-context">Sub-600Hz breath turbulence: {spoof_info['breath_ratio']}% (Human threshold &gt; 28%)</div>
+                <div class="stressor-context">Sub-600Hz breath turbulence: {spoof_info.get('breath_ratio', 0.0)}% (Human threshold &gt; 28%)</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -2059,15 +2059,15 @@ if audio_data is not None:
         with st.container(border=True):
             st.markdown("""<h4 style="font-size: 1.55rem; margin-bottom: 18px;">Biometric Verification & Anti-Spoofing Assessment</h4>""", unsafe_allow_html=True)
             
-            status_html = f"{ICON_CHECK} <strong>Authentic Avian Syrinx Verified</strong>" if spoof_info['is_authentic'] else f"{ICON_CROSS} <strong>Rejected: {html.escape(spoof_info['status_label'])}</strong>"
+            status_html = f"{ICON_CHECK} <strong>Authentic Avian Syrinx Verified</strong>" if spoof_info['is_authentic'] else f"{ICON_CROSS} <strong>Rejected: {html.escape(spoof_info.get('status_label', ''))}</strong>"
             st.markdown(f"<div style='margin-bottom: 12px; font-size: 1.15rem;'>{status_html}</div>", unsafe_allow_html=True)
-            st.write(f"**Non-Avian Risk Score:** `{spoof_info['spoof_score']} / 100`")
-            st.write(f"**Sub-1,000 Hz Low-Frequency Energy:** `{spoof_info['sub1k_ratio']}%` (Avian Baseline &lt; 8%; Mammals &gt; 20%)")
+            st.write(f"**Non-Avian Risk Score:** `{spoof_info.get('spoof_score', 0.0)} / 100`")
+            st.write(f"**Sub-1,000 Hz Low-Frequency Energy:** `{spoof_info.get('sub1k_ratio', 0.0)}%` (Avian Baseline &lt; 8%; Mammals &gt; 20%)")
             st.write(f"**Detected Category:** `{spoof_info.get('detected_category', 'unknown')}`")
             
-            if spoof_info["spoof_factors"]:
+            if spoof_info.get("spoof_factors", []):
                 st.markdown("##### Detected Anti-Spoofing Flags:")
-                for factor in spoof_info["spoof_factors"]:
+                for factor in spoof_info.get("spoof_factors", []):
                     st.warning(f"• {html.escape(factor)}")
             else:
                 st.success("• Dual syrinx harmonic purity confirmed. Zero human breath turbulence or oral cavity formants detected.")
