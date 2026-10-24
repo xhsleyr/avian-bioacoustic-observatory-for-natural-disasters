@@ -1,17 +1,11 @@
 """Avian Early Warning System (AEWS) — Designed in the visual system of Project CETI.
 
 Recreating https://www.projectceti.org/ exactly:
-- Authentic Project CETI CDN background gradient & iridescent color atmosphere
-- Official GT Super Display serif font for display headlines (white upright + black italic)
-- Official Söhne font for navigation, metadata, and body
-- Hero composition matching the website screenshot:
-  - Top black logo badge ([ ceti ]) + clean navigation + social icons
-  - Authentic sperm whale emerging with mix-blend-mode multiply
-  - Glowing circular neon purple halo ring
-  - 'WHAT WOULD IT MEAN TO' -> 'Understand' (white serif) -> 'What Birds are Saying' (black italic serif)
-  - Floating translucent card with tote graphic, copy, and electric blue button
-  - Organic white wave crest separating hero from bioacoustic tools
-- Cornell BirdNET 6,522 Species Intelligence, Biometric Anti-Spoofing, and Early Warning
+- Fluid motion-blurred iridescent gradient aura (Cyan #befff7 -> Electric Blue #4749fe -> Deep Purple #4d1bc7)
+- GT Super Display high-contrast editorial serif typography for headlines
+- Clean Sohne / Plus Jakarta Sans for body and metadata
+- Sharp 0px architectural containers and 100px pill buttons
+- Global Cornell BirdNET 6,522 Species Intelligence, Biometric Anti-Spoofing, and Early Warning
 """
 
 import os
@@ -29,327 +23,148 @@ from src.image_fetcher import fetch_bird_visuals
 
 # Page configuration
 st.set_page_config(
-    page_title="Project CETI •-- Listening to Sentinels",
+    page_title="Project AEWS — Listening to the Sentinels",
     page_icon="🌊",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
-# Project CETI Exact Typography & Styling CSS
+# Project CETI Exact Design System CSS
 st.markdown("""
 <style>
-    /* 1. Official Project CETI Webfonts from CDN (GT Super Display + Söhne) */
-    @font-face {
-        font-family: 'GT Super Display';
-        src: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/64595f83c1fc195e83c9e816_GT-Super-Display-Bold.woff2') format('woff2');
-        font-weight: 700;
-        font-style: normal;
-        font-display: swap;
-    }
-    @font-face {
-        font-family: 'GT Super Display';
-        src: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/64595f837812b5eb0a449bd4_GT-Super-Display-Bold-Italic.woff2') format('woff2');
-        font-weight: 700;
-        font-style: italic;
-        font-display: swap;
-    }
-    @font-face {
-        font-family: 'GT Super Display';
-        src: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/64595f83f76c2508a0a92666_GT-Super-Display-Medium.woff2') format('woff2');
-        font-weight: 500;
-        font-style: normal;
-        font-display: swap;
-    }
-    @font-face {
-        font-family: 'Sohne';
-        src: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/64596026870b9b4285fe2498_soehne-buch.woff2') format('woff2');
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-    }
-    @font-face {
-        font-family: 'Sohne';
-        src: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/64596026a59218839d6d964c_soehne-dreiviertelfett.woff2') format('woff2');
-        font-weight: 700;
-        font-style: normal;
-        font-display: swap;
-    }
-
-    /* Fallback Google Fonts if CDN delayed */
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+    /* Google Fonts: GT Super equivalent (Playfair Display) & Sohne equivalent (Plus Jakarta Sans) */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
     :root {
         --ceti-primary: #4d1bc7;
         --ceti-primary-accent: #4749fe;
         --ceti-button-hover: #000000;
+        --ceti-nav-hover: #4f1ccb;
         --ceti-bg: #ffffff;
         --ceti-text-primary: #4e5a7c;
+        --ceti-text-inverse: #ffffff;
         --ceti-text-dark: #000000;
         --ceti-text-muted: #a2a7b7;
+        --ceti-surface-dark: #181b22;
         --ceti-border-light: #e6e8ee;
+        --ceti-cyan: #befff7;
     }
 
-    /* Streamlit Canvas Overrides with Ambient Fixed Atmospheric Gradient */
-    .stApp {
+    /* Ambient Motion-Blurred Atmospheric Gradient Background (Signature CETI Look) */
+    .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
         background-color: #ffffff !important;
         background-image: 
-            radial-gradient(circle at 10% 18%, rgba(190, 255, 247, 0.45) 0%, transparent 45%),
-            radial-gradient(circle at 90% 28%, rgba(71, 73, 254, 0.20) 0%, transparent 48%),
-            radial-gradient(circle at 50% 85%, rgba(77, 27, 199, 0.15) 0%, transparent 55%) !important;
+            radial-gradient(circle at 12% 18%, rgba(190, 255, 247, 0.45) 0%, transparent 42%),
+            radial-gradient(circle at 88% 22%, rgba(71, 73, 254, 0.20) 0%, transparent 48%),
+            radial-gradient(circle at 50% 85%, rgba(77, 27, 199, 0.16) 0%, transparent 55%) !important;
         background-attachment: fixed !important;
-        font-family: 'Sohne', 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
         color: var(--ceti-text-primary) !important;
-    }
-
-    /* Remove default Streamlit top header padding */
-    .block-container {
-        padding-top: 0.5rem !important;
-        padding-bottom: 4rem !important;
-        max-width: 1320px !important;
     }
 
     [data-testid="stHeader"] {
         background: transparent !important;
     }
 
-    /* --- HERO CONTAINER (MATCHES SCREENSHOT EXACTLY) --- */
-    .ceti-hero-wrapper {
-        position: relative;
-        width: 100%;
-        min-height: 580px;
-        background-color: #befff7;
-        background-image: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/6448200903d27e9cbbec4b16_BG-0-home-gradient-wide.jpg');
-        background-size: cover;
-        background-position: center top;
-        background-repeat: no-repeat;
-        border-radius: 0px;
-        overflow: hidden;
-        margin-bottom: 40px;
-        box-shadow: 0 10px 40px -10px rgba(71, 73, 254, 0.15);
+    /* Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background-color: #fafbfc !important;
+        border-right: 1px solid var(--ceti-border-light) !important;
     }
 
-    /* Top Navigation inside Hero */
-    .ceti-hero-nav {
+    [data-testid="stSidebar"] * {
+        color: var(--ceti-text-primary) !important;
+    }
+
+    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] h4, [data-testid="stSidebar"] h5 {
+        color: var(--ceti-text-dark) !important;
+    }
+
+    /* Global Typography Rules from DESIGN-projectceti-org.md */
+    h1, h2, h3, .ceti-display, .ceti-headline {
+        font-family: 'Playfair Display', Georgia, serif !important;
+        font-weight: 400 !important;
+        line-height: 1.15 !important;
+        color: var(--ceti-text-dark) !important;
+        letter-spacing: -0.02em !important;
+    }
+
+    p, span, div, label, input, .stMarkdown {
+        font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+        color: var(--ceti-text-primary);
+    }
+
+    /* Project CETI Navigation Bar */
+    .ceti-navbar {
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        padding: 0 24px;
-        position: relative;
-        z-index: 10;
-    }
-
-    .ceti-hero-brand {
-        background-color: #000000;
-        padding: 18px 24px 14px 24px;
-        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+        padding: 18px 0;
+        border-bottom: 1px solid var(--ceti-border-light);
+        margin-bottom: 40px;
     }
 
-    .ceti-hero-brand img {
-        height: 26px;
-        width: auto;
-    }
-
-    .ceti-hero-links {
-        display: flex;
-        gap: 22px;
-        font-family: 'Sohne', 'Plus Jakarta Sans', sans-serif;
-        font-size: 11px;
+    .ceti-logo-mark {
+        font-family: 'Space Mono', monospace;
+        font-size: 13px;
         font-weight: 700;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: #000000;
+        color: var(--ceti-text-dark);
+        display: flex;
         align-items: center;
+        gap: 8px;
     }
 
-    .ceti-hero-links span {
-        cursor: pointer;
+    .ceti-logo-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--ceti-primary-accent);
+        display: inline-block;
+    }
+
+    .ceti-nav-links {
+        display: flex;
+        gap: 28px;
+        font-family: 'Space Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ceti-text-muted);
+    }
+
+    .ceti-nav-links a {
+        color: var(--ceti-text-dark);
+        text-decoration: none;
         transition: color 0.2s ease;
     }
 
-    .ceti-hero-links span.active {
-        color: var(--ceti-primary-accent);
-    }
-
-    .ceti-hero-links span:hover {
+    .ceti-nav-links a:hover {
         color: var(--ceti-primary);
     }
 
-    .ceti-hero-socials {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        font-size: 13px;
-        color: #000000;
-        opacity: 0.75;
-        padding-right: 12px;
-    }
-
-    /* Whale Image from Screenshot */
-    .ceti-hero-whale {
-        position: absolute;
-        left: -120px;
-        top: 20px;
-        width: 620px;
-        max-width: 52vw;
-        mix-blend-mode: multiply;
-        transform: rotate(4deg);
-        z-index: 2;
-        pointer-events: none;
-        user-select: none;
-    }
-
-    /* Neon Purple Toroidal Halo Ring */
-    .ceti-hero-halo {
-        position: absolute;
-        right: 16%;
-        top: 14%;
-        width: 460px;
-        max-width: 40vw;
-        z-index: 1;
-        pointer-events: none;
-        opacity: 0.95;
-    }
-
-    /* Main Hero Headline Layout */
-    .ceti-hero-content {
-        position: relative;
-        z-index: 5;
-        padding: 30px 48px 75px 48px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        text-align: left;
-    }
-
-    .ceti-hero-text-block {
-        max-width: 700px;
-        width: 100%;
-        margin-left: auto;
-    }
-
-    .ceti-hero-eyebrow {
-        font-family: 'Sohne', 'Plus Jakarta Sans', sans-serif;
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: #ffffff;
-        margin-bottom: 2px;
-        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .ceti-hero-title-white {
-        font-family: 'GT Super Display', 'Playfair Display', serif;
-        font-size: 104px;
-        font-weight: 700;
-        color: #ffffff;
-        line-height: 0.85;
-        margin: 0;
+    /* Hero Section (Matches "Understand What Whales are Saying") */
+    .ceti-hero-title {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 3.8rem;
+        font-weight: 400;
+        line-height: 1.1;
+        color: var(--ceti-text-dark);
+        margin-bottom: 16px;
         letter-spacing: -0.025em;
-        text-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
     }
 
-    .ceti-hero-title-black {
-        font-family: 'GT Super Display', 'Playfair Display', serif;
-        font-size: 64px;
-        font-weight: 700;
-        font-style: italic;
-        color: #000000;
-        line-height: 1.05;
-        margin: 4px 0 28px 0;
-        letter-spacing: -0.02em;
+    .ceti-hero-subtitle {
+        font-size: 1.15rem;
+        line-height: 1.6;
+        color: var(--ceti-text-primary);
+        max-width: 860px;
+        margin-bottom: 36px;
+        font-weight: 400;
     }
 
-    /* Floating Card from Screenshot */
-    .ceti-floating-card {
-        background-color: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(10px);
-        border: 1px solid #ffffff;
-        border-radius: 0px;
-        padding: 22px 28px;
-        display: flex;
-        align-items: center;
-        gap: 24px;
-        max-width: 550px;
-        box-shadow: 0 8px 32px rgba(71, 73, 254, 0.08);
-    }
-
-    .ceti-card-left {
-        flex: 0 0 auto;
-    }
-
-    .ceti-card-badge {
-        height: 64px;
-        width: auto;
-        object-fit: contain;
-    }
-
-    .ceti-card-right {
-        flex: 1;
-    }
-
-    .ceti-card-text {
-        font-family: 'Sohne', 'Plus Jakarta Sans', sans-serif;
-        font-size: 13px;
-        line-height: 1.45;
-        color: #4e5a7c;
-        margin: 0 0 12px 0;
-    }
-
-    .ceti-card-btn {
-        display: inline-block;
-        background-color: var(--ceti-primary-accent);
-        color: #ffffff !important;
-        font-family: 'Sohne', 'Plus Jakarta Sans', sans-serif;
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        padding: 8px 20px;
-        border-radius: 0px;
-        text-decoration: none;
-        transition: background-color 0.2s ease;
-    }
-
-    .ceti-card-btn:hover {
-        background-color: #000000;
-    }
-
-    /* Wave Crest at bottom of Hero */
-    .ceti-hero-wave {
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 100%;
-        line-height: 0;
-        z-index: 4;
-        pointer-events: none;
-    }
-
-    .ceti-hero-wave svg {
-        display: block;
-        width: 100%;
-        height: 52px;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 900px) {
-        .ceti-hero-title-white {
-            font-size: 64px !important;
-        }
-        .ceti-hero-title-black {
-            font-size: 40px !important;
-        }
-        .ceti-hero-whale {
-            opacity: 0.35;
-            left: -180px;
-        }
-    }
-
-    /* --- CONTENT CARDS (0px radius, clean hairline) --- */
+    /* Content Cards (0px radius, clean whitespace, subtle hairline border) */
     .ceti-content-card {
         background-color: #ffffff;
         border: 1px solid var(--ceti-border-light);
@@ -365,19 +180,21 @@ st.markdown("""
         box-shadow: 0 8px 30px -4px rgba(71, 73, 254, 0.08);
     }
 
-    /* CETI Gradient Banner */
+    /* Signature CETI Gradient Banner */
     .ceti-gradient-banner {
         background: linear-gradient(135deg, #befff7 0%, #4749fe 50%, #4d1bc7 100%);
         color: #ffffff;
         padding: 44px 40px;
         border-radius: 0px;
         margin-bottom: 28px;
+        position: relative;
+        overflow: hidden;
     }
 
     .ceti-gradient-banner h2 {
-        font-family: 'GT Super Display', 'Playfair Display', serif;
+        font-family: 'Playfair Display', serif;
         font-size: 2.3rem;
-        font-weight: 700;
+        font-weight: 400;
         color: #ffffff !important;
         margin-bottom: 10px;
     }
@@ -390,7 +207,7 @@ st.markdown("""
         margin: 0;
     }
 
-    /* Pill Badges */
+    /* Pill Badges (100px radius for category / status tags) */
     .ceti-pill-badge {
         display: inline-flex;
         align-items: center;
@@ -398,7 +215,7 @@ st.markdown("""
         padding: 5px 16px;
         border-radius: 100px;
         font-size: 12px;
-        font-weight: 600;
+        font-weight: 500;
         letter-spacing: 0.04em;
         text-transform: uppercase;
         font-family: 'Space Mono', monospace;
@@ -455,13 +272,13 @@ st.markdown("""
         color: #000000 !important;
     }
 
-    /* Buttons */
+    /* CETI Button Primary: Sharp 0px, electric blue -> black hover */
     .stButton > button {
         background-color: var(--ceti-primary-accent) !important;
         color: #ffffff !important;
-        font-family: 'Sohne', 'Plus Jakarta Sans', sans-serif !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
         font-size: 12px !important;
-        font-weight: 600 !important;
+        font-weight: 500 !important;
         letter-spacing: 0.08em !important;
         text-transform: uppercase !important;
         padding: 10px 32px !important;
@@ -476,7 +293,7 @@ st.markdown("""
         color: #ffffff !important;
     }
 
-    /* Tabs */
+    /* CETI Underline Tabs */
     .stTabs [data-baseweb="tab-list"] {
         gap: 28px;
         border-bottom: 1px solid var(--ceti-border-light);
@@ -500,10 +317,10 @@ st.markdown("""
         font-weight: 700 !important;
     }
 
-    /* Metrics */
+    /* Metric Cards Styling */
     [data-testid="stMetricValue"] {
-        font-family: 'GT Super Display', 'Playfair Display', serif !important;
-        font-size: 2.1rem !important;
+        font-family: 'Playfair Display', serif !important;
+        font-size: 2rem !important;
         color: var(--ceti-text-dark) !important;
     }
 
@@ -517,9 +334,9 @@ st.markdown("""
 
     /* Species Card Visual Styling */
     .ceti-species-heading {
-        font-family: 'GT Super Display', 'Playfair Display', serif;
+        font-family: 'Playfair Display', serif;
         font-size: 2.4rem;
-        font-weight: 700;
+        font-weight: 400;
         color: var(--ceti-text-dark);
         line-height: 1.1;
         margin: 6px 0 2px 0;
@@ -536,7 +353,7 @@ st.markdown("""
     table {
         border-collapse: collapse !important;
         width: 100% !important;
-        font-family: 'Sohne', 'Plus Jakarta Sans', sans-serif !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
         font-size: 13px !important;
     }
     thead tr th {
@@ -552,7 +369,7 @@ st.markdown("""
     tbody tr td {
         border-bottom: 1px solid #f4f5f8 !important;
         padding: 12px 14px !important;
-        color: #181b22 !important;
+        color: var(--ceti-surface-dark) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -565,7 +382,7 @@ def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
         value=adi_score,
         domain={'x': [0, 1], 'y': [0, 1]},
         title={'text': "ACOUSTIC DISTRESS INDEX (ADI)", 'font': {'size': 11, 'color': "#a2a7b7", 'family': "Space Mono"}},
-        number={'suffix': "%", 'font': {'size': 46, 'color': "#000000", 'family': "GT Super Display, Playfair Display"}},
+        number={'suffix': "%", 'font': {'size': 46, 'color': "#000000", 'family': "Playfair Display"}},
         gauge={
             'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "#e6e8ee"},
             'bar': {'color': "#4749fe", 'thickness': 0.28},
@@ -588,7 +405,7 @@ def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
         height=260,
         margin=dict(l=20, r=20, t=40, b=10),
         paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(family="Sohne, Plus Jakarta Sans")
+        font=dict(family="Plus Jakarta Sans")
     )
     return fig
 
@@ -614,9 +431,9 @@ def plot_mel_spectrogram(features: dict) -> go.Figure:
         colorbar=dict(title=dict(text="dB", font=dict(family="Space Mono", size=11)), len=0.8)
     ))
     fig.update_layout(
-        title=dict(text="Mel-Frequency Bioacoustic Spectrogram", font=dict(family="GT Super Display, Playfair Display", size=19, color="#000000")),
-        xaxis=dict(title=dict(text="Time (seconds)", font=dict(family="Sohne, Plus Jakarta Sans", size=12)), showgrid=False),
-        yaxis=dict(title=dict(text="Frequency (Hz)", font=dict(family="Sohne, Plus Jakarta Sans", size=12)), showgrid=True, gridcolor="#f4f5f8"),
+        title=dict(text="Mel-Frequency Bioacoustic Spectrogram", font=dict(family="Playfair Display", size=19, color="#000000")),
+        xaxis=dict(title=dict(text="Time (seconds)", font=dict(family="Plus Jakarta Sans", size=12)), showgrid=False),
+        yaxis=dict(title=dict(text="Frequency (Hz)", font=dict(family="Plus Jakarta Sans", size=12)), showgrid=True, gridcolor="#f4f5f8"),
         height=320,
         margin=dict(l=20, r=20, t=40, b=20),
         paper_bgcolor='rgba(0,0,0,0)',
@@ -668,7 +485,7 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         showlegend=True,
-        font=dict(family="Sohne, Plus Jakarta Sans")
+        font=dict(family="Plus Jakarta Sans")
     )
     fig.update_xaxes(title_text="Time (seconds)", row=2, col=1, gridcolor="#f4f5f8")
     fig.update_yaxes(title_text="Amplitude", row=1, col=1, gridcolor="#f4f5f8")
@@ -677,73 +494,63 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
     return fig
 
 
-# --- HERO SECTION (MATCHES PROJECT CETI WEBSITE SCREENSHOT EXACTLY) ---
+# --- SIDEBAR (Project CETI Minimalist Architecture) ---
+with st.sidebar:
+    st.markdown("""
+    <div style="font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #4749fe; margin-bottom: 8px;">
+        RESEARCH INITIATIVE
+    </div>
+    <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.8rem; font-weight: 400; color: #000000; line-height: 1.1; margin-bottom: 8px;">
+        Project AEWS
+    </div>
+    <div style="font-size: 0.88rem; color: #4e5a7c; margin-bottom: 24px; line-height: 1.5;">
+        Avian Bioacoustic Translation & Planetary Early Warning Intelligence.
+    </div>
+    """, unsafe_allow_html=True)
+    st.divider()
+
+    st.markdown("##### 🔬 Bioacoustic Principles")
+    st.caption("""
+    * **Non-Human Communication:** Decoding avian flock vocalizations before seismic and atmospheric disruptions.
+    * **Dual Syrinx Biphonation:** Verifying authentic multi-tonal avian biological markers.
+    * **Planetary Sensing:** Detecting compressional P-waves & storm infrasound (< 20 Hz).
+    """)
+
+    st.divider()
+    st.markdown("##### 🌐 Neural Architecture")
+    st.markdown("""
+    * **Classifier:** Cornell BirdNET v2.4 (6,522 Species)
+    * **Biometrics:** Syrinx vs Oral Cavity Anti-Spoofing
+    * **Compute Core:** Apple Silicon M1 Local Neural Inference
+    """)
+
+
+# --- TOP NAVIGATION BAR ---
 st.markdown("""
-<div class="ceti-hero-wrapper">
-    <!-- Top Navigation inside Hero -->
-    <div class="ceti-hero-nav">
-        <div class="ceti-hero-brand">
-            <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645d24eb63dfb01f70696649_logo-ceti.svg" alt="CETI Logo" />
-        </div>
-        <div class="ceti-hero-links">
-            <span class="active">HOME</span>
-            <span>ABOUT ▾</span>
-            <span>GET INVOLVED ▾</span>
-            <span>RESEARCH</span>
-            <span>DOMINICA</span>
-            <span>NEWS</span>
-            <span>DONATE</span>
-            <span>SHOP</span>
-        </div>
-        <div class="ceti-hero-socials">
-            <span>📷</span>
-            <span>▶</span>
-            <span>in</span>
-            <span>𝕏</span>
-        </div>
+<div class="ceti-navbar">
+    <div class="ceti-logo-mark">
+        <span class="ceti-logo-dot"></span> PROJECT AEWS // BIOACOUSTICS
     </div>
-
-    <!-- Sperm Whale from Screenshot -->
-    <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645d2b2186435d15f32cc462_whale-home.jpg" class="ceti-hero-whale" alt="Sperm Whale" />
-
-    <!-- Neon Purple Toroidal Halo Ring -->
-    <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/64482522a0d34620804b6acf_Element-0-home-circle.png" class="ceti-hero-halo" alt="Purple Halo Ring" />
-
-    <!-- Hero Headlines & Floating Card -->
-    <div class="ceti-hero-content">
-        <div class="ceti-hero-text-block">
-            <div class="ceti-hero-eyebrow">WHAT WOULD IT MEAN TO</div>
-            <div class="ceti-hero-title-white">Understand</div>
-            <div class="ceti-hero-title-black">What Birds are Saying</div>
-
-            <!-- Floating Card -->
-            <div class="ceti-floating-card">
-                <div class="ceti-card-left">
-                    <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/66d8adc03d225ccfda813fc5_CETI-Tote-Design.png" class="ceti-card-badge" alt="Listen to the Whales" />
-                </div>
-                <div class="ceti-card-right">
-                    <p class="ceti-card-text">
-                        What if their sounds became stories? Take the plunge and discover a hidden planetary bioacoustic radar.
-                    </p>
-                    <a href="#bioacoustic-radar" class="ceti-card-btn">Visit now</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Organic Wave Crest at Bottom -->
-    <div class="ceti-hero-wave">
-        <svg viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none">
-            <path d="M0,25 C360,65 680,5 1020,35 C1240,55 1380,20 1440,30 L1440,60 L0,60 Z" fill="#ffffff"></path>
-        </svg>
+    <div class="ceti-nav-links">
+        <span>RESEARCH</span>
+        <span>6,522 SPECIES</span>
+        <span>ANTI-SPOOFING</span>
+        <span>DISASTER INTELLIGENCE</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
+# --- HERO SECTION (MATCHES PROJECT CETI HOMEPAGE) ---
+st.markdown("""
+<div class="ceti-hero-title">
+    Understand What Birds are Saying
+</div>
+<div class="ceti-hero-subtitle">
+    What if avian vocalizations became planetary early-warning stories? Applying advanced machine learning and bioacoustic translation to decode avian communication &mdash; forecasting earthquakes, cyclones, and atmospheric shockwaves before disaster strikes.
+</div>
+""", unsafe_allow_html=True)
 
-# --- BIOACOUSTIC CHANNEL SELECTION ---
-st.markdown('<div id="bioacoustic-radar"></div>', unsafe_allow_html=True)
-
+# Select Input Mode (Styled with Project CETI Pill Philosophy)
 input_mode = st.radio(
     "SELECT BIOACOUSTIC CHANNEL:",
     options=[
@@ -809,7 +616,7 @@ if audio_data is not None:
     <div style="font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #4749fe; margin-top: 24px; margin-bottom: 2px;">
         ACOUSTIC FEED ACQUIRED
     </div>
-    <div style="font-family: 'GT Super Display', 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: #000000; margin-bottom: 12px;">
+    <div style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #000000; margin-bottom: 12px;">
         {audio_label}
     </div>
     """, unsafe_allow_html=True)
@@ -913,7 +720,7 @@ if audio_data is not None:
     if spoof_info["suppress_alarm"]:
         st.markdown("""
         <div class="ceti-content-card" style="border-left: 3px solid #e63946;">
-            <h3 style="font-family: 'GT Super Display', 'Playfair Display', serif; font-size: 1.6rem; color: #e63946; margin: 0 0 6px 0;">
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #e63946; margin: 0 0 6px 0;">
                 ⚠️ Disaster Early Warning Trigger Suppressed
             </h3>
             <p style="color: #4e5a7c; font-size: 0.95rem; margin: 0;">
@@ -940,7 +747,7 @@ if audio_data is not None:
 
     with col_stats:
         st.markdown('<div class="ceti-content-card" style="padding: 26px 30px;">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'GT Super Display', 'Playfair Display', serif; font-size: 1.5rem; color: #000000; margin-bottom: 18px;">Bioacoustic Signal Descriptors</h4>""", unsafe_allow_html=True)
+        st.markdown("""<h4 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #000000; margin-bottom: 18px;">Bioacoustic Signal Descriptors</h4>""", unsafe_allow_html=True)
         c1, c2 = st.columns(2)
         with c1:
             st.metric("Pitch Center (Centroid)", f"{features['spectral_centroid']['mean']:.0f} Hz", delta=f"{results['sub_scores']['pitch']}% stress")
@@ -971,7 +778,7 @@ if audio_data is not None:
 
     with tab_species:
         st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'GT Super Display', 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 16px;">Top Species Candidates (from 6,522 Global Species)</h4>""", unsafe_allow_html=True)
+        st.markdown("""<h4 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 16px;">Top Species Candidates (from 6,522 Global Species)</h4>""", unsafe_allow_html=True)
         for cand in species_info["top_candidates"]:
             col_info, col_bar = st.columns([2.5, 1])
             with col_info:
@@ -985,7 +792,7 @@ if audio_data is not None:
 
     with tab_anti_spoof:
         st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'GT Super Display', 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 16px;">Biometric Verification & Anti-Spoofing Assessment</h4>""", unsafe_allow_html=True)
+        st.markdown("""<h4 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 16px;">Biometric Verification & Anti-Spoofing Assessment</h4>""", unsafe_allow_html=True)
         st.write(f"**Authenticity Determination:** {'✅ Authentic Avian' if spoof_info['is_authentic'] else '❌ Rejected (Human Mimicry / Spoofing)'}")
         st.write(f"**Spoofing Likelihood Score:** `{spoof_info['spoof_score']} / 100`")
         st.write(f"**Sub-600Hz Breath Turbulence Ratio:** `{spoof_info['breath_ratio']}%` (Threshold: > 28% indicates human exhalation)")
@@ -1000,7 +807,7 @@ if audio_data is not None:
 
     with tab_table:
         st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'GT Super Display', 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 16px;">Detailed Bioacoustic Diagnostic Parameters</h4>""", unsafe_allow_html=True)
+        st.markdown("""<h4 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 16px;">Detailed Bioacoustic Diagnostic Parameters</h4>""", unsafe_allow_html=True)
         diag_rows = []
         for d in results["diagnostics"]:
             diag_rows.append({
@@ -1016,7 +823,7 @@ if audio_data is not None:
 else:
     st.markdown("""
     <div class="ceti-content-card" style="text-align: center; padding: 72px 32px;">
-        <div style="font-family: 'GT Super Display', 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: #000000; margin-bottom: 12px;">
+        <div style="font-family: 'Playfair Display', serif; font-size: 2.4rem; color: #000000; margin-bottom: 12px;">
             Awaiting Bioacoustic Acoustic Feed
         </div>
         <p style="color: #4e5a7c; font-size: 1.05rem; max-width: 620px; margin: 0 auto 28px auto; line-height: 1.6;">
