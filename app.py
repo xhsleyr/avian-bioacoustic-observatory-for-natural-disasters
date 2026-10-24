@@ -1,4 +1,4 @@
-"""Avian Early Warning System (AEWS) — Designed in the Ponder Design System.
+"""INTERA — Designed in the Ponder Design System.
 
 Ponder is a minimal, cinematic dark-mode product experience.
 - Background: Pure Black (#000000)
@@ -39,7 +39,7 @@ ICON_AUDIO = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stro
 
 # Streamlit page configuration
 st.set_page_config(
-    page_title="Ponder // AEWS Bioacoustics",
+    page_title="INTERA // Bioacoustics",
     page_icon="🐦",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -593,7 +593,7 @@ with st.sidebar:
         RESEARCH INITIATIVE
     </div>
     <div style="font-size: 22px; font-weight: 500; color: #fafafa; line-height: 28px; letter-spacing: -0.01em; margin-bottom: 8px;">
-        Project AEWS
+        INTERA
     </div>
     <div style="font-size: 14px; color: rgba(250, 250, 250, 0.58); margin-bottom: 24px; line-height: 20px;">
         Avian Bioacoustic Translation & Planetary Early Warning Intelligence.
@@ -622,7 +622,7 @@ st.markdown(f"""
 <div class="ponder-header">
     <div class="ponder-brand">
         <span class="ponder-brand-dot"></span>
-        <span>PONDER // AEWS BIOACOUSTICS</span>
+        <span>INTERA // BIOACOUSTICS</span>
     </div>
     <div class="ponder-nav-pills">
         <span class="ponder-nav-chip">{ICON_RADAR} 6,522 SPECIES</span>

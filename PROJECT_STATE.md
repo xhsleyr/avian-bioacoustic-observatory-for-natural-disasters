@@ -1,4 +1,4 @@
-# Project State & Memory: Avian Early Warning System (AEWS)
+# Project State & Memory: INTERA
 
 **Project Title:** Avian Vocal Bioacoustics for Natural Disaster Early Warning  
 **Target Environment:** Local macOS (Apple Silicon M1)  
