@@ -41,7 +41,7 @@ st.set_page_config(
 # Project CETI Design System + Times New Roman Typography CSS
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+    /* Universal Times New Roman Typography */
 
     :root {
         --ceti-primary: #4d1bc7;
@@ -56,6 +56,15 @@ st.markdown("""
         --ceti-surface-dark: #181b22;
         --ceti-border-light: #e6e8ee;
         --ceti-cyan: #befff7;
+    }
+
+    /* Universal Times New Roman Font Across ALL DOM Elements */
+    *, *::before, *::after, html, body, [class*="css"], .stApp, .stApp *,
+    h1, h2, h3, h4, h5, h6, p, span, div, label, input, button, select, textarea,
+    table, th, td, tr, caption, small, strong, b, em, i, u, a,
+    [data-testid], [data-testid] *, [data-baseweb], [data-baseweb] *,
+    .stMarkdown, .stMarkdown *, .stCaption, .stCaption *, .stMetric, .stMetric * {
+        font-family: 'Times New Roman', Times, 'Nimbus Roman No9 L', Georgia, serif !important;
     }
 
     /* Ambient Motion-Blurred Atmospheric Gradient Background with Times New Roman */
