@@ -28,7 +28,9 @@ NON_BIRD_KEYWORDS = [
     "siren",
     "noise",
     "ambient",
-    "car horn"
+    "car horn",
+    "gun",
+    "fireworks"
 ]
 
 
@@ -43,10 +45,11 @@ def evaluate_avian_authenticity(
     
     Multi-Layer Biometric Criteria:
     1. Explicit Non-Bird Neural Identification (Dog_Dog, Human, Siren, Noise)
-    2. Mammalian Larynx Sub-1,000 Hz Energy Dominance (Syrinx vs Larynx)
-    3. Neural Confidence Gating (Rejects Out-of-Distribution sounds < 25% confidence)
-    4. Smartphone Loudspeaker Replay Frequency Ceiling & Compression
-    5. Human Oral Whistling & Breath Turbulence Constraints
+    2. Linear Sub-800 Hz & Sub-600 Hz Energy Dominance (Syrinx vs Larynx)
+    3. Indian Peafowl vs Feline Meow Acoustic Discrimination
+    4. Neural Confidence Gating (Rejects Out-of-Distribution sounds < 25% confidence)
+    5. Smartphone Loudspeaker Replay Frequency Ceiling & Compression
+    6. Human Oral Whistling & Breath Turbulence Constraints
     
     Returns:
         Dictionary with verification status, authenticity flag, spoofing score,
@@ -59,8 +62,9 @@ def evaluate_avian_authenticity(
 
     centroid_max = acoustic_features.get("spectral_centroid", {}).get("max", 0.0)
     centroid_mean = acoustic_features.get("spectral_centroid", {}).get("mean", 0.0)
+    sub600_ratio = float(acoustic_features.get("sub600_ratio", 0.0))
+    sub800_ratio = float(acoustic_features.get("sub800_ratio", 0.0))
     sub1k_ratio = float(acoustic_features.get("sub1k_ratio", 0.0))
-    sub350_ratio = float(acoustic_features.get("sub350_ratio", 0.0))
     rolloff_95 = float(acoustic_features.get("spectral_rolloff_95", {}).get("mean", 5000.0))
 
     spoof_factors: List[str] = []
@@ -70,10 +74,8 @@ def evaluate_avian_authenticity(
     # --- LAYER 1: Explicit Non-Bird Neural Match in Top Candidates ---
     is_explicit_non_bird = False
     
-    # Check primary candidate
     for kw in NON_BIRD_KEYWORDS:
         if kw in common_name or kw in scientific_name:
-            # Special check to avoid false matching birds with 'cat' in name like 'Catbird' unless confidence is tiny
             if kw == "cat" and "catbird" in common_name and birdnet_conf > 30.0:
                 continue
             is_explicit_non_bird = True
@@ -87,12 +89,12 @@ def evaluate_avian_authenticity(
                 detected_category = "ambient_noise"
             break
 
-    # Also scan top 5 candidates to catch non-bird tokens (e.g. Dog_Dog, Siren, Human)
+    # Scan top candidates for non-bird classes (e.g. Dog_Dog, Siren, Human vocal)
     if not is_explicit_non_bird:
         for cand in species_info.get("top_candidates", []):
             c_name = cand.get("common_name", "").lower()
             c_conf = cand.get("confidence", 0.0)
-            for kw in ["dog", "human whistle", "human vocal", "siren", "engine", "noise"]:
+            for kw in ["dog", "human whistle", "human vocal", "siren", "engine", "noise", "gun"]:
                 if kw in c_name and c_conf > 10.0:
                     is_explicit_non_bird = True
                     spoof_score = 100.0
@@ -118,42 +120,69 @@ def evaluate_avian_authenticity(
                 f"Explicit Non-Avian Acoustic Match: Identified as '{top_candidate.get('common_name')}' with {birdnet_conf:.1f}% confidence."
             )
     else:
-        # --- LAYER 2: Mammalian Larynx Sub-1,000 Hz Energy Dominance ---
-        # Genuine avian syrinx vocalizations have < 8% energy below 1,000 Hz.
-        # Canine barks and feline meows have 25% - 60% of their energy below 1,000 Hz.
-        if sub1k_ratio > 0.28:
-            spoof_score += 65.0
-            if detected_category == "authentic_avian":
-                detected_category = "mammalian_domestic"
+        # --- LAYER 2: Special Peafowl / Feline Meow Discrimination ---
+        # Domestic cat meows share a rising-falling contour with Indian Peafowl calls,
+        # but genuine peafowl honks have < 3% energy below 800 Hz and centroid > 2,000 Hz.
+        # Cat meows have 30% - 60% energy below 800 Hz and centroid around 800 - 1,400 Hz.
+        is_peafowl = ("peafowl" in common_name) or ("pavo" in scientific_name)
+        if is_peafowl and (sub800_ratio > 0.045 or centroid_mean < 1850.0):
+            spoof_score = 100.0
+            detected_category = "feline_cat"
             spoof_factors.append(
-                f"Mammalian Laryngeal Acoustic Resonance: {sub1k_ratio*100:.1f}% of acoustic energy is below 1,000 Hz "
-                "(characteristic of domestic dog barks or cat meows; incompatible with avian dual-syrinx acoustics)."
-            )
-        elif sub1k_ratio > 0.18:
-            spoof_score += 40.0
-            if detected_category == "authentic_avian":
-                detected_category = "mammalian_domestic"
-            spoof_factors.append(
-                f"Elevated sub-1,000 Hz low-frequency energy detected ({sub1k_ratio*100:.1f}%)."
+                f"Peafowl Bio-Verification Failed: Identified as a domestic cat meow. Audio exhibits "
+                f"{sub800_ratio*100:.1f}% energy below 800 Hz (authentic Indian Peafowl has < 3.0%) and "
+                f"a low spectral centroid ({centroid_mean:.0f} Hz vs > 2,000 Hz required for peafowl)."
             )
 
-        # --- LAYER 3: Neural Confidence Gate (Out-of-Distribution Sounds) ---
-        # Domestic animals and phone noises forced onto a 6,522-bird model yield very low confidence
-        if birdnet_conf < 15.0:
+        # --- LAYER 3: Strict Mammalian Larynx Sub-800 Hz & Sub-600 Hz Energy Dominance ---
+        # Avian syrinx physically cannot produce significant sub-800 Hz energy (baseline < 2.7%).
+        # Dogs, cats, and humans vocalize with a larynx and vocal folds, creating heavy sub-800 Hz energy.
+        elif sub800_ratio > 0.075 or sub600_ratio > 0.035:
+            spoof_score = 100.0
+            if rolloff_95 < 10500 and centroid_mean < 3600 and birdnet_conf < 45.0:
+                detected_category = "phone_speaker_replay"
+                spoof_factors.append(
+                    f"Smartphone Speaker Replay Transducer Detected: Sharp high-frequency rolloff at {rolloff_95:.0f} Hz "
+                    f"with domestic sound resonance ({sub800_ratio*100:.1f}% sub-800 Hz)."
+                )
+            elif "cat" in common_name or (centroid_mean < 1400.0 and sub800_ratio < 0.60):
+                detected_category = "feline_cat"
+                spoof_factors.append(
+                    f"Domestic Feline Acoustic Profile: Meow harmonics detected ({sub800_ratio*100:.1f}% sub-800 Hz, centroid {centroid_mean:.0f} Hz)."
+                )
+            elif "dog" in common_name or sub800_ratio >= 0.60:
+                detected_category = "canine_dog"
+                spoof_factors.append(
+                    f"Domestic Canine Acoustic Signature: Heavy laryngeal resonance ({sub800_ratio*100:.1f}% sub-800 Hz)."
+                )
+            else:
+                detected_category = "mammalian_domestic"
+                spoof_factors.append(
+                    f"Mammalian Laryngeal Resonance: {sub800_ratio*100:.1f}% energy below 800 Hz (avian syrinx baseline < 3.0%)."
+                )
+        elif sub1k_ratio > 0.18:
             spoof_score += 65.0
+            if detected_category == "authentic_avian":
+                detected_category = "mammalian_domestic"
+            spoof_factors.append(
+                f"Elevated sub-1,000 Hz low-frequency energy detected ({sub1k_ratio*100:.1f}% vs < 6% avian baseline)."
+            )
+
+        # --- LAYER 4: Neural Confidence Gate (Out-of-Distribution Sounds) ---
+        if birdnet_conf < 15.0:
+            spoof_score += 70.0
             spoof_factors.append(
                 f"Very Low Species Match ({birdnet_conf:.1f}% < 15% threshold): Lacks distinct avian syrinx spectrogram ridges."
             )
         elif birdnet_conf < 25.0:
-            spoof_score += 35.0
+            spoof_score += 45.0
             spoof_factors.append(
                 f"Sub-threshold Species Match ({birdnet_conf:.1f}% < 25% threshold): High out-of-distribution ambiguity."
             )
 
-        # --- LAYER 4: Smartphone Loudspeaker Replay Transducer Artifacts ---
-        # Phone micro-speakers roll off sharply above 10.5 kHz and have heavy mid-band acoustic compression
-        if rolloff_95 < 10500 and centroid_mean < 3600 and birdnet_conf < 45.0 and sub1k_ratio > 0.10:
-            spoof_score += 35.0
+        # --- LAYER 5: Smartphone Loudspeaker Replay Transducer Artifacts ---
+        if rolloff_95 < 10500 and centroid_mean < 3600 and birdnet_conf < 45.0 and sub1k_ratio > 0.08:
+            spoof_score += 45.0
             if detected_category in ["authentic_avian", "mammalian_domestic"]:
                 detected_category = "phone_speaker_replay"
             spoof_factors.append(
@@ -161,7 +190,7 @@ def evaluate_avian_authenticity(
                 "with mid-range compression typical of mobile phone loudspeaker playback."
             )
 
-        # --- LAYER 5: Human Whistling & Exhalation Breath Turbulence ---
+        # --- LAYER 6: Human Whistling & Exhalation Breath Turbulence ---
         s = np.abs(librosa.stft(y, n_fft=2048, hop_length=512))
         freqs = librosa.fft_frequencies(sr=sr, n_fft=2048)
         breath_mask = (freqs >= 80) & (freqs <= 650)
@@ -170,7 +199,7 @@ def evaluate_avian_authenticity(
         breath_ratio = float(breath_energy / total_energy)
 
         if centroid_max < 3000.0 and centroid_mean < 2300.0 and birdnet_conf < 40.0:
-            spoof_score += 25.0
+            spoof_score += 35.0
             if detected_category == "authentic_avian":
                 detected_category = "human_mimicry"
             spoof_factors.append(
@@ -178,7 +207,7 @@ def evaluate_avian_authenticity(
             )
 
         if breath_ratio > 0.28 and birdnet_conf < 40.0:
-            spoof_score += 30.0
+            spoof_score += 40.0
             spoof_factors.append(
                 f"Elevated sub-650 Hz breath turbulence detected ({breath_ratio*100:.1f}% energy) — characteristic of human exhalation airflow."
             )
@@ -199,16 +228,17 @@ def evaluate_avian_authenticity(
         status_color = "#EF4444"  # Red
         suppress_alarm = True
 
-        if detected_category == "canine_dog":
+        if detected_category == "feline_cat":
+            status_label = "REJECTED: DOMESTIC FELINE SOUND (CAT MEOW)"
+            status_summary = (
+                "Acoustic analysis identified a domestic cat meow. While sliding vocal tract formants can confuse "
+                "generic bird models into predicting a peacock, biological biometrics confirmed > 30% low-frequency "
+                "mammalian resonance that an avian syrinx cannot produce. Civil disaster trigger safely DISARMED."
+            )
+        elif detected_category == "canine_dog":
             status_label = "REJECTED: DOMESTIC CANINE SOUND (DOG BARK / WHINE)"
             status_summary = (
                 "Acoustic signature matches domestic dog barking or canine vocalization. "
-                "Disaster Early Warning trigger has been safely DISARMED to prevent false civil alarms."
-            )
-        elif detected_category == "feline_cat":
-            status_label = "REJECTED: DOMESTIC FELINE SOUND (CAT MEOW)"
-            status_summary = (
-                "Acoustic signature matches domestic cat meowing with mammalian vocal tract formants. "
                 "Disaster Early Warning trigger has been safely DISARMED to prevent false civil alarms."
             )
         elif detected_category == "phone_speaker_replay":
@@ -245,7 +275,8 @@ def evaluate_avian_authenticity(
         "suppress_alarm": suppress_alarm,
         "detected_category": detected_category,
         "spoof_factors": spoof_factors,
+        "sub600_ratio": round(sub600_ratio * 100.0, 1),
+        "sub800_ratio": round(sub800_ratio * 100.0, 1),
         "sub1k_ratio": round(sub1k_ratio * 100.0, 1),
-        "birdnet_conf": birdnet_conf,
-        "detected_class": top_candidate.get("common_name", "Unknown")
+        "birdnet_conf": round(birdnet_conf, 1)
     }

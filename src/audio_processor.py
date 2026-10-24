@@ -90,13 +90,14 @@ def extract_acoustic_features(y: np.ndarray, sr: int = TARGET_SR) -> Dict[str, A
     zcr = librosa.feature.zero_crossing_rate(y=y, hop_length=hop_length)[0]
     active_zcr = zcr[active_mask]
 
-    # 7. Low-Frequency Energy Ratios for Mammalian Larynx vs Avian Syrinx Discrimination
-    mel_freqs = librosa.mel_frequencies(n_mels=128, fmin=200, fmax=10000)
-    mask_sub1k = mel_freqs < 1000
-    mask_sub350 = mel_freqs < 350
-    total_mel_energy = np.sum(s_mel) + 1e-9
-    sub1k_ratio = float(np.sum(s_mel[mask_sub1k, :]) / total_mel_energy)
-    sub350_ratio = float(np.sum(s_mel[mask_sub350, :]) / total_mel_energy)
+    # 7. Linear FFT Low-Frequency Energy Ratios for Mammalian Larynx vs Avian Syrinx Discrimination
+    s_linear = np.abs(librosa.stft(y, n_fft=n_fft, hop_length=hop_length))
+    fft_freqs = librosa.fft_frequencies(sr=sr, n_fft=n_fft)
+    total_linear_energy = np.sum(s_linear) + 1e-9
+    sub600_ratio = float(np.sum(s_linear[fft_freqs < 600, :]) / total_linear_energy)
+    sub800_ratio = float(np.sum(s_linear[fft_freqs < 800, :]) / total_linear_energy)
+    sub1k_ratio = float(np.sum(s_linear[fft_freqs < 1000, :]) / total_linear_energy)
+    sub350_ratio = float(np.sum(s_linear[fft_freqs < 350, :]) / total_linear_energy)
 
     # 8. Onset Detection (Call Bursts / Chirp Events)
     onset_frames = librosa.onset.onset_detect(
@@ -142,6 +143,8 @@ def extract_acoustic_features(y: np.ndarray, sr: int = TARGET_SR) -> Dict[str, A
             "mean": float(np.mean(active_zcr)),
             "trajectory": zcr
         },
+        "sub600_ratio": sub600_ratio,
+        "sub800_ratio": sub800_ratio,
         "sub1k_ratio": sub1k_ratio,
         "sub350_ratio": sub350_ratio,
         "call_rate": float(call_rate),

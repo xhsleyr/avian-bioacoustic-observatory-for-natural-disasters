@@ -1742,7 +1742,9 @@ else:
                 "critical_disaster_panic.wav": "OBS-03 // Northern Cardinal (Cardinalis cardinalis) — Critical Pre-Disaster Panic",
                 "authentic_warbler_storm_alarm.wav": "OBS-04 // Golden-winged Warbler — 2014 Tornado Outbreak Infrasound",
                 "authentic_peafowl_earthquake_alarm.wav": "OBS-05 // Indian Peafowl — Documented Seismic P-Wave Honk",
-                "human_whistling_mimic.wav": "OBS-06 // Homo sapiens Oral Cavity — Anti-Spoofing Whistling Test"
+                "human_whistling_mimic.wav": "OBS-06 // Homo sapiens Oral Cavity — Anti-Spoofing Whistling Test",
+                "domestic_cat_meow_spoof.wav": "OBS-07 // Domestic Cat (Felis catus) — Feline Meow (Peafowl Rejection Test)",
+                "dog_bark_phone_speaker_replay.wav": "OBS-08 // Domestic Dog Bark via Phone Speaker — Loudspeaker Replay Test"
             }.get(x, x)
         )
     
