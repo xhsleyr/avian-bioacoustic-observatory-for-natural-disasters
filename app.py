@@ -1,8 +1,8 @@
 """Avian Early Warning System (AEWS) - Web Application.
 
 A bioacoustic intelligence platform that verifies avian biometrics, detects human mimicry,
-identifies species using Cornell BirdNET, and predicts natural disaster indicators from
-uploaded files, live microphone streams, or calibrated benchmark samples.
+identifies species using Cornell BirdNET, displays dynamic species photography, and predicts
+natural disaster indicators from uploaded audio, live microphone streams, or benchmark samples.
 """
 
 import os
@@ -16,6 +16,7 @@ from src.audio_processor import load_audio, extract_acoustic_features
 from src.distress_engine import compute_distress_index
 from src.species_classifier import identify_species
 from src.spoof_detector import evaluate_avian_authenticity
+from src.image_fetcher import fetch_bird_visuals
 
 # Page configuration
 st.set_page_config(
@@ -39,12 +40,12 @@ st.markdown("""
         color: #64748B;
         margin-bottom: 1.5rem;
     }
-    .species-card {
+    .species-container {
         background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
         border-radius: 12px;
-        padding: 22px 26px;
+        padding: 20px 24px;
         color: white;
-        margin-bottom: 22px;
+        margin-bottom: 20px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
         border: 1px solid #334155;
     }
@@ -58,7 +59,7 @@ st.markdown("""
         font-style: italic;
         color: #94A3B8;
         font-size: 1.08rem;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -201,12 +202,12 @@ with st.sidebar:
 
     st.divider()
     st.markdown("### 🌐 Global Classifier")
-    st.info("🤖 **Cornell BirdNET v2.4**\n\nSupports **6,522 global bird species** via ONNX inference.")
+    st.info("🤖 **Cornell BirdNET v2.4**\n\nSupports **6,522 global bird species** via ONNX inference with Wikipedia taxonomy visuals.")
 
 
 # --- MAIN INTERFACE ---
 st.markdown('<div class="main-title">🦅 Avian Vocal Bioacoustics & Natural Disaster Early Warning</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Capture real-time environmental bird sound or upload audio to verify avian biometrics, identify species (BirdNET 6.5K), and predict natural disaster indicators.</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Capture real-time environmental bird sound or upload audio to verify avian biometrics, identify species with high-res photography, and predict natural disaster indicators.</div>', unsafe_allow_html=True)
 
 # Select Input Mode
 input_mode = st.radio(
@@ -299,25 +300,56 @@ if audio_data is not None:
     </div>
     """, unsafe_allow_html=True)
 
-    # 2. Species Identification Card
-    st.markdown(f"""
-    <div class="species-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span style="background-color: #3B82F6; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 600;">
-                CORNELL BirdNET &bull; {prim_sp['confidence']}% MATCH
+    # 2. Visual Species Identification Card (with Dynamic Photography)
+    if spoof_info["is_authentic"]:
+        visuals = fetch_bird_visuals(prim_sp['common_name'], prim_sp['scientific_name'])
+        
+        with st.container():
+            st.markdown('<div class="species-container">', unsafe_allow_html=True)
+            col_photo, col_details = st.columns([1, 2.2])
+            
+            with col_photo:
+                st.image(
+                    visuals["image_url"],
+                    caption=f"{prim_sp['common_name']} ({visuals['source']})",
+                    use_container_width=True
+                )
+            
+            with col_details:
+                st.markdown(f"""
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <span style="background-color: #3B82F6; color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.82rem; font-weight: 600;">
+                        CORNELL BirdNET &bull; {prim_sp['confidence']}% MATCH
+                    </span>
+                    <span style="color: #94A3B8; font-size: 0.85rem;">6,522 Species Global Database</span>
+                </div>
+                <div class="species-title">🐦 {prim_sp['common_name']}</div>
+                <div class="scientific-name">{prim_sp['scientific_name']}</div>
+                <p style="font-size: 0.92rem; color: #E2E8F0; margin-bottom: 8px;">
+                    {visuals['description']}
+                </p>
+                <p style="margin: 4px 0; font-size: 0.9rem; color: #CBD5E1;">
+                    <strong>Acoustic State:</strong> {prim_sp['pitch_status']} ({prim_sp['detected_pitch']:.0f} Hz)
+                </p>
+                <p style="margin: 6px 0 0 0; font-size: 0.88rem; color: #94A3B8; border-top: 1px solid #334155; padding-top: 8px;">
+                    <strong>Disaster Sensitivity:</strong> {prim_sp['disaster_sensitivity']}
+                </p>
+                """, unsafe_allow_html=True)
+            
+            st.markdown('</div>', unsafe_allow_html=True)
+    else:
+        # Human mimicry / unverified state
+        st.markdown(f"""
+        <div class="species-container">
+            <span style="background-color: #EF4444; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.82rem; font-weight: 600;">
+                NON-AVIAN ACOUSTIC PROFILE
             </span>
-            <span style="color: #94A3B8; font-size: 0.88rem;">Trained on 6,522 Global Species</span>
+            <div class="species-title" style="margin-top: 8px;">👤 {prim_sp['common_name']}</div>
+            <p style="font-size: 0.95rem; color: #E2E8F0; margin-top: 6px;">
+                Sound spectrum matches human oral whistling frequency bounds or non-biological noise rather than an authentic avian syrinx.
+            </p>
         </div>
-        <div class="species-title">🐦 {prim_sp['common_name']}</div>
-        <div class="scientific-name">{prim_sp['scientific_name']}</div>
-        <p style="margin: 6px 0 6px 0; font-size: 0.95rem; color: #E2E8F0;">
-            <strong>Acoustic State:</strong> {prim_sp['pitch_status']} ({prim_sp['detected_pitch']:.0f} Hz)
-        </p>
-        <p style="margin: 6px 0 0 0; font-size: 0.9rem; color: #CBD5E1; border-top: 1px solid #334155; padding-top: 10px;">
-            <strong>Disaster Sensitivity:</strong> {prim_sp['disaster_sensitivity']}
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
     # 3. Early Warning Status Card (Suppressed if spoofed)
     if spoof_info["suppress_alarm"]:

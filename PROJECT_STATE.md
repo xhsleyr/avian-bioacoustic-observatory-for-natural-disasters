@@ -8,7 +8,7 @@
 ---
 
 ## 1. Project Goal & Scientific Foundation
-Develop an acoustic early-warning system that captures live microphone environmental sounds or audio files, identifies bird species across **6,522 global species**, verifies biological authenticity via an **Anti-Spoofing & Biometric Shield**, and analyzes authentic vocalizations to detect abnormal collective distress, acoustic panic, or sudden flock dispersion indicators preceding natural disasters (e.g., seismic P-waves, severe storms, cyclones).
+Develop an acoustic early-warning system that captures live microphone environmental sounds or audio files, identifies bird species across **6,522 global species**, dynamically retrieves high-resolution species photographs, verifies biological authenticity via an **Anti-Spoofing & Biometric Shield**, and analyzes authentic vocalizations to detect abnormal collective distress, acoustic panic, or sudden flock dispersion indicators preceding natural disasters (e.g., seismic P-waves, severe storms, cyclones).
 
 ### Multi-Factor Pipeline:
 1. **🎙️ Multi-Channel Input:**
@@ -20,12 +20,14 @@ Develop an acoustic early-warning system that captures live microphone environme
    - Checks for sub-600 Hz human exhalation breath turbulence.
    - Evaluates human oral whistling frequency ceiling (< 3,000 Hz).
    - Suppresses Disaster Warnings on unverified/spoofed audio to prevent civil false alarms.
-3. **🤖 Cornell BirdNET Global Classifier:**
+33. **🤖 Cornell BirdNET Global Classifier & Visuals:**
    - Identifies species across 6,522 global species using 3-second overlapping sliding windows (50% overlap @ 48 kHz).
+4   - Dynamically fetches high-resolution bird photography and biological excerpts via Wikipedia REST API.
+   - Local JSON caching for offline presentation resilience.
 4. **🚨 Acoustic Distress Index (ADI 0 - 100):**
    - Evaluates Pitch Elevation, Vocal Burst Density, Noise Harshness, and Energy Volatility.
    - Classifies threat into Normal 🟢, Elevated Alert 🟡, and Critical Early Warning 🔴.
-5. **🌪️ Documented Real-World Disaster Sentinel Sounds:**
+55. **🌪️ Documented Real-World Disaster Sentinel Sounds:**
    - **Golden-winged Warbler:** Fled 48h before an outbreak of 84 tornadoes (*Current Biology, 2014*).
    - **Indian Peafowl:** Real pre-monsoon & pre-seismic compressional P-wave honking alarms.
 
@@ -38,7 +40,7 @@ Birds Interaction and Communication/
 ├── PROJECT_STATE.md        # Persistent project memory and progress tracker
 ├── README.md               # User guide & project presentation documentation
 ├── requirements.txt        # Python dependencies
-├── app.py                  # Streamlit Web Application with Live Mic, Anti-Spoofing & Species Card
+├── app.py                  # Streamlit Web Application with Live Mic, Photos, Anti-Spoofing & Species Card
 ├── models/
 │   ├── birdnet_model.onnx                      # Cornell BirdNET Global ONNX weights (49.3 MB)
 │   └── BirdNET_GLOBAL_6K_V2.4_Labels.txt       # 6,522 Species labels (Common & Scientific names)
@@ -47,8 +49,10 @@ Birds Interaction and Communication/
 │   ├── audio_processor.py      # Audio loading, VAD masking, Mel-spectrogram & feature extraction
 │   ├── distress_engine.py      # Acoustic Distress Index (ADI) calculation & warning logic
 │   ├── species_classifier.py   # Cornell BirdNET 6,522 Species Engine & Disaster sensitivity heuristics
-│   └── spoof_detector.py       # Bioacoustic Anti-Spoofing Shield & false-alarm suppression
+│   ├── spoof_detector.py       # Bioacoustic Anti-Spoofing Shield & false-alarm suppression
+│   └── image_fetcher.py        # Dynamic bird photo and taxonomy summary fetcher with offline caching
 └── data/
+    ├── cache/              # Local species image and taxonomy cache
     └── samples/            # Benchmark audio samples (Normal, Elevated, Critical, Warbler, Peafowl, Human Mimic)
 ```
 
@@ -78,17 +82,12 @@ Birds Interaction and Communication/
   - Low-frequency breath turbulence ratio (0 - 600 Hz) detector.
   - Automatic false-alarm suppression mechanism for civil early-warning safety.
 - [x] **Milestone 5: Real-World Disaster Benchmark Recordings**
-  - Downloaded authentic field recordings of **Golden-winged Warbler** (99.6% BirdNET match) and **Indian Peafowl** (86.2% BirdNET match).
-- [x] **Milestone 6: Live Microphone Stream & Streamlit UI (`app.py`)**
+[x]**Milestone6: Live Microphone Stream & Streamlit UI (`app.py`)**
   - Integrated `st.audio_input` for real-time live environmental audio recording from Mac internal/external mics.
-  - Anti-Spoofing Biometric Verification Shield banner.
-  - Bird Species Identification card displaying Common Name, Scientific Name, Match Confidence %, and Disaster Sensitivity.
-  - Interactive Plotly Gauge indicator.
-  - Interactive Heatmap Mel-Spectrogram and Waveform with Onset burst markers.
-  - Top 5 Candidate Species breakdown with probability bars.
-  - Dedicated Anti-Spoofing Biometrics diagnostic tab.
-  - Diagnostic factor analysis table.
-
+- [x] **Milestone 7: Dynamic Species Photography (`src/image_fetcher.py`)**
+  - Connected Wikipedia / Wikimedia taxonomy REST API.
+  - Local caching in `data/cache/` for instant offline presentation loading.
+  - Sleek dual-column visual species card with high-resolution plumage photography
 ---
 
 ## 4. How to Resume in a New Session
