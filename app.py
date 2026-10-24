@@ -1,12 +1,11 @@
 """Avian Early Warning System (AEWS) — Designed in the visual system of Project CETI.
 
-Recreating https://www.projectceti.org/ exactly:
+Typography: Times New Roman serif across all headings, body text, metrics, and charts.
 - Fluid motion-blurred iridescent gradient aura (Cyan #befff7 -> Electric Blue #4749fe -> Deep Purple #4d1bc7)
-- Savate display typography for expressive, organic biological headlines & titles
-- Clean Sohne / Plus Jakarta Sans for body and metadata
+- Times New Roman typography for classic editorial elegance
 - Sharp 0px architectural containers and 100px pill buttons
 - Global Cornell BirdNET 6,522 Species Intelligence, Biometric Anti-Spoofing, and Early Warning
-- Standard Figma-style vector SVG icons (Lucide / Icons8 minimal outline style) replacing emojis
+- Standard Figma-style vector SVG icons (Lucide / Icons8 minimal outline style)
 """
 
 import os
@@ -39,11 +38,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Project CETI Exact Design System CSS + Savate Typography
+# Project CETI Design System + Times New Roman Typography CSS
 st.markdown("""
 <style>
-    /* Google Fonts: Savate Display Font + Playfair Display & Plus Jakarta Sans */
-    @import url('https://fonts.googleapis.com/css2?family=Savate&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
 
     :root {
         --ceti-primary: #4d1bc7;
@@ -60,7 +58,7 @@ st.markdown("""
         --ceti-cyan: #befff7;
     }
 
-    /* Ambient Motion-Blurred Atmospheric Gradient Background (Signature CETI Look) */
+    /* Ambient Motion-Blurred Atmospheric Gradient Background with Times New Roman */
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
         background-color: #ffffff !important;
         background-image: 
@@ -68,7 +66,7 @@ st.markdown("""
             radial-gradient(circle at 88% 22%, rgba(71, 73, 254, 0.20) 0%, transparent 48%),
             radial-gradient(circle at 50% 85%, rgba(77, 27, 199, 0.16) 0%, transparent 55%) !important;
         background-attachment: fixed !important;
-        font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
         color: var(--ceti-text-primary) !important;
     }
 
@@ -80,28 +78,30 @@ st.markdown("""
     [data-testid="stSidebar"] {
         background-color: #fafbfc !important;
         border-right: 1px solid var(--ceti-border-light) !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
     }
 
     [data-testid="stSidebar"] * {
         color: var(--ceti-text-primary) !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
     }
 
     [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] h4, [data-testid="stSidebar"] h5 {
-        font-family: 'Savate', 'Playfair Display', serif !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
         color: var(--ceti-text-dark) !important;
     }
 
-    /* Global Typography Rules — Savate Display Font */
-    h1, h2, h3, .ceti-display, .ceti-headline {
-        font-family: 'Savate', 'Playfair Display', Georgia, serif !important;
-        font-weight: 400 !important;
+    /* Global Typography Rules — Times New Roman */
+    h1, h2, h3, h4, h5, .ceti-display, .ceti-headline {
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        font-weight: 700 !important;
         line-height: 1.15 !important;
         color: var(--ceti-text-dark) !important;
         letter-spacing: -0.01em !important;
     }
 
     p, span, div, label, input, .stMarkdown {
-        font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+        font-family: 'Times New Roman', Times, Georgia, serif;
         color: var(--ceti-text-primary);
     }
 
@@ -116,10 +116,10 @@ st.markdown("""
     }
 
     .ceti-logo-mark {
-        font-family: 'Space Mono', monospace;
-        font-size: 13px;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 14px;
         font-weight: 700;
-        letter-spacing: 0.14em;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--ceti-text-dark);
         display: flex;
@@ -138,8 +138,8 @@ st.markdown("""
     .ceti-nav-links {
         display: flex;
         gap: 28px;
-        font-family: 'Space Mono', monospace;
-        font-size: 11px;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 13px;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--ceti-text-muted);
@@ -155,19 +155,20 @@ st.markdown("""
         color: var(--ceti-primary);
     }
 
-    /* Hero Section with Savate */
+    /* Hero Section with Times New Roman */
     .ceti-hero-title {
-        font-family: 'Savate', 'Playfair Display', Georgia, serif;
-        font-size: 3.9rem;
-        font-weight: 400;
+        font-family: 'Times New Roman', Times, Georgia, serif;
+        font-size: 3.8rem;
+        font-weight: 700;
         line-height: 1.1;
         color: var(--ceti-text-dark);
         margin-bottom: 16px;
-        letter-spacing: -0.015em;
+        letter-spacing: -0.02em;
     }
 
     .ceti-hero-subtitle {
-        font-size: 1.15rem;
+        font-family: 'Times New Roman', Times, Georgia, serif;
+        font-size: 1.2rem;
         line-height: 1.6;
         color: var(--ceti-text-primary);
         max-width: 860px;
@@ -203,15 +204,16 @@ st.markdown("""
     }
 
     .ceti-gradient-banner h2 {
-        font-family: 'Savate', 'Playfair Display', serif;
-        font-size: 2.4rem;
-        font-weight: 400;
+        font-family: 'Times New Roman', Times, Georgia, serif;
+        font-size: 2.3rem;
+        font-weight: 700;
         color: #ffffff !important;
         margin-bottom: 10px;
     }
 
     .ceti-gradient-banner p {
-        font-size: 1.05rem;
+        font-family: 'Times New Roman', Times, Georgia, serif;
+        font-size: 1.1rem;
         line-height: 1.6;
         color: rgba(255, 255, 255, 0.95) !important;
         max-width: 760px;
@@ -226,10 +228,10 @@ st.markdown("""
         padding: 5px 16px;
         border-radius: 100px;
         font-size: 12px;
-        font-weight: 500;
+        font-weight: 700;
         letter-spacing: 0.04em;
         text-transform: uppercase;
-        font-family: 'Space Mono', monospace;
+        font-family: 'Times New Roman', Times, serif;
     }
 
     .ceti-pill-verified {
@@ -246,9 +248,9 @@ st.markdown("""
 
     /* Radio button filters */
     div[data-testid="stRadio"] > label {
-        font-family: 'Space Mono', monospace !important;
-        font-size: 11px !important;
-        letter-spacing: 0.1em !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        font-size: 12px !important;
+        letter-spacing: 0.08em !important;
         text-transform: uppercase !important;
         color: var(--ceti-text-dark) !important;
         font-weight: 700 !important;
@@ -263,6 +265,7 @@ st.markdown("""
         padding: 8px 20px !important;
         cursor: pointer !important;
         transition: all 0.2s ease !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
     }
     div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
         border-color: var(--ceti-primary-accent) !important;
@@ -270,9 +273,9 @@ st.markdown("""
 
     /* Selectbox */
     div[data-testid="stSelectbox"] label {
-        font-family: 'Space Mono', monospace !important;
-        font-size: 11px !important;
-        letter-spacing: 0.08em !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        font-size: 13px !important;
+        letter-spacing: 0.06em !important;
         text-transform: uppercase !important;
         color: var(--ceti-text-dark) !important;
     }
@@ -281,15 +284,16 @@ st.markdown("""
         border: 1px solid var(--ceti-border-light) !important;
         background-color: #ffffff !important;
         color: #000000 !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
     }
 
     /* Buttons */
     .stButton > button {
         background-color: var(--ceti-primary-accent) !important;
         color: #ffffff !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        font-size: 12px !important;
-        font-weight: 500 !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
         letter-spacing: 0.08em !important;
         text-transform: uppercase !important;
         padding: 10px 32px !important;
@@ -312,8 +316,8 @@ st.markdown("""
     }
 
     .stTabs [data-baseweb="tab"] {
-        font-family: 'Space Mono', monospace !important;
-        font-size: 11px !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        font-size: 12px !important;
         letter-spacing: 0.08em !important;
         text-transform: uppercase !important;
         color: var(--ceti-text-muted) !important;
@@ -328,48 +332,50 @@ st.markdown("""
         font-weight: 700 !important;
     }
 
-    /* Metric Cards with Savate */
+    /* Metric Cards with Times New Roman */
     [data-testid="stMetricValue"] {
-        font-family: 'Savate', 'Playfair Display', serif !important;
-        font-size: 2.1rem !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        font-size: 2.3rem !important;
+        font-weight: 700 !important;
         color: var(--ceti-text-dark) !important;
     }
 
     [data-testid="stMetricLabel"] {
-        font-family: 'Space Mono', monospace !important;
-        font-size: 11px !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        font-size: 12px !important;
         letter-spacing: 0.06em !important;
         text-transform: uppercase !important;
         color: var(--ceti-text-muted) !important;
     }
 
-    /* Species Card Visual Styling with Savate */
+    /* Species Card Visual Styling with Times New Roman */
     .ceti-species-heading {
-        font-family: 'Savate', 'Playfair Display', serif;
-        font-size: 2.5rem;
-        font-weight: 400;
+        font-family: 'Times New Roman', Times, Georgia, serif;
+        font-size: 2.6rem;
+        font-weight: 700;
         color: var(--ceti-text-dark);
         line-height: 1.1;
         margin: 6px 0 2px 0;
     }
 
     .ceti-species-sci {
-        font-size: 1rem;
+        font-family: 'Times New Roman', Times, Georgia, serif;
+        font-size: 1.1rem;
         font-style: italic;
         color: var(--ceti-text-muted);
         margin-bottom: 14px;
     }
 
-    /* Diagnostic Table Clean CETI Style */
+    /* Diagnostic Table Clean Style */
     table {
         border-collapse: collapse !important;
         width: 100% !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        font-size: 13px !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        font-size: 14px !important;
     }
     thead tr th {
-        font-family: 'Space Mono', monospace !important;
-        font-size: 11px !important;
+        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        font-size: 13px !important;
         text-transform: uppercase !important;
         letter-spacing: 0.06em !important;
         color: var(--ceti-text-muted) !important;
@@ -387,13 +393,13 @@ st.markdown("""
 
 
 def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
-    """Create a minimalist Plotly gauge indicator styled with Project CETI palette and Savate font."""
+    """Create a minimalist Plotly gauge indicator styled with Times New Roman."""
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=adi_score,
         domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': "ACOUSTIC DISTRESS INDEX (ADI)", 'font': {'size': 11, 'color': "#a2a7b7", 'family': "Space Mono"}},
-        number={'suffix': "%", 'font': {'size': 46, 'color': "#000000", 'family': "Savate, Playfair Display"}},
+        title={'text': "ACOUSTIC DISTRESS INDEX (ADI)", 'font': {'size': 12, 'color': "#a2a7b7", 'family': "Times New Roman, Times, serif"}},
+        number={'suffix': "%", 'font': {'size': 48, 'color': "#000000", 'family': "Times New Roman, Times, serif"}},
         gauge={
             'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "#e6e8ee"},
             'bar': {'color': "#4749fe", 'thickness': 0.28},
@@ -416,13 +422,13 @@ def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
         height=260,
         margin=dict(l=20, r=20, t=40, b=10),
         paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(family="Plus Jakarta Sans")
+        font=dict(family="Times New Roman, Times, serif")
     )
     return fig
 
 
 def plot_mel_spectrogram(features: dict) -> go.Figure:
-    """Create a Mel-Spectrogram heatmap in Project CETI's signature oceanic purple palette."""
+    """Create a Mel-Spectrogram heatmap with Times New Roman typography."""
     mel_db = features["mel_db"]
     times = features["times"]
     freq_bins = np.linspace(200, 10000, mel_db.shape[0])
@@ -439,12 +445,12 @@ def plot_mel_spectrogram(features: dict) -> go.Figure:
         x=times,
         y=freq_bins,
         colorscale=colorscale_ceti,
-        colorbar=dict(title=dict(text="dB", font=dict(family="Space Mono", size=11)), len=0.8)
+        colorbar=dict(title=dict(text="dB", font=dict(family="Times New Roman, Times, serif", size=12)), len=0.8)
     ))
     fig.update_layout(
-        title=dict(text="Mel-Frequency Bioacoustic Spectrogram", font=dict(family="Savate, Playfair Display", size=20, color="#000000")),
-        xaxis=dict(title=dict(text="Time (seconds)", font=dict(family="Plus Jakarta Sans", size=12)), showgrid=False),
-        yaxis=dict(title=dict(text="Frequency (Hz)", font=dict(family="Plus Jakarta Sans", size=12)), showgrid=True, gridcolor="#f4f5f8"),
+        title=dict(text="Mel-Frequency Bioacoustic Spectrogram", font=dict(family="Times New Roman, Times, serif", size=20, color="#000000")),
+        xaxis=dict(title=dict(text="Time (seconds)", font=dict(family="Times New Roman, Times, serif", size=13)), showgrid=False),
+        yaxis=dict(title=dict(text="Frequency (Hz)", font=dict(family="Times New Roman, Times, serif", size=13)), showgrid=True, gridcolor="#f4f5f8"),
         height=320,
         margin=dict(l=20, r=20, t=40, b=20),
         paper_bgcolor='rgba(0,0,0,0)',
@@ -454,7 +460,7 @@ def plot_mel_spectrogram(features: dict) -> go.Figure:
 
 
 def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Figure:
-    """Plot synchronized waveform and pitch trajectory in Project CETI minimalist style."""
+    """Plot synchronized waveform and pitch trajectory with Times New Roman styling."""
     time_wave = np.linspace(0, len(y) / sr, len(y))
     times_feats = features["times"]
     centroid = features["spectral_centroid"]["trajectory"]
@@ -496,7 +502,7 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         showlegend=True,
-        font=dict(family="Plus Jakarta Sans")
+        font=dict(family="Times New Roman, Times, serif")
     )
     fig.update_xaxes(title_text="Time (seconds)", row=2, col=1, gridcolor="#f4f5f8")
     fig.update_yaxes(title_text="Amplitude", row=1, col=1, gridcolor="#f4f5f8")
@@ -505,16 +511,16 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
     return fig
 
 
-# --- SIDEBAR (Project CETI Minimalist Architecture) ---
+# --- SIDEBAR ---
 with st.sidebar:
     st.markdown("""
-    <div style="font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #4749fe; margin-bottom: 8px;">
+    <div style="font-family: 'Times New Roman', Times, serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #4749fe; margin-bottom: 8px;">
         RESEARCH INITIATIVE
     </div>
-    <div style="font-family: 'Savate', 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 400; color: #000000; line-height: 1.1; margin-bottom: 8px;">
+    <div style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 2.1rem; font-weight: 700; color: #000000; line-height: 1.1; margin-bottom: 8px;">
         Project AEWS
     </div>
-    <div style="font-size: 0.88rem; color: #4e5a7c; margin-bottom: 24px; line-height: 1.5;">
+    <div style="font-family: 'Times New Roman', Times, serif; font-size: 0.95rem; color: #4e5a7c; margin-bottom: 24px; line-height: 1.5;">
         Avian Bioacoustic Translation & Planetary Early Warning Intelligence.
     </div>
     """, unsafe_allow_html=True)
@@ -551,7 +557,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- HERO SECTION WITH SAVATE HEADLINE ---
+# --- HERO SECTION ---
 st.markdown("""
 <div class="ceti-hero-title">
     Understand What Birds are Saying
@@ -561,7 +567,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Select Input Mode (Styled with Project CETI Pill Philosophy)
+# Select Input Mode
 input_mode = st.radio(
     "SELECT BIOACOUSTIC CHANNEL:",
     options=[
@@ -624,10 +630,10 @@ else:
 
 if audio_data is not None:
     st.markdown(f"""
-    <div style="font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #4749fe; margin-top: 24px; margin-bottom: 2px;">
+    <div style="font-family: 'Times New Roman', Times, serif; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #4749fe; margin-top: 24px; margin-bottom: 2px;">
         ACOUSTIC FEED ACQUIRED
     </div>
-    <div style="font-family: 'Savate', 'Playfair Display', serif; font-size: 1.8rem; color: #000000; margin-bottom: 12px;">
+    <div style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.8rem; font-weight: 700; color: #000000; margin-bottom: 12px;">
         {audio_label}
     </div>
     """, unsafe_allow_html=True)
@@ -650,11 +656,11 @@ if audio_data is not None:
                 <span class="ceti-pill-badge ceti-pill-verified">
                     {ICON_SHIELD} {spoof_info['status_label']}
                 </span>
-                <span style="font-family: 'Space Mono', monospace; font-size: 11px; color: #a2a7b7;">
+                <span style="font-family: 'Times New Roman', Times, serif; font-size: 12px; color: #a2a7b7;">
                     BIRDNET CONFIDENCE: {spoof_info['birdnet_conf']}% &bull; SYRINX CONFIRMED
                 </span>
             </div>
-            <p style="margin: 8px 0 0 0; font-size: 0.92rem; color: #4e5a7c;">
+            <p style="margin: 8px 0 0 0; font-size: 1rem; color: #4e5a7c;">
                 {spoof_info['status_summary']}
             </p>
         </div>
@@ -666,17 +672,17 @@ if audio_data is not None:
                 <span class="ceti-pill-badge ceti-pill-warning">
                     {ICON_ALERT} {spoof_info['status_label']}
                 </span>
-                <span style="font-family: 'Space Mono', monospace; font-size: 11px; color: #e63946;">
+                <span style="font-family: 'Times New Roman', Times, serif; font-size: 12px; color: #e63946;">
                     ADVERSARIAL SPOOFING DETECTED
                 </span>
             </div>
-            <p style="margin: 8px 0 0 0; font-size: 0.92rem; color: #4e5a7c;">
+            <p style="margin: 8px 0 0 0; font-size: 1rem; color: #4e5a7c;">
                 {spoof_info['status_summary']}
             </p>
         </div>
         """, unsafe_allow_html=True)
 
-    # 2. Visual Species Identification Card (Dual Column with Dynamic High-Res Photo)
+    # 2. Visual Species Identification Card
     if spoof_info["is_authentic"]:
         visuals = fetch_bird_visuals(prim_sp['common_name'], prim_sp['scientific_name'])
         
@@ -693,17 +699,17 @@ if audio_data is not None:
         with col_details:
             st.markdown(f"""
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                <span style="background-color: #4749fe; color: #ffffff; font-family: 'Space Mono', monospace; font-size: 10px; padding: 3px 12px; letter-spacing: 0.08em; text-transform: uppercase;">
+                <span style="background-color: #4749fe; color: #ffffff; font-family: 'Times New Roman', Times, serif; font-size: 11px; padding: 3px 12px; letter-spacing: 0.08em; text-transform: uppercase;">
                     CORNELL BIRDNET &bull; {prim_sp['confidence']}% MATCH
                 </span>
-                <span style="font-family: 'Space Mono', monospace; font-size: 11px; color: #a2a7b7;">GLOBAL DATABASE: 6,522 SPECIES</span>
+                <span style="font-family: 'Times New Roman', Times, serif; font-size: 12px; color: #a2a7b7;">GLOBAL DATABASE: 6,522 SPECIES</span>
             </div>
             <div class="ceti-species-heading">{prim_sp['common_name']}</div>
             <div class="ceti-species-sci">{prim_sp['scientific_name']}</div>
-            <p style="font-size: 0.95rem; color: #4e5a7c; line-height: 1.6; margin-bottom: 14px;">
+            <p style="font-size: 1rem; color: #4e5a7c; line-height: 1.6; margin-bottom: 14px;">
                 {visuals['description']}
             </p>
-            <div style="border-top: 1px solid #e6e8ee; padding-top: 12px; margin-top: 12px; font-size: 0.9rem;">
+            <div style="border-top: 1px solid #e6e8ee; padding-top: 12px; margin-top: 12px; font-size: 0.95rem;">
                 <p style="margin: 0 0 6px 0; color: #4e5a7c;">
                     <strong>Acoustic State:</strong> {prim_sp['pitch_status']} &bull; Pitch Centroid: <strong>{prim_sp['detected_pitch']:.0f} Hz</strong>
                 </p>
@@ -717,24 +723,24 @@ if audio_data is not None:
     else:
         st.markdown(f"""
         <div class="ceti-content-card" style="border-left: 3px solid #e63946;">
-            <span style="background-color: #000000; color: #ffffff; font-family: 'Space Mono', monospace; font-size: 10px; padding: 3px 12px; letter-spacing: 0.08em; text-transform: uppercase;">
+            <span style="background-color: #000000; color: #ffffff; font-family: 'Times New Roman', Times, serif; font-size: 11px; padding: 3px 12px; letter-spacing: 0.08em; text-transform: uppercase;">
                 NON-AVIAN ACOUSTIC PROFILE
             </span>
             <div class="ceti-species-heading" style="margin-top: 8px;">{prim_sp['common_name']}</div>
-            <p style="font-size: 0.95rem; color: #4e5a7c; margin-top: 8px; line-height: 1.6;">
+            <p style="font-size: 1rem; color: #4e5a7c; margin-top: 8px; line-height: 1.6;">
                 The sound profile exhibits human oral cavity formant constraints and breath turbulence rather than authentic avian syrinx modulation.
             </p>
         </div>
         """, unsafe_allow_html=True)
 
-    # 3. Early Warning Threat Assessment Banner (Signature CETI Gradient)
+    # 3. Early Warning Threat Assessment Banner
     if spoof_info["suppress_alarm"]:
         st.markdown(f"""
         <div class="ceti-content-card" style="border-left: 3px solid #e63946;">
-            <h3 style="font-family: 'Savate', 'Playfair Display', serif; font-size: 1.6rem; color: #e63946; margin: 0 0 6px 0;">
+            <h3 style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.7rem; color: #e63946; margin: 0 0 6px 0;">
                 {ICON_ALERT} Disaster Early Warning Trigger Suppressed
             </h3>
-            <p style="color: #4e5a7c; font-size: 0.95rem; margin: 0;">
+            <p style="color: #4e5a7c; font-size: 1rem; margin: 0;">
                 Because non-avian or human acoustic mimicry was identified, automated early-warning triggers have been locked to prevent civil false alarms.
             </p>
         </div>
@@ -758,7 +764,7 @@ if audio_data is not None:
 
     with col_stats:
         st.markdown('<div class="ceti-content-card" style="padding: 26px 30px;">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'Savate', 'Playfair Display', serif; font-size: 1.6rem; color: #000000; margin-bottom: 18px;">Bioacoustic Signal Descriptors</h4>""", unsafe_allow_html=True)
+        st.markdown("""<h4 style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.6rem; color: #000000; margin-bottom: 18px;">Bioacoustic Signal Descriptors</h4>""", unsafe_allow_html=True)
         c1, c2 = st.columns(2)
         with c1:
             st.metric("Pitch Center (Centroid)", f"{features['spectral_centroid']['mean']:.0f} Hz", delta=f"{results['sub_scores']['pitch']}% stress")
@@ -768,7 +774,7 @@ if audio_data is not None:
             st.metric("Breath Turbulence Ratio", f"{spoof_info['breath_ratio']}%", delta="Human Breath" if spoof_info['breath_ratio'] > 20 else "Avian Syrinx")
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # 5. Scientific Visualizers & Tables (Clean Figma-Style Tab Headers)
+    # 5. Scientific Visualizers & Tables
     tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_table = st.tabs([
         "SPECTROGRAM HEATMAP",
         "WAVEFORM & ONSETS",
@@ -789,7 +795,7 @@ if audio_data is not None:
 
     with tab_species:
         st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'Savate', 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 16px;">Top Species Candidates (from 6,522 Global Species)</h4>""", unsafe_allow_html=True)
+        st.markdown("""<h4 style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.6rem; margin-bottom: 16px;">Top Species Candidates (from 6,522 Global Species)</h4>""", unsafe_allow_html=True)
         for cand in species_info["top_candidates"]:
             col_info, col_bar = st.columns([2.5, 1])
             with col_info:
@@ -803,7 +809,7 @@ if audio_data is not None:
 
     with tab_anti_spoof:
         st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'Savate', 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 16px;">Biometric Verification & Anti-Spoofing Assessment</h4>""", unsafe_allow_html=True)
+        st.markdown("""<h4 style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.6rem; margin-bottom: 16px;">Biometric Verification & Anti-Spoofing Assessment</h4>""", unsafe_allow_html=True)
         
         status_html = f"{ICON_CHECK} <strong>Authentic Avian Syrinx Verified</strong>" if spoof_info['is_authentic'] else f"{ICON_CROSS} <strong>Rejected (Human Oral Mimicry / Spoofing)</strong>"
         st.markdown(f"<div style='margin-bottom: 10px;'>{status_html}</div>", unsafe_allow_html=True)
@@ -820,7 +826,7 @@ if audio_data is not None:
 
     with tab_table:
         st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'Savate', 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 16px;">Detailed Bioacoustic Diagnostic Parameters</h4>""", unsafe_allow_html=True)
+        st.markdown("""<h4 style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.6rem; margin-bottom: 16px;">Detailed Bioacoustic Diagnostic Parameters</h4>""", unsafe_allow_html=True)
         diag_rows = []
         for d in results["diagnostics"]:
             diag_rows.append({
@@ -836,10 +842,10 @@ if audio_data is not None:
 else:
     st.markdown(f"""
     <div class="ceti-content-card" style="text-align: center; padding: 72px 32px;">
-        <div style="font-family: 'Savate', 'Playfair Display', serif; font-size: 2.5rem; color: #000000; margin-bottom: 12px;">
+        <div style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 2.5rem; font-weight: 700; color: #000000; margin-bottom: 12px;">
             Awaiting Bioacoustic Acoustic Feed
         </div>
-        <p style="color: #4e5a7c; font-size: 1.05rem; max-width: 620px; margin: 0 auto 28px auto; line-height: 1.6;">
+        <p style="color: #4e5a7c; font-size: 1.1rem; max-width: 620px; margin: 0 auto 28px auto; line-height: 1.6;">
             Select a calibrated laboratory benchmark, upload an avian field recording, or initiate live microphonic acquisition to commence neural species identification and disaster threat forecasting.
         </p>
         <span class="ceti-pill-badge ceti-pill-verified">
