@@ -4,18 +4,7 @@ Recreating https://www.projectceti.org/ exactly:
 - Authentic Project CETI CDN background gradient & iridescent color atmosphere
 - Official GT Super Display serif font for display headlines (white upright + black italic)
 - Official Söhne font for navigation, metadata, and body
-- Hero composition matching the exact website screenshot:
-  - Top black logo badge ([ ceti ]) + clean navigation + social icons
-  - Authentic sperm whale emerging with mix-blend-mode multiply
-  - Glowing circular neon purple halo ring
-  - 'WHAT WOULD IT MEAN TO' -> 'Understand' (white serif) -> 'What Birds are Saying' (black italic serif)
-  - Floating translucent card with tote graphic, copy, and electric blue button
-  - Organic white wave crest separating hero from bioacoustic tools
-- Cornell BirdNET 6,522 Species Intelligence, Biometric Anti-Spoofing, and Early Warning
-- Authentic Project CETI CDN background gradient & iridescent color atmosphere
-- Official GT Super Display serif font for display headlines (white upright + black italic)
-- Official Söhne font for navigation, metadata, and body
-- Hero composition matching the exact website screenshot:
+- Hero composition matching the website screenshot:
   - Top black logo badge ([ ceti ]) + clean navigation + social icons
   - Authentic sperm whale emerging with mix-blend-mode multiply
   - Glowing circular neon purple halo ring
@@ -40,54 +29,15 @@ from src.image_fetcher import fetch_bird_visuals
 
 # Page configuration
 st.set_page_config(
-    page_title="Project CETICETI •--•-- Listening to Sentinels",
+    page_title="Project CETI •-- Listening to Sentinels",
     page_icon="🌊",
     layout="wide",
-    initial_sidebar_state="collapsedcollapsed"
+    initial_sidebar_state="collapsed"
 )
 
-# Project CETI Exact TypographyTypography & Styling& Styling CSS
+# Project CETI Exact Typography & Styling CSS
 st.markdown("""
 <style>
-    /* 1. Official Project CETI Webfonts from CDN (GT Super Display + Söhne) */
-    @font-face {
-        font-family: 'GT Super Display';
-        src: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/64595f83c1fc195e83c9e816_GT-Super-Display-Bold.woff2') format('woff2');
-        font-weight: 700;
-        font-style: normal;
-        font-display: swap;
-    }
-    @font-face {
-        font-family: 'GT Super Display';
-        src: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/64595f837812b5eb0a449bd4_GT-Super-Display-Bold-Italic.woff2') format('woff2');
-        font-weight: 700;
-        font-style: italic;
-        font-display: swap;
-    }
-    @font-face {
-        font-family: 'GT Super Display';
-        src: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/64595f83f76c2508a0a92666_GT-Super-Display-Medium.woff2') format('woff2');
-        font-weight: 500;
-        font-style: normal;
-        font-display: swap;
-    }
-    @font-face {
-        font-family: 'Sohne';
-        src: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/64596026870b9b4285fe2498_soehne-buch.woff2') format('woff2');
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-    }
-    @font-face {
-        font-family: 'Sohne';
-        src: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/64596026a59218839d6d964c_soehne-dreiviertelfett.woff2') format('woff2');
-        font-weight: 700;
-        font-style: normal;
-        font-display: swap;
-    }
-
-    /* Fallback Google Fonts if CDN delayed */
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
     /* 1. Official Project CETI Webfonts from CDN (GT Super Display + Söhne) */
     @font-face {
         font-family: 'GT Super Display';
@@ -139,10 +89,15 @@ st.markdown("""
         --ceti-border-light: #e6e8ee;
     }
 
-    /* Streamlit Canvas Overrides with  CanvasFixed Overrides */
+    /* Streamlit Canvas Overrides with Ambient Fixed Atmospheric Gradient */
     .stApp {
         background-color: #ffffff !important;
-        1045902815font-family: 'Sohne', 'Sohne', 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+        background-image: 
+            radial-gradient(circle at 10% 18%, rgba(190, 255, 247, 0.45) 0%, transparent 45%),
+            radial-gradient(circle at 90% 28%, rgba(71, 73, 254, 0.20) 0%, transparent 48%),
+            radial-gradient(circle at 50% 85%, rgba(77, 27, 199, 0.15) 0%, transparent 55%) !important;
+        background-attachment: fixed !important;
+        font-family: 'Sohne', 'Plus Jakarta Sans', -apple-system, sans-serif !important;
         color: var(--ceti-text-primary) !important;
     }
 
@@ -161,18 +116,6 @@ st.markdown("""
     .ceti-hero-wrapper {
         position: relative;
         width: 100%;
-        min-height: 560px;
-        background-color: #befff7;
-        background-image: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/6448200903d27e9cbbec4b16_BG-0-home-gradient-wide.jpg');
-        background-size: cover;
-        background-position: center top;
-        background-repeat: no-repeat;
-        border-radius: 0px;
-        overflow: hidden;
-    /* --- HERO CONTAINER (MATCHES SCREENSHOT EXACTLY) --- */
-    .ceti-hero-wrapper {
-        position: relative;
-        width: 100%;
         min-height: 580px;
         background-color: #befff7;
         background-image: url('https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/6448200903d27e9cbbec4b16_BG-0-home-gradient-wide.jpg');
@@ -186,26 +129,19 @@ st.markdown("""
     }
 
     /* Top Navigation inside Hero */
-    .ceti-herohero-navnav {
+    .ceti-hero-nav {
         display: flex;
         align-items: center;
-        justify-contentjustify-content: space-between;
-        padding: 0 24px;
-        position: relative;
-        z-index: 10space-between;
+        justify-content: space-between;
         padding: 0 24px;
         position: relative;
         z-index: 10;
     }
 
-    .ceti-herohero-brandbrand {
+    .ceti-hero-brand {
         background-color: #000000;
-        padding: 18px 24px 14px 24px#000000;
         padding: 18px 24px 14px 24px;
         display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.2)flex;
         align-items: center;
         justify-content: center;
         box-shadow: 0 4px 14px rgba(0,0,0,0.2);
@@ -216,34 +152,24 @@ st.markdown("""
         width: auto;
     }
 
-    .ceti-herohero-brand img {
-        height: 26px;
-        width: auto;
-    }
-
     .ceti-hero-links {
         display: flex;
-        gap: 22px22px;
-        font-family: 'SohneSohne', 'Plus Jakarta Sans', sans-serif'Plus Jakarta Sans', sans-serif;
+        gap: 22px;
+        font-family: 'Sohne', 'Plus Jakarta Sans', sans-serif;
         font-size: 11px;
         font-weight: 700;
-        letter-spacing: 0.1em1em;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
         color: #000000;
-        align#000000;
-        align-items: centeritems: center;
+        align-items: center;
     }
 
-    .ceti-herohero-links spanspan {
-        cursorcursor: pointerpointer;
+    .ceti-hero-links span {
+        cursor: pointer;
         transition: color 0.2s ease;
     }
 
-    .ceti-herohero-links span.active {
-        color: var(--ceti-primary-accent);
-    }
-
-    .ceti-hero-links spanspan.active {
+    .ceti-hero-links span.active {
         color: var(--ceti-primary-accent);
     }
 
@@ -251,77 +177,6 @@ st.markdown("""
         color: var(--ceti-primary);
     }
 
-    .ceti-hero-socials {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        font-size: 13px;
-        color: #000000;
-        opacity: 0.75;
-        padding-right: 12px;
-    }
-
-    /* Whale Image from Screenshot */
-    .ceti-hero-whale {
-        position: absolute;
-        left: -120px;
-        top: 20px;
-        width: 620px;
-        max-width: 52vw;
-        mix-blend-mode: multiply;
-        transform: rotate(4deg);
-        z-index: 2;
-        pointer-events: none;
-        user-select: none;
-    }
-
-    /* Neon Purple Toroidal Halo Ring */
-    .ceti-hero-halo {
-        position: absolute;
-        right: 18%;
-        top: 15%;
-        width: 440px;
-        max-width: 38vw;
-        z-index: 1;
-        pointer-events: none;
-        opacity: 0.95;
-    }
-
-    /* Main Hero Headline Layout */
-    .ceti-hero-content {
-        position: relative;
-        z-index: 5;
-        padding: 30px 48px 70px 48px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        text-align: left;
-    }
-
-    .ceti-hero-text-block {
-        max-width: 680px;
-        width: 100%;
-        margin-left: auto;
-    }
-
-    .ceti-hero-eyebrow {
-        font-family: 'Sohne', 'Plus Jakarta Sans', sans-serif;
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: #ffffff;
-        margin-bottom: 2px;
-        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-    }
-
-    .ceti-hero-title-white {
-        font-family: 'GT Super Display', 'Playfair Display', serif;
-        font-size: 104px;
-        font-weight: 700;
-        color: #ffffff;
-        line-height: 0.85;
-        margin: 0;
     .ceti-hero-socials {
         display: flex;
         flex-direction: column;
@@ -406,90 +261,8 @@ st.markdown("""
         line-height: 1.05;
         margin: 4px 0 28px 0;
         letter-spacing: -0.02em;
-    .ceti-hero-title-black {
-        font-family: 'GT Super Display', 'Playfair Display', serif;
-        font-size: 64px;
-        font-weight: 700;
-        font-style: italic;
-        color: #000000;
-        line-height: 1.05;
-        margin: 4px 0 28px 0;
-        letter-spacing: -0.02em;
     }
 
-    /* Floating Card from Screenshot */
-    .ceti-floating-card {
-        background-color: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(10px);
-        border: 1px solid #ffffff;
-        border-radius: 0px;
-        padding: 22px 28px;
-        display: flex;
-        align-items: center;
-        gap: 24px;
-        max-width: 540px;
-        box-shadow: 0 8px 32px rgba(71, 73, 254, 0.08);
-    }
-
-    .ceti-card-left {
-        flex: 0 0 auto;
-    }
-
-    .ceti-card-badge {
-        height: 64px;
-        width: auto;
-        object-fit: contain;
-    }
-
-    .ceti-card-right {
-        flex: 1;
-    }
-
-    .ceti-card-text {
-        font-family: 'Sohne', 'Plus Jakarta Sans', sans-serif;
-        font-size: 13px;
-        line-height: 1.45;
-        color: #4e5a7c;
-        margin: 0 0 12px 0;
-    }
-
-    .ceti-card-btn {
-        display: inline-block;
-        background-color: var(--ceti-primary-accent);
-        color: #ffffff !important;
-        font-family: 'Sohne', 'Plus Jakarta Sans', sans-serif;
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        padding: 8px 20px;
-        border-radius: 0px;
-        text-decoration: none;
-        transition: background-color 0.2s ease;
-    }
-
-    .ceti-card-btn:hover {
-        background-color: #000000;
-    }
-
-    /* Wave Crest at bottom of Hero */
-    .ceti-hero-wave {
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 100%;
-        line-height: 0;
-        z-index: 4;
-        pointer-events: none;
-    }
-
-    .ceti-hero-wave svg {
-        display: block;
-        width: 100%;
-        height: 50px;
-    }
-
-    /* --- CONTENT CARDS (0px radius, clean hairline) --- */
     /* Floating Card from Screenshot */
     .ceti-floating-card {
         background-color: rgba(255, 255, 255, 0.92);
@@ -604,7 +377,7 @@ st.markdown("""
     .ceti-gradient-banner h2 {
         font-family: 'GT Super Display', 'Playfair Display', serif;
         font-size: 2.3rem;
-        font-weight: 700700;
+        font-weight: 700;
         color: #ffffff !important;
         margin-bottom: 10px;
     }
@@ -625,7 +398,7 @@ st.markdown("""
         padding: 5px 16px;
         border-radius: 100px;
         font-size: 12px;
-        font-weight: 600600;
+        font-weight: 600;
         letter-spacing: 0.04em;
         text-transform: uppercase;
         font-family: 'Space Mono', monospace;
@@ -682,13 +455,13 @@ st.markdown("""
         color: #000000 !important;
     }
 
-    /* ButtonsButtons */
+    /* Buttons */
     .stButton > button {
         background-color: var(--ceti-primary-accent) !important;
         color: #ffffff !important;
         font-family: 'Sohne', 'Plus Jakarta Sans', sans-serif !important;
         font-size: 12px !important;
-        font-weight: 600600 !important;
+        font-weight: 600 !important;
         letter-spacing: 0.08em !important;
         text-transform: uppercase !important;
         padding: 10px 32px !important;
@@ -727,10 +500,10 @@ st.markdown("""
         font-weight: 700 !important;
     }
 
-    /* MetricsMetrics */
+    /* Metrics */
     [data-testid="stMetricValue"] {
         font-family: 'GT Super Display', 'Playfair Display', serif !important;
-        font-size: 2.1rem2.1rem !important;
+        font-size: 2.1rem !important;
         color: var(--ceti-text-dark) !important;
     }
 
@@ -746,7 +519,7 @@ st.markdown("""
     .ceti-species-heading {
         font-family: 'GT Super Display', 'Playfair Display', serif;
         font-size: 2.4rem;
-        font-weight: 700700;
+        font-weight: 700;
         color: var(--ceti-text-dark);
         line-height: 1.1;
         margin: 6px 0 2px 0;
@@ -779,7 +552,7 @@ st.markdown("""
     tbody tr td {
         border-bottom: 1px solid #f4f5f8 !important;
         padding: 12px 14px !important;
-        color: #181b22#181b22 !important;
+        color: #181b22 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -905,7 +678,6 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
 
 
 # --- HERO SECTION (MATCHES PROJECT CETI WEBSITE SCREENSHOT EXACTLY) ---
-# --- HERO SECTION (MATCHES PROJECT CETI WEBSITE SCREENSHOT EXACTLY) ---
 st.markdown("""
 <div class="ceti-hero-wrapper">
     <!-- Top Navigation inside Hero -->
@@ -929,63 +701,7 @@ st.markdown("""
             <span>in</span>
             <span>𝕏</span>
         </div>
-<div class="ceti-hero-wrapper">
-    <!-- Top Navigation inside Hero -->
-    <div class="ceti-hero-nav">
-        <div class="ceti-hero-brand">
-            <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645d24eb63dfb01f70696649_logo-ceti.svg" alt="CETI Logo" />
-        </div>
-        <div class="ceti-hero-links">
-            <span class="active">HOME</span>
-            <span>ABOUT ▾</span>
-            <span>GET INVOLVED ▾</span>
-            <span>RESEARCH</span>
-            <span>DOMINICA</span>
-            <span>NEWS</span>
-            <span>DONATE</span>
-            <span>SHOP</span>
-        </div>
-        <div class="ceti-hero-socials">
-            <span>📷</span>
-            <span>▶</span>
-            <span>in</span>
-            <span>𝕏</span>
-        </div>
     </div>
-
-    <!-- Sperm Whale from Screenshot -->
-    <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645d2b2186435d15f32cc462_whale-home.jpg" class="ceti-hero-whale" alt="Sperm Whale" />
-
-    <!-- Neon Purple Toroidal Halo Ring -->
-    <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/64482522a0d34620804b6acf_Element-0-home-circle.png" class="ceti-hero-halo" alt="Purple Halo Ring" />
-
-    <!-- Hero Headlines & Floating Card -->
-    <div class="ceti-hero-content">
-        <div class="ceti-hero-text-block">
-            <div class="ceti-hero-eyebrow">WHAT WOULD IT MEAN TO</div>
-            <div class="ceti-hero-title-white">Understand</div>
-            <div class="ceti-hero-title-black">What Birds are Saying</div>
-
-            <!-- Floating Card -->
-            <div class="ceti-floating-card">
-                <div class="ceti-card-left">
-                    <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/66d8adc03d225ccfda813fc5_CETI-Tote-Design.png" class="ceti-card-badge" alt="Listen to the Whales" />
-                </div>
-                <div class="ceti-card-right">
-                    <p class="ceti-card-text">
-                        What if their sounds became stories? Take the plunge and discover a hidden planetary bioacoustic radar.
-                    </p>
-                    <a href="#bioacoustic-radar" class="ceti-card-btn">Visit now</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Organic Wave Crest at Bottom -->
-    <div class="ceti-hero-wave">
-        <svg viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none">
-            <path d="M0,25 C360,65 680,5 1020,35 C1240,55 1380,20 1440,30 L1440,60 L0,60 Z" fill="#ffffff"></path>
-        </svg>
 
     <!-- Sperm Whale from Screenshot -->
     <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645d2b2186435d15f32cc462_whale-home.jpg" class="ceti-hero-whale" alt="Sperm Whale" />
@@ -1025,7 +741,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ------ BIOACOUSTICBIOACOUSTIC CHANNELCHANNEL SELECTIONSELECTION ------
+# --- BIOACOUSTIC CHANNEL SELECTION ---
 st.markdown('<div id="bioacoustic-radar"></div>', unsafe_allow_html=True)
 
 input_mode = st.radio(
@@ -1093,7 +809,7 @@ if audio_data is not None:
     <div style="font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #4749fe; margin-top: 24px; margin-bottom: 2px;">
         ACOUSTIC FEED ACQUIRED
     </div>
-    <div style="font-family: 'GT Super Display', 'Playfair Display', serif; font-size: 1.8rem; font-weight: 7008rem; font-weight: 700; color: #000000; margin-bottom: 12px;">
+    <div style="font-family: 'GT Super Display', 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: #000000; margin-bottom: 12px;">
         {audio_label}
     </div>
     """, unsafe_allow_html=True)
