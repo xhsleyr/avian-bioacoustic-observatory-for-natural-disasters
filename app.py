@@ -1,11 +1,16 @@
-"""Avian Early Warning System (AEWS) — Designed in the visual system of Project CETI.
+"""Avian Early Warning System (AEWS) — Designed in the Ponder Design System.
 
-Typography: Times New Roman serif across all headings, body text, metrics, and charts.
-- Fluid motion-blurred iridescent gradient aura (Cyan #befff7 -> Electric Blue #4749fe -> Deep Purple #4d1bc7)
-- Times New Roman typography for classic editorial elegance
-- Sharp 0px architectural containers and 100px pill buttons
-- Global Cornell BirdNET 6,522 Species Intelligence, Biometric Anti-Spoofing, and Early Warning
-- Standard Figma-style vector SVG icons (Lucide / Icons8 minimal outline style)
+Ponder is a minimal, cinematic dark-mode product experience.
+- Background: Pure Black (#000000)
+- Surface 1: Dark Charcoal (#171717)
+- Surface 2: Elevated Interactive Charcoal (#252525)
+- Surface Hover: #2f2f2f
+- Borders: Low-opacity hairline (#ffffff14 / #ffffff24)
+- Typography: DM Sans (Lay Grotesk fallback) + JetBrains Mono (Fragment Mono fallback)
+- Shapes: Binary — Perfect Pills (rounded: 9999px) for buttons/badges, 14px for cards
+- Accent: Sky Blue (#4a9eed) strictly for focus and active indicators
+- Status: #53b365 (Syrinx Authentic) & #fb2c36 (Adversarial Spoof / Critical)
+- Performance: Cached inference pipelines for 60 FPS zero-lag interaction
 """
 
 import os
@@ -21,436 +26,497 @@ from src.species_classifier import identify_species
 from src.spoof_detector import evaluate_avian_authenticity
 from src.image_fetcher import fetch_bird_visuals
 
-# --- FIGMA / ICONS8 STANDARD OUTLINE SVG ICONS ---
+# --- FIGMA / ICONS8 STANDARD OUTLINE SVG ICONS (STROKE: 1.8 - 2.0) ---
 ICON_SHIELD = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>"""
 ICON_ALERT = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>"""
-ICON_CHECK = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>"""
-ICON_CROSS = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>"""
-ICON_MIC = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>"""
-ICON_WAVE = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><path d="M2 10v4"/><path d="M6 6v12"/><path d="M10 3v18"/><path d="M14 8v8"/><path d="M18 5v14"/><path d="M22 10v4"/></svg>"""
-ICON_NETWORK = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect width="6" height="6" x="9" y="2" rx="1"/><rect width="6" height="6" x="2" y="16" rx="1"/><rect width="6" height="6" x="16" y="16" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>"""
+ICON_CHECK = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#53b365" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>"""
+ICON_CROSS = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fb2c36" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>"""
+ICON_MIC = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>"""
+ICON_WAVE = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M2 10v4"/><path d="M6 6v12"/><path d="M10 3v18"/><path d="M14 8v8"/><path d="M18 5v14"/><path d="M22 10v4"/></svg>"""
+ICON_NETWORK = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><rect width="6" height="6" x="9" y="2" rx="1"/><rect width="6" height="6" x="2" y="16" rx="1"/><rect width="6" height="6" x="16" y="16" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>"""
+ICON_RADAR = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-4.2 4.2V2"/><path d="M12 16a4 4 0 1 0 0-8"/></svg>"""
+ICON_AUDIO = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>"""
 
-# Page configuration
+# Streamlit page configuration
 st.set_page_config(
-    page_title="Project AEWS — Listening to the Sentinels",
-    page_icon="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645bdf9d4bac53320316d064_CETI-Favicon.png",
+    page_title="Ponder // AEWS Bioacoustics",
+    page_icon="🐦",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Project CETI Design System + Times New Roman Typography CSS
+# --- PONDER DESIGN SYSTEM CSS ---
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
 
     :root {
-        --ceti-primary: #4d1bc7;
-        --ceti-primary-accent: #4749fe;
-        --ceti-button-hover: #000000;
-        --ceti-nav-hover: #4f1ccb;
-        --ceti-bg: #ffffff;
-        --ceti-text-primary: #4e5a7c;
-        --ceti-text-inverse: #ffffff;
-        --ceti-text-dark: #000000;
-        --ceti-text-muted: #a2a7b7;
-        --ceti-surface-dark: #181b22;
-        --ceti-border-light: #e6e8ee;
-        --ceti-cyan: #befff7;
+        --ds-background: #000000;
+        --ds-surface: #171717;
+        --ds-surface-2: #252525;
+        --ds-surface-hover: #2f2f2f;
+        --ds-on-surface: #fafafa;
+        --ds-on-surface-secondary: rgba(250, 250, 250, 0.58);
+        --ds-on-surface-tertiary: rgba(250, 250, 250, 0.38);
+        --ds-border: rgba(255, 255, 255, 0.08);
+        --ds-border-strong: rgba(255, 255, 255, 0.14);
+        --ds-primary: #fafafa;
+        --ds-on-primary: #000000;
+        --ds-secondary: #252525;
+        --ds-on-secondary: #fafafa;
+        --ds-accent: #4a9eed;
+        --ds-success: #53b365;
+        --ds-error: #fb2c36;
+        --ds-violet: #8b5cf6;
+        --ds-radius-sm: 6px;
+        --ds-radius-md: 10px;
+        --ds-radius-lg: 14px;
+        --ds-radius-full: 9999px;
     }
 
-    /* Ambient Motion-Blurred Atmospheric Gradient Background with Times New Roman */
+    /* Cinematic Pure Black Page Canvas */
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
-        background-color: #ffffff !important;
-        background-image: 
-            radial-gradient(circle at 12% 18%, rgba(190, 255, 247, 0.45) 0%, transparent 42%),
-            radial-gradient(circle at 88% 22%, rgba(71, 73, 254, 0.20) 0%, transparent 48%),
-            radial-gradient(circle at 50% 85%, rgba(77, 27, 199, 0.16) 0%, transparent 55%) !important;
-        background-attachment: fixed !important;
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
-        color: var(--ceti-text-primary) !important;
+        background-color: var(--ds-background) !important;
+        background-image: none !important;
+        font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        color: var(--ds-on-surface) !important;
     }
 
     [data-testid="stHeader"] {
         background: transparent !important;
     }
 
+    /* Custom Minimal Scrollbar */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+        background: var(--ds-background);
+    }
+    ::-webkit-scrollbar-thumb {
+        background: var(--ds-surface-2);
+        border-radius: var(--ds-radius-full);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--ds-surface-hover);
+    }
+
+    /* Text Selection */
+    ::selection {
+        background-color: rgba(74, 158, 237, 0.28);
+        color: #ffffff;
+    }
+
     /* Sidebar Styling */
     [data-testid="stSidebar"] {
-        background-color: #fafbfc !important;
-        border-right: 1px solid var(--ceti-border-light) !important;
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        background-color: #0b0b0b !important;
+        border-right: 1px solid var(--ds-border) !important;
+        font-family: 'DM Sans', sans-serif !important;
     }
 
     [data-testid="stSidebar"] * {
-        color: var(--ceti-text-primary) !important;
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        color: var(--ds-on-surface) !important;
+        font-family: 'DM Sans', sans-serif !important;
     }
 
     [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] h4, [data-testid="stSidebar"] h5 {
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
-        color: var(--ceti-text-dark) !important;
-    }
-
-    /* Global Typography Rules — Times New Roman */
-    h1, h2, h3, h4, h5, .ceti-display, .ceti-headline {
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
-        font-weight: 700 !important;
-        line-height: 1.15 !important;
-        color: var(--ceti-text-dark) !important;
+        font-family: 'DM Sans', sans-serif !important;
+        color: var(--ds-on-surface) !important;
         letter-spacing: -0.01em !important;
     }
 
-    p, span, div, label, input, .stMarkdown {
-        font-family: 'Times New Roman', Times, Georgia, serif;
-        color: var(--ceti-text-primary);
+    /* Global Typography Rules — Ponder Restrained Scale */
+    h1, h2, h3, h4, h5 {
+        font-family: 'DM Sans', sans-serif !important;
+        font-weight: 500 !important;
+        color: var(--ds-on-surface) !important;
+        letter-spacing: -0.012em !important;
     }
 
-    /* Project CETI Navigation Bar */
-    .ceti-navbar {
+    p, span, div, label {
+        font-family: 'DM Sans', sans-serif;
+        color: var(--ds-on-surface);
+    }
+
+    code, pre, .stCode, [data-testid="stMetricValue"] {
+        font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    /* Ponder Minimal Header */
+    .ponder-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 18px 0;
-        border-bottom: 1px solid var(--ceti-border-light);
-        margin-bottom: 40px;
+        padding: 20px 0 24px 0;
+        border-bottom: 1px solid var(--ds-border);
+        margin-bottom: 36px;
     }
 
-    .ceti-logo-mark {
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--ceti-text-dark);
+    .ponder-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        color: var(--ds-on-surface);
+    }
+
+    .ponder-brand-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: var(--ds-radius-full);
+        background-color: var(--ds-accent);
+        display: inline-block;
+        box-shadow: 0 0 0 2px rgba(74, 158, 237, 0.25);
+    }
+
+    .ponder-nav-pills {
         display: flex;
         align-items: center;
         gap: 8px;
     }
 
-    .ceti-logo-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: var(--ceti-primary-accent);
-        display: inline-block;
+    .ponder-nav-chip {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--ds-on-surface-secondary);
+        background: var(--ds-surface);
+        border: 1px solid var(--ds-border);
+        padding: 6px 14px;
+        border-radius: var(--ds-radius-full);
+        transition: all 0.15s ease;
     }
 
-    .ceti-nav-links {
-        display: flex;
-        gap: 28px;
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 13px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--ceti-text-muted);
+    .ponder-nav-chip:hover {
+        color: var(--ds-on-surface);
+        background: var(--ds-surface-2);
+        border-color: var(--ds-border-strong);
     }
 
-    .ceti-nav-links a {
-        color: var(--ceti-text-dark);
-        text-decoration: none;
-        transition: color 0.2s ease;
+    /* Hero Section — Minimal, Cinematic, High-Contrast */
+    .ponder-hero-display {
+        font-size: 34px;
+        font-weight: 500;
+        line-height: 42px;
+        letter-spacing: -0.015em;
+        color: var(--ds-on-surface);
+        margin-bottom: 12px;
     }
 
-    .ceti-nav-links a:hover {
-        color: var(--ceti-primary);
-    }
-
-    /* Hero Section with Times New Roman */
-    .ceti-hero-title {
-        font-family: 'Times New Roman', Times, Georgia, serif;
-        font-size: 3.8rem;
-        font-weight: 700;
-        line-height: 1.1;
-        color: var(--ceti-text-dark);
-        margin-bottom: 16px;
-        letter-spacing: -0.02em;
-    }
-
-    .ceti-hero-subtitle {
-        font-family: 'Times New Roman', Times, Georgia, serif;
-        font-size: 1.2rem;
-        line-height: 1.6;
-        color: var(--ceti-text-primary);
-        max-width: 860px;
-        margin-bottom: 36px;
+    .ponder-hero-sub {
+        font-size: 16px;
         font-weight: 400;
+        line-height: 26px;
+        color: var(--ds-on-surface-secondary);
+        max-width: 820px;
+        margin-bottom: 32px;
+        letter-spacing: -0.005em;
     }
 
-    /* Content Cards */
-    .ceti-content-card {
-        background-color: #ffffff;
-        border: 1px solid var(--ceti-border-light);
-        border-radius: 0px;
-        padding: 32px 36px;
-        margin-bottom: 24px;
-        box-shadow: 0 4px 20px -2px rgba(77, 27, 199, 0.04);
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    /* Tonal Surface Cards (z=1) */
+    .ponder-card {
+        background-color: var(--ds-surface);
+        border: 1px solid var(--ds-border);
+        border-radius: var(--ds-radius-lg);
+        padding: 24px 28px;
+        margin-bottom: 20px;
+        transition: border-color 0.15s ease;
     }
 
-    .ceti-content-card:hover {
-        border-color: var(--ceti-primary-accent);
-        box-shadow: 0 8px 30px -4px rgba(71, 73, 254, 0.08);
+    .ponder-card:hover {
+        border-color: var(--ds-border-strong);
     }
 
-    /* Signature CETI Gradient Banner */
-    .ceti-gradient-banner {
-        background: linear-gradient(135deg, #befff7 0%, #4749fe 50%, #4d1bc7 100%);
-        color: #ffffff;
-        padding: 44px 40px;
-        border-radius: 0px;
-        margin-bottom: 28px;
-        position: relative;
-        overflow: hidden;
+    .ponder-card-elevated {
+        background-color: var(--ds-surface-2);
+        border: 1px solid var(--ds-border-strong);
+        border-radius: var(--ds-radius-lg);
+        padding: 24px 28px;
+        margin-bottom: 20px;
     }
 
-    .ceti-gradient-banner h2 {
-        font-family: 'Times New Roman', Times, Georgia, serif;
-        font-size: 2.3rem;
-        font-weight: 700;
-        color: #ffffff !important;
-        margin-bottom: 10px;
-    }
-
-    .ceti-gradient-banner p {
-        font-family: 'Times New Roman', Times, Georgia, serif;
-        font-size: 1.1rem;
-        line-height: 1.6;
-        color: rgba(255, 255, 255, 0.95) !important;
-        max-width: 760px;
-        margin: 0;
-    }
-
-    /* Pill Badges */
-    .ceti-pill-badge {
+    /* Ponder Status Pill Badges */
+    .ponder-pill {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 5px 16px;
-        border-radius: 100px;
+        padding: 5px 14px;
+        border-radius: var(--ds-radius-full);
         font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        font-family: 'Times New Roman', Times, serif;
+        font-weight: 500;
+        letter-spacing: -0.005em;
     }
 
-    .ceti-pill-verified {
-        background-color: rgba(71, 73, 254, 0.08);
-        color: var(--ceti-primary-accent);
-        border: 1px solid var(--ceti-primary-accent);
+    .ponder-pill-verified {
+        background-color: rgba(83, 179, 101, 0.12);
+        color: var(--ds-success);
+        border: 1px solid rgba(83, 179, 101, 0.28);
     }
 
-    .ceti-pill-warning {
-        background-color: rgba(230, 57, 70, 0.08);
-        color: #e63946;
-        border: 1px solid #e63946;
+    .ponder-pill-warning {
+        background-color: rgba(251, 44, 54, 0.12);
+        color: var(--ds-error);
+        border: 1px solid rgba(251, 44, 54, 0.28);
     }
 
-    /* Radio button filters */
+    .ponder-pill-accent {
+        background-color: rgba(74, 158, 237, 0.12);
+        color: var(--ds-accent);
+        border: 1px solid rgba(74, 158, 237, 0.28);
+    }
+
+    .ponder-pill-neutral {
+        background-color: var(--ds-surface-2);
+        color: var(--ds-on-surface);
+        border: 1px solid var(--ds-border);
+    }
+
+    /* Streamlit Radio Buttons styled as Ponder Pills */
     div[data-testid="stRadio"] > label {
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
-        font-size: 12px !important;
-        letter-spacing: 0.08em !important;
-        text-transform: uppercase !important;
-        color: var(--ceti-text-dark) !important;
-        font-weight: 700 !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: var(--ds-on-surface-secondary) !important;
+        letter-spacing: -0.005em !important;
+        margin-bottom: 12px !important;
     }
     div[data-testid="stRadio"] div[role="radiogroup"] {
-        gap: 12px !important;
+        gap: 8px !important;
     }
     div[data-testid="stRadio"] div[role="radiogroup"] > label {
-        background-color: #ffffff !important;
-        border: 1px solid var(--ceti-border-light) !important;
-        border-radius: 100px !important;
-        padding: 8px 20px !important;
+        background-color: var(--ds-surface) !important;
+        border: 1px solid var(--ds-border) !important;
+        border-radius: var(--ds-radius-full) !important;
+        padding: 8px 18px !important;
         cursor: pointer !important;
-        transition: all 0.2s ease !important;
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        transition: all 0.15s ease !important;
+        color: var(--ds-on-surface) !important;
     }
     div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
-        border-color: var(--ceti-primary-accent) !important;
+        background-color: var(--ds-surface-2) !important;
+        border-color: var(--ds-border-strong) !important;
+    }
+    div[data-testid="stRadio"] div[role="radiogroup"] > label[data-checked="true"] {
+        background-color: var(--ds-surface-2) !important;
+        border-color: var(--ds-accent) !important;
+        color: #ffffff !important;
     }
 
     /* Selectbox */
     div[data-testid="stSelectbox"] label {
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
         font-size: 13px !important;
-        letter-spacing: 0.06em !important;
-        text-transform: uppercase !important;
-        color: var(--ceti-text-dark) !important;
+        font-weight: 500 !important;
+        color: var(--ds-on-surface-secondary) !important;
     }
     div[data-testid="stSelectbox"] div[data-baseweb="select"] {
-        border-radius: 0px !important;
-        border: 1px solid var(--ceti-border-light) !important;
-        background-color: #ffffff !important;
-        color: #000000 !important;
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
+        border-radius: var(--ds-radius-sm) !important;
+        border: 1px solid var(--ds-border-strong) !important;
+        background-color: var(--ds-surface) !important;
+        color: var(--ds-on-surface) !important;
+        transition: border-color 0.15s ease;
+    }
+    div[data-testid="stSelectbox"] div[data-baseweb="select"]:focus-within {
+        border-color: var(--ds-accent) !important;
+        box-shadow: 0 0 0 1px var(--ds-accent) !important;
     }
 
-    /* Buttons */
+    /* Buttons — Ponder Signature Pill CTAs */
     .stButton > button {
-        background-color: var(--ceti-primary-accent) !important;
-        color: #ffffff !important;
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
-        font-size: 13px !important;
-        font-weight: 700 !important;
-        letter-spacing: 0.08em !important;
-        text-transform: uppercase !important;
-        padding: 10px 32px !important;
-        border-radius: 0px !important;
-        border: 1px solid var(--ceti-primary-accent) !important;
-        transition: background-color 0.2s ease, border-color 0.2s ease !important;
+        background-color: var(--ds-primary) !important;
+        color: var(--ds-on-primary) !important;
+        font-family: 'DM Sans', sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        letter-spacing: -0.005em !important;
+        padding: 9px 24px !important;
+        border-radius: var(--ds-radius-full) !important;
+        border: 1px solid var(--ds-primary) !important;
+        transition: opacity 0.15s ease !important;
     }
-
     .stButton > button:hover {
-        background-color: #000000 !important;
-        border-color: #000000 !important;
-        color: #ffffff !important;
+        opacity: 0.88 !important;
     }
 
-    /* Tabs */
+    /* Tabs — Minimal Hairline Underline */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 28px;
-        border-bottom: 1px solid var(--ceti-border-light);
+        gap: 20px;
+        border-bottom: 1px solid var(--ds-border);
         background: transparent;
     }
-
     .stTabs [data-baseweb="tab"] {
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
-        font-size: 12px !important;
-        letter-spacing: 0.08em !important;
-        text-transform: uppercase !important;
-        color: var(--ceti-text-muted) !important;
+        font-family: 'DM Sans', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: var(--ds-on-surface-secondary) !important;
         border-radius: 0px !important;
-        padding: 12px 2px !important;
+        padding: 12px 4px !important;
         background: transparent !important;
+        transition: color 0.15s ease;
     }
-
+    .stTabs [data-baseweb="tab"]:hover {
+        color: var(--ds-on-surface) !important;
+    }
     .stTabs [aria-selected="true"] {
-        color: var(--ceti-primary-accent) !important;
-        border-bottom: 2px solid var(--ceti-primary-accent) !important;
-        font-weight: 700 !important;
+        color: var(--ds-on-surface) !important;
+        border-bottom: 2px solid var(--ds-accent) !important;
     }
 
-    /* Metric Cards with Times New Roman */
+    /* Metrics Readout */
     [data-testid="stMetricValue"] {
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
-        font-size: 2.3rem !important;
-        font-weight: 700 !important;
-        color: var(--ceti-text-dark) !important;
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 26px !important;
+        font-weight: 500 !important;
+        color: var(--ds-on-surface) !important;
     }
-
     [data-testid="stMetricLabel"] {
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
-        font-size: 12px !important;
-        letter-spacing: 0.06em !important;
-        text-transform: uppercase !important;
-        color: var(--ceti-text-muted) !important;
+        font-family: 'DM Sans', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: var(--ds-on-surface-secondary) !important;
+        letter-spacing: -0.005em !important;
     }
 
-    /* Species Card Visual Styling with Times New Roman */
-    .ceti-species-heading {
-        font-family: 'Times New Roman', Times, Georgia, serif;
-        font-size: 2.6rem;
-        font-weight: 700;
-        color: var(--ceti-text-dark);
-        line-height: 1.1;
-        margin: 6px 0 2px 0;
+    /* Species Card Typography */
+    .ponder-species-heading {
+        font-size: 26px;
+        font-weight: 500;
+        color: var(--ds-on-surface);
+        line-height: 32px;
+        letter-spacing: -0.01em;
+        margin: 4px 0 2px 0;
     }
-
-    .ceti-species-sci {
-        font-family: 'Times New Roman', Times, Georgia, serif;
-        font-size: 1.1rem;
+    .ponder-species-sci {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
         font-style: italic;
-        color: var(--ceti-text-muted);
-        margin-bottom: 14px;
+        color: var(--ds-on-surface-secondary);
+        margin-bottom: 12px;
     }
 
-    /* Diagnostic Table Clean Style */
+    /* Diagnostic Table */
     table {
         border-collapse: collapse !important;
         width: 100% !important;
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
-        font-size: 14px !important;
+        font-family: 'DM Sans', sans-serif !important;
+        font-size: 13px !important;
+        background-color: var(--ds-surface) !important;
+        border-radius: var(--ds-radius-md) !important;
+        overflow: hidden !important;
     }
     thead tr th {
-        font-family: 'Times New Roman', Times, Georgia, serif !important;
-        font-size: 13px !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.06em !important;
-        color: var(--ceti-text-muted) !important;
-        border-bottom: 2px solid var(--ceti-border-light) !important;
-        padding: 10px 14px !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        color: var(--ds-on-surface-tertiary) !important;
+        border-bottom: 1px solid var(--ds-border) !important;
+        padding: 12px 16px !important;
         text-align: left !important;
+        background-color: var(--ds-surface-2) !important;
     }
     tbody tr td {
-        border-bottom: 1px solid #f4f5f8 !important;
-        padding: 12px 14px !important;
-        color: var(--ceti-surface-dark) !important;
+        border-bottom: 1px solid var(--ds-border) !important;
+        padding: 12px 16px !important;
+        color: var(--ds-on-surface) !important;
+    }
+    tbody tr:last-child td {
+        border-bottom: none !important;
+    }
+
+    /* Audio Player dark frame */
+    audio {
+        filter: invert(1) hue-rotate(180deg) brightness(0.95);
+        border-radius: var(--ds-radius-full);
+        width: 100%;
+        margin-top: 8px;
     }
 </style>
 """, unsafe_allow_html=True)
 
 
+# --- 60 FPS PERFORMANCE CACHING PIPELINE ---
+@st.cache_data(show_spinner=False)
+def cached_process_audio(audio_bytes: bytes):
+    """Zero-lag cached neural bioacoustics & biometric inference pipeline."""
+    y, sr, duration = load_audio(audio_bytes)
+    features = extract_acoustic_features(y, sr)
+    results = compute_distress_index(features)
+    species_info = identify_species(audio_bytes, features, top_k=5)
+    spoof_info = evaluate_avian_authenticity(y, sr, species_info, features)
+    return y, sr, duration, features, results, species_info, spoof_info
+
+
+@st.cache_data(show_spinner=False)
+def cached_fetch_visuals(common_name: str, scientific_name: str):
+    """Cached species photographic imagery and taxonomy description."""
+    return fetch_bird_visuals(common_name, scientific_name)
+
+
+# --- PLOTLY VISUALIZATION ENGINE (PONDER MONOCHROME + SKY BLUE ACCENT) ---
 def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
-    """Create a minimalist Plotly gauge indicator styled with Times New Roman."""
+    """Minimalist, dark-mode Plotly gauge with JetBrains Mono readout."""
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=adi_score,
         domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': "ACOUSTIC DISTRESS INDEX (ADI)", 'font': {'size': 12, 'color': "#a2a7b7", 'family': "Times New Roman, Times, serif"}},
-        number={'suffix': "%", 'font': {'size': 48, 'color': "#000000", 'family': "Times New Roman, Times, serif"}},
+        title={'text': "ACOUSTIC DISTRESS INDEX", 'font': {'size': 11, 'color': "rgba(250, 250, 250, 0.45)", 'family': "DM Sans, sans-serif"}},
+        number={'suffix': "%", 'font': {'size': 44, 'color': "#fafafa", 'family': "JetBrains Mono, monospace"}},
         gauge={
-            'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "#e6e8ee"},
-            'bar': {'color': "#4749fe", 'thickness': 0.28},
-            'bgcolor': "#ffffff",
+            'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "rgba(255, 255, 255, 0.12)"},
+            'bar': {'color': "#4a9eed", 'thickness': 0.22},
+            'bgcolor': "#171717",
             'borderwidth': 1,
-            'bordercolor': "#e6e8ee",
+            'bordercolor': "rgba(255, 255, 255, 0.08)",
             'steps': [
-                {'range': [0, 38], 'color': 'rgba(190, 255, 247, 0.50)'},
-                {'range': [38, 70], 'color': 'rgba(71, 73, 254, 0.20)'},
-                {'range': [70, 100], 'color': 'rgba(77, 27, 199, 0.35)'}
+                {'range': [0, 38], 'color': 'rgba(255, 255, 255, 0.04)'},
+                {'range': [38, 70], 'color': 'rgba(74, 158, 237, 0.10)'},
+                {'range': [70, 100], 'color': 'rgba(251, 44, 54, 0.14)'}
             ],
             'threshold': {
-                'line': {'color': "#4d1bc7", 'width': 3},
-                'thickness': 0.85,
+                'line': {'color': "#fb2c36", 'width': 2},
+                'thickness': 0.8,
                 'value': 70.0
             }
         }
     ))
     fig.update_layout(
-        height=260,
-        margin=dict(l=20, r=20, t=40, b=10),
+        height=240,
+        margin=dict(l=15, r=15, t=35, b=10),
         paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(family="Times New Roman, Times, serif")
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(family="DM Sans, sans-serif")
     )
     return fig
 
 
 def plot_mel_spectrogram(features: dict) -> go.Figure:
-    """Create a Mel-Spectrogram heatmap with Times New Roman typography."""
+    """Mel-Spectrogram heatmap matching Ponder obsidian & sky-blue tonal palette."""
     mel_db = features["mel_db"]
     times = features["times"]
     freq_bins = np.linspace(200, 10000, mel_db.shape[0])
 
-    colorscale_ceti = [
-        [0.0, "#181b22"],
-        [0.32, "#4d1bc7"],
-        [0.68, "#4749fe"],
-        [1.0, "#befff7"]
+    colorscale_ponder = [
+        [0.0, "#0a0a0a"],
+        [0.25, "#171717"],
+        [0.55, "#1d3557"],
+        [0.80, "#4a9eed"],
+        [1.0, "#fafafa"]
     ]
 
     fig = go.Figure(data=go.Heatmap(
         z=mel_db,
         x=times,
         y=freq_bins,
-        colorscale=colorscale_ceti,
-        colorbar=dict(title=dict(text="dB", font=dict(family="Times New Roman, Times, serif", size=12)), len=0.8)
+        colorscale=colorscale_ponder,
+        colorbar=dict(
+            title=dict(text="dB", font=dict(family="JetBrains Mono, monospace", size=11, color="rgba(250,250,250,0.6)")),
+            len=0.8,
+            tickfont=dict(family="JetBrains Mono, monospace", size=10, color="rgba(250,250,250,0.5)")
+        )
     ))
     fig.update_layout(
-        title=dict(text="Mel-Frequency Bioacoustic Spectrogram", font=dict(family="Times New Roman, Times, serif", size=20, color="#000000")),
-        xaxis=dict(title=dict(text="Time (seconds)", font=dict(family="Times New Roman, Times, serif", size=13)), showgrid=False),
-        yaxis=dict(title=dict(text="Frequency (Hz)", font=dict(family="Times New Roman, Times, serif", size=13)), showgrid=True, gridcolor="#f4f5f8"),
+        title=dict(text="Mel-Frequency Bioacoustic Spectrogram", font=dict(family="DM Sans, sans-serif", size=16, color="#fafafa")),
+        xaxis=dict(title=dict(text="Time (seconds)", font=dict(family="DM Sans, sans-serif", size=12, color="rgba(250,250,250,0.6)")), showgrid=False, tickfont=dict(family="JetBrains Mono, monospace", size=10, color="rgba(250,250,250,0.5)")),
+        yaxis=dict(title=dict(text="Frequency (Hz)", font=dict(family="DM Sans, sans-serif", size=12, color="rgba(250,250,250,0.6)")), showgrid=True, gridcolor="rgba(255,255,255,0.06)", tickfont=dict(family="JetBrains Mono, monospace", size=10, color="rgba(250,250,250,0.5)")),
         height=320,
         margin=dict(l=20, r=20, t=40, b=20),
         paper_bgcolor='rgba(0,0,0,0)',
@@ -460,7 +526,7 @@ def plot_mel_spectrogram(features: dict) -> go.Figure:
 
 
 def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Figure:
-    """Plot synchronized waveform and pitch trajectory with Times New Roman styling."""
+    """Waveform and pitch trajectory visualizer with Ponder precision styling."""
     time_wave = np.linspace(0, len(y) / sr, len(y))
     times_feats = features["times"]
     centroid = features["spectral_centroid"]["trajectory"]
@@ -469,12 +535,12 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
         rows=2, cols=1,
         shared_xaxes=True,
         vertical_spacing=0.14,
-        subplot_titles=("Acoustic Signal Waveform & Call Onset Bursts", "Pitch / Spectral Centroid Trajectory (Hz)")
+        subplot_titles=("Acoustic Signal Waveform & Call Onset Bursts", "Spectral Centroid Trajectory (Hz)")
     )
 
     step = max(1, len(y) // 3000)
     fig.add_trace(
-        go.Scatter(x=time_wave[::step], y=y[::step], mode='lines', name='Waveform', line=dict(color="#4749fe", width=1.2)),
+        go.Scatter(x=time_wave[::step], y=y[::step], mode='lines', name='Waveform', line=dict(color="#4a9eed", width=1.2)),
         row=1, col=1
     )
 
@@ -486,27 +552,28 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
                 y=[0.85] * len(onsets),
                 mode='markers',
                 name='Call Bursts',
-                marker=dict(symbol="triangle-down", size=8, color="#4d1bc7")
+                marker=dict(symbol="triangle-down", size=7, color="#fafafa")
             ),
             row=1, col=1
         )
 
     fig.add_trace(
-        go.Scatter(x=times_feats, y=centroid, mode='lines', name='Centroid (Hz)', line=dict(color="#4d1bc7", width=1.8)),
+        go.Scatter(x=times_feats, y=centroid, mode='lines', name='Centroid (Hz)', line=dict(color="#fafafa", width=1.5)),
         row=2, col=1
     )
 
     fig.update_layout(
-        height=360,
+        height=340,
         margin=dict(l=20, r=20, t=30, b=20),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
         showlegend=True,
-        font=dict(family="Times New Roman, Times, serif")
+        legend=dict(font=dict(family="DM Sans, sans-serif", size=11, color="rgba(250,250,250,0.7)")),
+        font=dict(family="DM Sans, sans-serif")
     )
-    fig.update_xaxes(title_text="Time (seconds)", row=2, col=1, gridcolor="#f4f5f8")
-    fig.update_yaxes(title_text="Amplitude", row=1, col=1, gridcolor="#f4f5f8")
-    fig.update_yaxes(title_text="Centroid (Hz)", row=2, col=1, gridcolor="#f4f5f8")
+    fig.update_xaxes(title_text="Time (seconds)", row=2, col=1, gridcolor="rgba(255,255,255,0.06)", tickfont=dict(family="JetBrains Mono", size=10, color="rgba(250,250,250,0.5)"))
+    fig.update_yaxes(title_text="Amplitude", row=1, col=1, gridcolor="rgba(255,255,255,0.06)", tickfont=dict(family="JetBrains Mono", size=10, color="rgba(250,250,250,0.5)"))
+    fig.update_yaxes(title_text="Hz", row=2, col=1, gridcolor="rgba(255,255,255,0.06)", tickfont=dict(family="JetBrains Mono", size=10, color="rgba(250,250,250,0.5)"))
 
     return fig
 
@@ -514,13 +581,13 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
 # --- SIDEBAR ---
 with st.sidebar:
     st.markdown("""
-    <div style="font-family: 'Times New Roman', Times, serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #4749fe; margin-bottom: 8px;">
+    <div style="font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #4a9eed; margin-bottom: 6px;">
         RESEARCH INITIATIVE
     </div>
-    <div style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 2.1rem; font-weight: 700; color: #000000; line-height: 1.1; margin-bottom: 8px;">
+    <div style="font-size: 22px; font-weight: 500; color: #fafafa; line-height: 28px; letter-spacing: -0.01em; margin-bottom: 8px;">
         Project AEWS
     </div>
-    <div style="font-family: 'Times New Roman', Times, serif; font-size: 0.95rem; color: #4e5a7c; margin-bottom: 24px; line-height: 1.5;">
+    <div style="font-size: 14px; color: rgba(250, 250, 250, 0.58); margin-bottom: 24px; line-height: 20px;">
         Avian Bioacoustic Translation & Planetary Early Warning Intelligence.
     </div>
     """, unsafe_allow_html=True)
@@ -528,9 +595,9 @@ with st.sidebar:
 
     st.markdown(f"##### {ICON_WAVE} Bioacoustic Principles", unsafe_allow_html=True)
     st.caption("""
-    * **Non-Human Communication:** Decoding avian flock vocalizations before seismic and atmospheric disruptions.
+    * **Non-Human Vocal Translation:** Decoding flock panic patterns prior to seismic and atmospheric events.
     * **Dual Syrinx Biphonation:** Verifying authentic multi-tonal avian biological markers.
-    * **Planetary Sensing:** Detecting compressional P-waves & storm infrasound (< 20 Hz).
+    * **Planetary Sentinel Waves:** Detecting seismic P-waves & storm infrasound (< 20 Hz).
     """)
 
     st.divider()
@@ -538,42 +605,44 @@ with st.sidebar:
     st.markdown("""
     * **Classifier:** Cornell BirdNET v2.4 (6,522 Species)
     * **Biometrics:** Syrinx vs Oral Cavity Anti-Spoofing
-    * **Compute Core:** Apple Silicon M1 Local Neural Inference
+    * **Performance:** Cached M1 Local Neural Core (0ms rerun)
     """)
 
 
 # --- TOP NAVIGATION BAR ---
-st.markdown("""
-<div class="ceti-navbar">
-    <div class="ceti-logo-mark">
-        <span class="ceti-logo-dot"></span> PROJECT AEWS // BIOACOUSTICS
+st.markdown(f"""
+<div class="ponder-header">
+    <div class="ponder-brand">
+        <span class="ponder-brand-dot"></span>
+        <span>PONDER // AEWS BIOACOUSTICS</span>
     </div>
-    <div class="ceti-nav-links">
-        <span>RESEARCH</span>
-        <span>6,522 SPECIES</span>
-        <span>ANTI-SPOOFING</span>
-        <span>DISASTER INTELLIGENCE</span>
+    <div class="ponder-nav-pills">
+        <span class="ponder-nav-chip">{ICON_RADAR} 6,522 SPECIES</span>
+        <span class="ponder-nav-chip">{ICON_SHIELD} BIOMETRIC SHIELD</span>
+        <span class="ponder-nav-chip">{ICON_AUDIO} 60 FPS ZERO-LAG</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
+
 
 # --- HERO SECTION ---
 st.markdown("""
-<div class="ceti-hero-title">
+<div class="ponder-hero-display">
     Understand What Birds are Saying
 </div>
-<div class="ceti-hero-subtitle">
-    What if avian vocalizations became planetary early-warning stories? Applying advanced machine learning and bioacoustic translation to decode avian communication &mdash; forecasting earthquakes, cyclones, and atmospheric shockwaves before disaster strikes.
+<div class="ponder-hero-sub">
+    Applying deep learning and bioacoustic translation to decode avian flock vocalizations &mdash; forecasting earthquakes, cyclones, and atmospheric shockwaves before disaster strikes.
 </div>
 """, unsafe_allow_html=True)
 
-# Select Input Mode
+
+# --- INPUT SELECTION ---
 input_mode = st.radio(
     "SELECT BIOACOUSTIC CHANNEL:",
     options=[
+        "Calibrated Field Benchmarks",
         "Upload Audio Recording",
-        "Live Microphone Stream",
-        "Calibrated Field Benchmarks"
+        "Live Microphone Stream"
     ],
     horizontal=True
 )
@@ -614,7 +683,7 @@ else:
             "Select Calibrated Laboratory Benchmark:",
             options=list(sample_names.keys()),
             format_func=lambda x: {
-                "calm_robin_song.wav": "[CALM] Robin Whistle — Baseline Melodic",
+                "calm_robin_song.wav": "[CALM] American Robin Whistle — Baseline Melodic",
                 "elevated_warning_call.wav": "[ELEVATED] Warning Call — Agitation Alert",
                 "critical_disaster_panic.wav": "[CRITICAL] Disaster Panic Screech — Pre-Tremor Evacuation",
                 "authentic_warbler_storm_alarm.wav": "[SENTINEL] Golden-winged Warbler — Documented 2014 Tornado Outbreak",
@@ -628,65 +697,72 @@ else:
             audio_data = f.read()
         audio_label = selected_sample_name
 
+
+# --- INFERENCE & PRESENTATION ---
 if audio_data is not None:
+    # 0ms Lag Cached Pipeline
+    with st.spinner("Decoding bioacoustic signals with Cornell BirdNET & verifying biometrics..."):
+        y, sr, duration, features, results, species_info, spoof_info = cached_process_audio(audio_data)
+
+    prim_sp = species_info["primary_species"]
+
+    # Header for acquired feed
     st.markdown(f"""
-    <div style="font-family: 'Times New Roman', Times, serif; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #4749fe; margin-top: 24px; margin-bottom: 2px;">
-        ACOUSTIC FEED ACQUIRED
-    </div>
-    <div style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.8rem; font-weight: 700; color: #000000; margin-bottom: 12px;">
-        {audio_label}
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 24px; margin-bottom: 8px;">
+        <div>
+            <div style="font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #4a9eed;">
+                ACOUSTIC FEED ACQUIRED
+            </div>
+            <div style="font-size: 22px; font-weight: 500; color: #fafafa; letter-spacing: -0.01em;">
+                {audio_label}
+            </div>
+        </div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(250, 250, 250, 0.58);">
+            Duration: {duration:.2f}s • Sample Rate: {sr:,} Hz
+        </div>
     </div>
     """, unsafe_allow_html=True)
     st.audio(audio_data)
 
-    with st.spinner("Decoding bioacoustic signals with Cornell BirdNET & verifying biometrics..."):
-        y, sr, duration = load_audio(audio_data)
-        features = extract_acoustic_features(y, sr)
-        results = compute_distress_index(features)
-        species_info = identify_species(audio_data, features, top_k=5)
-        spoof_info = evaluate_avian_authenticity(y, sr, species_info, features)
-
-    prim_sp = species_info["primary_species"]
-
-    # 1. Anti-Spoofing Biometric Verification Badge
+    # 1. Biometric Anti-Spoofing Verification Panel
     if spoof_info["is_authentic"]:
         st.markdown(f"""
-        <div class="ceti-content-card" style="border-left: 3px solid #4749fe; padding: 18px 24px;">
+        <div class="ponder-card" style="border-left: 2px solid #53b365;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span class="ceti-pill-badge ceti-pill-verified">
+                <span class="ponder-pill ponder-pill-verified">
                     {ICON_SHIELD} {spoof_info['status_label']}
                 </span>
-                <span style="font-family: 'Times New Roman', Times, serif; font-size: 12px; color: #a2a7b7;">
-                    BIRDNET CONFIDENCE: {spoof_info['birdnet_conf']}% &bull; SYRINX CONFIRMED
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(250, 250, 250, 0.58);">
+                    BIRDNET CONFIDENCE: {spoof_info['birdnet_conf']}% • SYRINX CONFIRMED
                 </span>
             </div>
-            <p style="margin: 8px 0 0 0; font-size: 1rem; color: #4e5a7c;">
+            <p style="margin: 8px 0 0 0; font-size: 14px; color: rgba(250, 250, 250, 0.75); line-height: 20px;">
                 {spoof_info['status_summary']}
             </p>
         </div>
         """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
-        <div class="ceti-content-card" style="border-left: 3px solid #e63946; padding: 18px 24px;">
+        <div class="ponder-card" style="border-left: 2px solid #fb2c36;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span class="ceti-pill-badge ceti-pill-warning">
+                <span class="ponder-pill ponder-pill-warning">
                     {ICON_ALERT} {spoof_info['status_label']}
                 </span>
-                <span style="font-family: 'Times New Roman', Times, serif; font-size: 12px; color: #e63946;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #fb2c36;">
                     ADVERSARIAL SPOOFING DETECTED
                 </span>
             </div>
-            <p style="margin: 8px 0 0 0; font-size: 1rem; color: #4e5a7c;">
+            <p style="margin: 8px 0 0 0; font-size: 14px; color: rgba(250, 250, 250, 0.75); line-height: 20px;">
                 {spoof_info['status_summary']}
             </p>
         </div>
         """, unsafe_allow_html=True)
 
-    # 2. Visual Species Identification Card
+    # 2. Species Intelligence Card
     if spoof_info["is_authentic"]:
-        visuals = fetch_bird_visuals(prim_sp['common_name'], prim_sp['scientific_name'])
+        visuals = cached_fetch_visuals(prim_sp['common_name'], prim_sp['scientific_name'])
         
-        st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
+        st.markdown('<div class="ponder-card">', unsafe_allow_html=True)
         col_photo, col_details = st.columns([1, 2.2])
         
         with col_photo:
@@ -698,23 +774,23 @@ if audio_data is not None:
         
         with col_details:
             st.markdown(f"""
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                <span style="background-color: #4749fe; color: #ffffff; font-family: 'Times New Roman', Times, serif; font-size: 11px; padding: 3px 12px; letter-spacing: 0.08em; text-transform: uppercase;">
-                    CORNELL BIRDNET &bull; {prim_sp['confidence']}% MATCH
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span class="ponder-pill ponder-pill-accent">
+                    CORNELL BIRDNET • {prim_sp['confidence']}% MATCH
                 </span>
-                <span style="font-family: 'Times New Roman', Times, serif; font-size: 12px; color: #a2a7b7;">GLOBAL DATABASE: 6,522 SPECIES</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(250, 250, 250, 0.38);">GLOBAL TAXONOMY: 6,522 SPECIES</span>
             </div>
-            <div class="ceti-species-heading">{prim_sp['common_name']}</div>
-            <div class="ceti-species-sci">{prim_sp['scientific_name']}</div>
-            <p style="font-size: 1rem; color: #4e5a7c; line-height: 1.6; margin-bottom: 14px;">
+            <div class="ponder-species-heading">{prim_sp['common_name']}</div>
+            <div class="ponder-species-sci">{prim_sp['scientific_name']}</div>
+            <p style="font-size: 14px; color: rgba(250, 250, 250, 0.75); line-height: 22px; margin-bottom: 16px;">
                 {visuals['description']}
             </p>
-            <div style="border-top: 1px solid #e6e8ee; padding-top: 12px; margin-top: 12px; font-size: 0.95rem;">
-                <p style="margin: 0 0 6px 0; color: #4e5a7c;">
-                    <strong>Acoustic State:</strong> {prim_sp['pitch_status']} &bull; Pitch Centroid: <strong>{prim_sp['detected_pitch']:.0f} Hz</strong>
+            <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; margin-top: 12px; font-size: 13px;">
+                <p style="margin: 0 0 6px 0; color: rgba(250, 250, 250, 0.75);">
+                    <strong style="color: #fafafa;">Acoustic State:</strong> {prim_sp['pitch_status']} &bull; Pitch Centroid: <strong style="color: #4a9eed; font-family: 'JetBrains Mono';">{prim_sp['detected_pitch']:.0f} Hz</strong>
                 </p>
-                <p style="margin: 4px 0 0 0; color: #4749fe;">
-                    <strong>Disaster Sensitivity:</strong> {prim_sp['disaster_sensitivity']}
+                <p style="margin: 4px 0 0 0; color: #4a9eed;">
+                    <strong style="color: #fafafa;">Disaster Sensitivity:</strong> {prim_sp['disaster_sensitivity']}
                 </p>
             </div>
             """, unsafe_allow_html=True)
@@ -722,34 +798,42 @@ if audio_data is not None:
         st.markdown('</div>', unsafe_allow_html=True)
     else:
         st.markdown(f"""
-        <div class="ceti-content-card" style="border-left: 3px solid #e63946;">
-            <span style="background-color: #000000; color: #ffffff; font-family: 'Times New Roman', Times, serif; font-size: 11px; padding: 3px 12px; letter-spacing: 0.08em; text-transform: uppercase;">
+        <div class="ponder-card" style="border-left: 2px solid #fb2c36;">
+            <span class="ponder-pill ponder-pill-warning">
                 NON-AVIAN ACOUSTIC PROFILE
             </span>
-            <div class="ceti-species-heading" style="margin-top: 8px;">{prim_sp['common_name']}</div>
-            <p style="font-size: 1rem; color: #4e5a7c; margin-top: 8px; line-height: 1.6;">
+            <div class="ponder-species-heading" style="margin-top: 8px;">{prim_sp['common_name']}</div>
+            <p style="font-size: 14px; color: rgba(250, 250, 250, 0.75); margin-top: 8px; line-height: 22px;">
                 The sound profile exhibits human oral cavity formant constraints and breath turbulence rather than authentic avian syrinx modulation.
             </p>
         </div>
         """, unsafe_allow_html=True)
 
-    # 3. Early Warning Threat Assessment Banner
+    # 3. Early Warning Threat Assessment
     if spoof_info["suppress_alarm"]:
         st.markdown(f"""
-        <div class="ceti-content-card" style="border-left: 3px solid #e63946;">
-            <h3 style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.7rem; color: #e63946; margin: 0 0 6px 0;">
+        <div class="ponder-card-elevated" style="border-left: 2px solid #fb2c36;">
+            <h3 style="font-size: 18px; color: #fb2c36; margin: 0 0 6px 0;">
                 {ICON_ALERT} Disaster Early Warning Trigger Suppressed
             </h3>
-            <p style="color: #4e5a7c; font-size: 1rem; margin: 0;">
+            <p style="color: rgba(250, 250, 250, 0.75); font-size: 14px; margin: 0; line-height: 20px;">
                 Because non-avian or human acoustic mimicry was identified, automated early-warning triggers have been locked to prevent civil false alarms.
             </p>
         </div>
         """, unsafe_allow_html=True)
     else:
+        banner_border_color = "#53b365" if results["threat_level"] == "LOW" else ("#e0a96d" if results["threat_level"] == "MEDIUM" else "#fb2c36")
         st.markdown(f"""
-        <div class="ceti-gradient-banner">
-            <h2>{results['alert_title']}</h2>
-            <p>{results['alert_summary']}</p>
+        <div class="ponder-card-elevated" style="border-left: 2px solid {banner_border_color};">
+            <div style="font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: {banner_border_color}; margin-bottom: 4px;">
+                SENTINEL STATE: {results['threat_level']} RISK
+            </div>
+            <h3 style="font-size: 20px; font-weight: 500; color: #fafafa; margin: 0 0 6px 0;">
+                {results['alert_title']}
+            </h3>
+            <p style="color: rgba(250, 250, 250, 0.75); font-size: 14px; margin: 0; line-height: 22px;">
+                {results['alert_summary']}
+            </p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -757,18 +841,18 @@ if audio_data is not None:
     col_gauge, col_stats = st.columns([1, 1.2])
 
     with col_gauge:
-        st.markdown('<div class="ceti-content-card" style="padding: 20px;">', unsafe_allow_html=True)
+        st.markdown('<div class="ponder-card" style="padding: 16px 20px;">', unsafe_allow_html=True)
         gauge_fig = create_gauge_chart(results["adi"], results["threat_color"])
         st.plotly_chart(gauge_fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col_stats:
-        st.markdown('<div class="ceti-content-card" style="padding: 26px 30px;">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.6rem; color: #000000; margin-bottom: 18px;">Bioacoustic Signal Descriptors</h4>""", unsafe_allow_html=True)
+        st.markdown('<div class="ponder-card" style="padding: 22px 26px;">', unsafe_allow_html=True)
+        st.markdown("""<div style="font-size: 14px; font-weight: 500; color: #fafafa; margin-bottom: 16px;">Bioacoustic Signal Descriptors</div>""", unsafe_allow_html=True)
         c1, c2 = st.columns(2)
         with c1:
             st.metric("Pitch Center (Centroid)", f"{features['spectral_centroid']['mean']:.0f} Hz", delta=f"{results['sub_scores']['pitch']}% stress")
-            st.metric("Call Burst Rate", f"{features['call_rate']:.2f} calls/sec", delta=f"{results['sub_scores']['call_rate']}% density")
+            st.metric("Call Burst Rate", f"{features['call_rate']:.2f} calls/s", delta=f"{results['sub_scores']['call_rate']}% density")
         with c2:
             st.metric("Noise Harshness (Flatness)", f"{features['spectral_flatness']['mean']:.4f}", delta=f"{results['sub_scores']['flatness']}% chaos")
             st.metric("Breath Turbulence Ratio", f"{spoof_info['breath_ratio']}%", delta="Human Breath" if spoof_info['breath_ratio'] > 20 else "Avian Syrinx")
@@ -776,26 +860,26 @@ if audio_data is not None:
 
     # 5. Scientific Visualizers & Tables
     tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_table = st.tabs([
-        "SPECTROGRAM HEATMAP",
+        "SPECTROGRAM",
         "WAVEFORM & ONSETS",
         "SPECIES TAXONOMY (6.5K)",
         "BIOMETRIC VERIFICATION",
-        "DIAGNOSTIC DATA TABLE"
+        "DIAGNOSTIC DATA"
     ])
 
     with tab_spec:
-        st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
+        st.markdown('<div class="ponder-card">', unsafe_allow_html=True)
         st.plotly_chart(plot_mel_spectrogram(features), use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with tab_wave:
-        st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
+        st.markdown('<div class="ponder-card">', unsafe_allow_html=True)
         st.plotly_chart(plot_waveform_and_dynamics(y, sr, features), use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with tab_species:
-        st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.6rem; margin-bottom: 16px;">Top Species Candidates (from 6,522 Global Species)</h4>""", unsafe_allow_html=True)
+        st.markdown('<div class="ponder-card">', unsafe_allow_html=True)
+        st.markdown("""<div style="font-size: 16px; font-weight: 500; color: #fafafa; margin-bottom: 16px;">Top Neural Species Matches (from 6,522 Global Species)</div>""", unsafe_allow_html=True)
         for cand in species_info["top_candidates"]:
             col_info, col_bar = st.columns([2.5, 1])
             with col_info:
@@ -808,32 +892,32 @@ if audio_data is not None:
         st.markdown('</div>', unsafe_allow_html=True)
 
     with tab_anti_spoof:
-        st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.6rem; margin-bottom: 16px;">Biometric Verification & Anti-Spoofing Assessment</h4>""", unsafe_allow_html=True)
+        st.markdown('<div class="ponder-card">', unsafe_allow_html=True)
+        st.markdown("""<div style="font-size: 16px; font-weight: 500; color: #fafafa; margin-bottom: 16px;">Biometric Syrinx vs Oral Cavity Verification</div>""", unsafe_allow_html=True)
         
-        status_html = f"{ICON_CHECK} <strong>Authentic Avian Syrinx Verified</strong>" if spoof_info['is_authentic'] else f"{ICON_CROSS} <strong>Rejected (Human Oral Mimicry / Spoofing)</strong>"
-        st.markdown(f"<div style='margin-bottom: 10px;'>{status_html}</div>", unsafe_allow_html=True)
+        status_html = f"{ICON_CHECK} <strong style='color:#53b365;'>Authentic Avian Syrinx Verified</strong>" if spoof_info['is_authentic'] else f"{ICON_CROSS} <strong style='color:#fb2c36;'>Rejected (Human Oral Mimicry / Spoofing)</strong>"
+        st.markdown(f"<div style='margin-bottom: 12px;'>{status_html}</div>", unsafe_allow_html=True)
         st.write(f"**Spoofing Likelihood Score:** `{spoof_info['spoof_score']} / 100`")
-        st.write(f"**Sub-600Hz Breath Turbulence Ratio:** `{spoof_info['breath_ratio']}%` (Threshold: > 28% indicates human exhalation)")
+        st.write(f"**Sub-600Hz Breath Turbulence Ratio:** `{spoof_info['breath_ratio']}%` (Threshold: > 28% indicates human breath exhalation)")
         
         if spoof_info["spoof_factors"]:
             st.markdown("##### Detected Anti-Spoofing Flags:")
             for factor in spoof_info["spoof_factors"]:
                 st.warning(f"• {factor}")
         else:
-            st.success("• Dual syrinx harmonic purity confirmed. Zero human breath turbulence or oral cavity formants detected.")
+            st.success("• Dual syrinx harmonic purity confirmed. Zero human oral cavity formant constraints detected.")
         st.markdown('</div>', unsafe_allow_html=True)
 
     with tab_table:
-        st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.6rem; margin-bottom: 16px;">Detailed Bioacoustic Diagnostic Parameters</h4>""", unsafe_allow_html=True)
+        st.markdown('<div class="ponder-card">', unsafe_allow_html=True)
+        st.markdown("""<div style="font-size: 16px; font-weight: 500; color: #fafafa; margin-bottom: 16px;">Acoustic Feature Diagnostics</div>""", unsafe_allow_html=True)
         diag_rows = []
         for d in results["diagnostics"]:
             diag_rows.append({
-                "Diagnostic Factor": d["name"],
+                "Factor": d["name"],
                 "Detected Value": d["value"],
-                "Normal Range": d["normal_range"],
-                "Stress Score (0-100)": f"{d['score']}%",
+                "Normal Baseline": d["normal_range"],
+                "Stress Score": f"{d['score']}%",
                 "Status": d["status"]
             })
         st.table(diag_rows)
@@ -841,15 +925,15 @@ if audio_data is not None:
 
 else:
     st.markdown(f"""
-    <div class="ceti-content-card" style="text-align: center; padding: 72px 32px;">
-        <div style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 2.5rem; font-weight: 700; color: #000000; margin-bottom: 12px;">
+    <div class="ponder-card" style="text-align: center; padding: 64px 32px;">
+        <div style="font-size: 24px; font-weight: 500; color: #fafafa; margin-bottom: 10px; letter-spacing: -0.01em;">
             Awaiting Bioacoustic Acoustic Feed
         </div>
-        <p style="color: #4e5a7c; font-size: 1.1rem; max-width: 620px; margin: 0 auto 28px auto; line-height: 1.6;">
+        <p style="color: rgba(250, 250, 250, 0.58); font-size: 15px; max-width: 620px; margin: 0 auto 24px auto; line-height: 24px;">
             Select a calibrated laboratory benchmark, upload an avian field recording, or initiate live microphonic acquisition to commence neural species identification and disaster threat forecasting.
         </p>
-        <span class="ceti-pill-badge ceti-pill-verified">
-            {ICON_SHIELD} 6,522 Species Active &bull; Biometric Anti-Spoofing Enabled
+        <span class="ponder-pill ponder-pill-neutral">
+            {ICON_SHIELD} 6,522 Species Active &bull; Biometric Anti-Spoofing Guard Ready
         </span>
     </div>
     """, unsafe_allow_html=True)
