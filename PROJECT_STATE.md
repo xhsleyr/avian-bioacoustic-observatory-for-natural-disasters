@@ -2,6 +2,7 @@
 
 **Project Title:** Avian Vocal Bioacoustics for Natural Disaster Early Warning  
 **Target Environment:** Local macOS (Apple Silicon M1)  
+**Release Tag:** `v1.0.0-first-final-demo` (First Final Demo Version)  
 **Design & Typography:** Times New Roman serif across all headings, body, metrics, tables, and Plotly charts, styled within Project CETI's atmospheric motion-blurred gradient aesthetic with standard Figma-style vector line SVG icons.  
 **Stack:** Python 3.11, Streamlit, Librosa, PyTorch, ONNX Runtime (BirdNET 6K), Plotly, NumPy  
 **Zero-Cost Principle:** Fully local execution, no paid cloud APIs.
@@ -25,8 +26,8 @@ Birds Interaction and Communication/
 ├── .gitignore
 ├── .streamlit/
 │   └── config.toml             # Streamlit theme configuration (font = "serif")
-├── PROJECT_STATE.md            # Persistent project memory and progress tracker
-├── README.md                   # User guide & project presentation documentation
+├── PROJECT_STATE.md            # Persistent project memory and version milestones
+├── README.md                   # First Final Demo comprehensive documentation
 ├── DESIGN-projectceti-org.md   # Project CETI design tokens & specifications
 ├── requirements.txt            # Python dependencies
 ├── app.py                      # Bioacoustic Early Warning Web Application
@@ -85,6 +86,10 @@ Birds Interaction and Communication/
   - Tested Google Font `Savate`.
 - [x] **Milestone 12: Times New Roman Font Replacement**
   - Standardized font across `.streamlit/config.toml`, CSS styling, and Plotly visualizers to **Times New Roman** (`'Times New Roman', Times, Georgia, serif`).
+- [x] **Milestone 13: First Final Demo Release (`v1.0.0-first-final-demo`)**
+  - Preserved, tested, and bookmarked as the official **First Final Demo** of the project.
+  - Comprehensive thesis README presentation guide documented.
+  - Tagged in git as `v1.0.0-first-final-demo` for safe version restoration.
 
 ---
 
