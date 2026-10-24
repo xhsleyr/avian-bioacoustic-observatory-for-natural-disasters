@@ -1,7 +1,8 @@
 """Global Bird Species Classifier powered by Cornell BirdNET v2.4 (6,522 Species).
 
 Performs audio chunking and inference using ONNX Runtime to identify bird species
-across 6,500+ global species, combined with disaster-sensitivity heuristics.
+across 6,500+ global species, combined with disaster-sensitivity heuristics
+and domestic animal non-avian boundary filtering.
 """
 
 from typing import Dict, Any, List, Tuple
@@ -39,7 +40,13 @@ def infer_disaster_sensitivity(common_name: str, scientific_name: str) -> str:
     """Infer known disaster-sensing behavioral traits from avian family taxonomy."""
     name_lower = (common_name + " " + scientific_name).lower()
 
-    if any(k in name_lower for k in ["peafowl", "pavo"]):
+    if any(k in name_lower for k in ["dog", "canis"]):
+        return "Domestic canine: barks at domestic sounds, phone playbacks, or local visitors; excluded from avian planetary early-warning triggers."
+    elif any(k in name_lower for k in ["human", "whistle"]):
+        return "Human acoustic activity: oral whistling or vocal mimicry; excluded from avian early-warning triggers."
+    elif any(k in name_lower for k in ["siren", "engine", "noise"]):
+        return "Mechanical/synthetic environmental noise: excluded from avian early-warning triggers."
+    elif any(k in name_lower for k in ["peafowl", "pavo"]):
         return "Asian seismology bio-indicator: sensitive to compressional seismic P-waves and barometric pressure drops; emits loud echoing alarm honks prior to earthquakes."
     elif any(k in name_lower for k in ["golden-winged", "warbler", "vermivora", "sylvi"]):
         return "Tornado & storm infrasound responder: documented in Current Biology (2014) evacuating 48h before 84 tornadoes by detecting low-frequency storm infrasound (<20 Hz)."
@@ -126,6 +133,23 @@ def identify_species(
         })
 
     primary = candidates[0]
+    com_lower = primary["common_name"].lower()
+
+    # Distinguish authentic birds from non-bird tokens or sub-threshold ambiguous audio
+    is_explicit_non_bird = any(k in com_lower for k in ["dog", "human", "siren", "engine", "noise"])
+    is_valid_bird = (not is_explicit_non_bird) and (primary["confidence"] >= 25.0)
+
+    if not is_valid_bird:
+        if "dog" in com_lower:
+            primary["common_name"] = "Domestic Dog"
+            primary["scientific_name"] = "Canis lupus familiaris"
+        elif "human" in com_lower:
+            pass  # keep human whistle / vocal
+        elif primary["confidence"] < 25.0:
+            primary["disaster_sensitivity"] = (
+                f"Sub-threshold match ({primary['confidence']}%): Lacks distinct avian syrinx spectrographic ridges; "
+                "typical of domestic mammal vocalizations (dog/cat), phone speaker playbacks, or ambient noise."
+            )
 
     detected_pitch = acoustic_features["spectral_centroid"]["mean"] if acoustic_features else 3000.0
     if detected_pitch > 5000:
@@ -138,6 +162,7 @@ def identify_species(
     return {
         "model_name": "Cornell BirdNET Global v2.4 (6,522 Species)",
         "total_species_supported": 6522,
+        "is_valid_bird": is_valid_bird,
         "primary_species": {
             "common_name": primary["common_name"],
             "scientific_name": primary["scientific_name"],

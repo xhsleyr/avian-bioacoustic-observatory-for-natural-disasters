@@ -1865,27 +1865,52 @@ if audio_data is not None:
                 </div>
                 """, unsafe_allow_html=True)
     else:
+        cat_labels = {
+            "canine_dog": "Domestic Canine (Dog Bark / Whine)",
+            "feline_cat": "Domestic Feline (Cat Meow)",
+            "phone_speaker_replay": "Smartphone Loudspeaker Replay Detected",
+            "mammalian_domestic": "Domestic Mammalian Sound (Canine / Feline)",
+            "human_mimicry": "Human Vocal Mimicry / Oral Whistling",
+            "artificial_siren": "Artificial Siren / Electronic Alarm",
+            "mechanical_engine": "Mechanical Engine Noise"
+        }
+        detected_non_bird_title = cat_labels.get(spoof_info.get("detected_category", ""), "Non-Avian Acoustic Interference")
+        factors_items = "".join(f"<li style='margin-bottom: 5px;'>{html.escape(f)}</li>" for f in spoof_info.get('spoof_factors', []))
+        
         st.markdown(f"""
-        <div class="intera-card" style="border-left: 4px solid #e63946; padding: 30px 38px;">
-            <span style="background-color: #000000; color: #ffffff; font-size: 12px; padding: 4px 14px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700;">
-                Non-Avian Acoustic Spectrum
-            </span>
-            <div class="species-hero-title" style="margin-top: 10px;">{safe_com_name}</div>
-            <p style="font-size: 1.15rem; color: #000000; font-weight: 500; margin-top: 12px; line-height: 1.65;">
-                Acoustic energy distribution exhibits vocal tract resonant formants and low-frequency breath turbulence typical of human oral whistling, rather than avian syrinx biphonation.
+        <div class="intera-card" style="border-left: 4px solid #e63946; padding: 28px 34px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+                <span style="background-color: #000000; color: #ffffff; font-size: 12px; padding: 4px 14px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700;">
+                    Biometric Rejection &bull; Non-Avian Acoustic Source
+                </span>
+                <span style="font-size: 13px; color: #e63946; font-weight: 700;">
+                    Sub-1kHz Energy: {spoof_info.get('sub1k_ratio', 0.0)}% (Avian Baseline &lt; 8%)
+                </span>
+            </div>
+            <div class="species-hero-title" style="margin-top: 8px; font-size: 2.1rem; color: #000000;">
+                {detected_non_bird_title}
+            </div>
+            <p style="font-size: 1.15rem; color: #000000; font-weight: 500; margin-top: 10px; line-height: 1.65;">
+                {html.escape(spoof_info['status_summary'])}
             </p>
+            <div style="margin-top: 14px; border-top: 1px solid #e2e5ec; padding-top: 14px; font-size: 0.98rem; color: #000000;">
+                <strong>Biometric Rejection Criteria Triggered:</strong>
+                <ul style="margin: 6px 0 0 18px; padding: 0;">
+                    {factors_items}
+                </ul>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
     # 3. Early Warning Threat Assessment Banner
     if spoof_info["suppress_alarm"]:
         st.markdown(f"""
-        <div class="intera-card" style="border-left: 4px solid #e63946; padding: 28px 38px;">
-            <h3 style="font-size: 1.85rem; color: #e63946; margin: 0 0 8px 0;">
-                {ICON_ALERT} Civil Early-Warning Trigger Suppressed
+        <div class="intera-card" style="border-left: 4px solid #e63946; padding: 26px 34px;">
+            <h3 style="font-size: 1.75rem; color: #e63946; margin: 0 0 8px 0;">
+                {ICON_ALERT} Civil Disaster Early-Warning Trigger Safely Disarmed
             </h3>
             <p style="color: #000000; font-size: 1.12rem; margin: 0; font-weight: 500; line-height: 1.6;">
-                Because human vocal mimicry or non-avian ambient disturbance was identified, automated disaster triggers have been disarmed to prevent civil false alarms.
+                Because domestic animal acoustics (dog bark, cat meow), smartphone loudspeaker playback, or non-avian ambient noise was detected, automated disaster triggers have been disarmed to prevent civil false panic.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -1991,7 +2016,7 @@ if audio_data is not None:
             <div class="stressor-card">
                 <div class="stressor-header">
                     <span class="stressor-name">Biometric Vocal Tract Organ</span>
-                    <span class="stressor-val" style="color: #4749fe;">{'Avian Syrinx' if spoof_info['is_authentic'] else 'Human Whistle'}</span>
+                    <span class="stressor-val" style="color: {'#10b981' if spoof_info['is_authentic'] else '#e63946'};">{'Avian Syrinx' if spoof_info['is_authentic'] else spoof_info.get('detected_category', 'Mammalian').replace('_', ' ').title()}</span>
                 </div>
                 <div class="stressor-bar-track">
                     <div class="stressor-bar-fill" style="width: {100.0 if spoof_info['is_authentic'] else 20.0}%; background-color: {'#10b981' if spoof_info['is_authentic'] else '#e63946'};"></div>
@@ -2034,10 +2059,11 @@ if audio_data is not None:
         with st.container(border=True):
             st.markdown("""<h4 style="font-size: 1.55rem; margin-bottom: 18px;">Biometric Verification & Anti-Spoofing Assessment</h4>""", unsafe_allow_html=True)
             
-            status_html = f"{ICON_CHECK} <strong>Authentic Avian Syrinx Verified</strong>" if spoof_info['is_authentic'] else f"{ICON_CROSS} <strong>Rejected (Human Oral Mimicry / Spoofing)</strong>"
+            status_html = f"{ICON_CHECK} <strong>Authentic Avian Syrinx Verified</strong>" if spoof_info['is_authentic'] else f"{ICON_CROSS} <strong>Rejected: {html.escape(spoof_info['status_label'])}</strong>"
             st.markdown(f"<div style='margin-bottom: 12px; font-size: 1.15rem;'>{status_html}</div>", unsafe_allow_html=True)
-            st.write(f"**Spoofing Likelihood Score:** `{spoof_info['spoof_score']} / 100`")
-            st.write(f"**Sub-600Hz Breath Turbulence Ratio:** `{spoof_info['breath_ratio']}%` (Threshold: > 28% indicates human exhalation)")
+            st.write(f"**Non-Avian Risk Score:** `{spoof_info['spoof_score']} / 100`")
+            st.write(f"**Sub-1,000 Hz Low-Frequency Energy:** `{spoof_info['sub1k_ratio']}%` (Avian Baseline &lt; 8%; Mammals &gt; 20%)")
+            st.write(f"**Detected Category:** `{spoof_info.get('detected_category', 'unknown')}`")
             
             if spoof_info["spoof_factors"]:
                 st.markdown("##### Detected Anti-Spoofing Flags:")

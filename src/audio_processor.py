@@ -1,7 +1,8 @@
 """Audio processing and bioacoustic feature extraction module.
 
 Standardizes input signals and extracts acoustic descriptors used by the
-distress analysis engine, using voice activity masking to ignore silence.
+distress analysis engine and biometric anti-spoofing shield, using voice
+activity masking to ignore ambient silence.
 """
 
 from typing import Dict, Any, Tuple
@@ -44,7 +45,8 @@ def load_audio(
 
 
 def extract_acoustic_features(y: np.ndarray, sr: int = TARGET_SR) -> Dict[str, Any]:
-    """Extract bioacoustic features correlated with bird vocalization distress.
+    """Extract bioacoustic features correlated with bird vocalization distress
+    and non-avian mammalian / smartphone playback discrimination.
     
     Uses vocal activity masking so silent intervals between calls do not skew
     spectral flatness or centroid calculations.
@@ -61,11 +63,10 @@ def extract_acoustic_features(y: np.ndarray, sr: int = TARGET_SR) -> Dict[str, A
     )
     s_mel_db = librosa.power_to_db(s_mel, ref=np.max)
 
-    # 2. RMS Energy
+    # 2. RMS Energy & Vocal Activity Mask
     rms = librosa.feature.rms(y=y, hop_length=hop_length)[0]
     max_rms = float(np.max(rms)) if len(rms) > 0 else 1.0
 
-    # Vocal Activity Mask: Focus spectral analysis on frames with actual bird audio (>5% peak RMS)
     active_mask = rms > (0.05 * max_rms)
     if not np.any(active_mask):
         active_mask = np.ones_like(rms, dtype=bool)
@@ -74,9 +75,12 @@ def extract_acoustic_features(y: np.ndarray, sr: int = TARGET_SR) -> Dict[str, A
     centroid = librosa.feature.spectral_centroid(y=y, sr=sr, n_fft=n_fft, hop_length=hop_length)[0]
     active_centroid = centroid[active_mask]
     
-    # 4. Spectral Rolloff (85% energy threshold)
+    # 4. Spectral Rolloff (85% and 95% energy thresholds)
     rolloff = librosa.feature.spectral_rolloff(y=y, sr=sr, n_fft=n_fft, hop_length=hop_length, roll_percent=0.85)[0]
     active_rolloff = rolloff[active_mask]
+
+    rolloff_95 = librosa.feature.spectral_rolloff(y=y, sr=sr, n_fft=n_fft, hop_length=hop_length, roll_percent=0.95)[0]
+    active_rolloff_95 = rolloff_95[active_mask]
 
     # 5. Spectral Flatness (measure of noise/screech harshness vs harmonic purity)
     flatness = librosa.feature.spectral_flatness(y=y, n_fft=n_fft, hop_length=hop_length)[0]
@@ -86,8 +90,15 @@ def extract_acoustic_features(y: np.ndarray, sr: int = TARGET_SR) -> Dict[str, A
     zcr = librosa.feature.zero_crossing_rate(y=y, hop_length=hop_length)[0]
     active_zcr = zcr[active_mask]
 
-    # 7. Onset Detection (Call Bursts / Chirp Events)
-    # Energy onset detection tailored for bird calls
+    # 7. Low-Frequency Energy Ratios for Mammalian Larynx vs Avian Syrinx Discrimination
+    mel_freqs = librosa.mel_frequencies(n_mels=128, fmin=200, fmax=10000)
+    mask_sub1k = mel_freqs < 1000
+    mask_sub350 = mel_freqs < 350
+    total_mel_energy = np.sum(s_mel) + 1e-9
+    sub1k_ratio = float(np.sum(s_mel[mask_sub1k, :]) / total_mel_energy)
+    sub350_ratio = float(np.sum(s_mel[mask_sub350, :]) / total_mel_energy)
+
+    # 8. Onset Detection (Call Bursts / Chirp Events)
     onset_frames = librosa.onset.onset_detect(
         y=y, sr=sr, hop_length=hop_length, backtrack=True, wait=4, delta=0.07
     )
@@ -113,6 +124,10 @@ def extract_acoustic_features(y: np.ndarray, sr: int = TARGET_SR) -> Dict[str, A
             "mean": float(np.mean(active_rolloff)),
             "trajectory": rolloff
         },
+        "spectral_rolloff_95": {
+            "mean": float(np.mean(active_rolloff_95)) if len(active_rolloff_95) > 0 else 5000.0,
+            "trajectory": rolloff_95
+        },
         "spectral_flatness": {
             "mean": float(np.mean(active_flatness)),
             "trajectory": flatness
@@ -127,6 +142,8 @@ def extract_acoustic_features(y: np.ndarray, sr: int = TARGET_SR) -> Dict[str, A
             "mean": float(np.mean(active_zcr)),
             "trajectory": zcr
         },
+        "sub1k_ratio": sub1k_ratio,
+        "sub350_ratio": sub350_ratio,
         "call_rate": float(call_rate),
         "total_onsets": int(len(onset_frames)),
         "onset_times": onset_times
