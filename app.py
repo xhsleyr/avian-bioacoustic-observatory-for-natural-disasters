@@ -77,14 +77,59 @@ st.markdown("""
         --intera-cyan: #befff7;
     }
 
-    /* Universal Times New Roman Font Across ALL Text Elements */
-    html, body, .stApp, 
-    h1, h2, h3, h4, h5, h6, p, label, input, select, textarea,
-    table, th, td, tr, caption, small, strong, b, em, i, a,
-    .stMarkdown, .stMarkdown p, .stCaption, .stMetric,
-    .stSelectbox, .stRadio, .stTabs, [data-baseweb="tab"], [data-testid="stMetricValue"],
-    [data-testid="stMetricLabel"] {
-        font-family: 'Times New Roman', Times, 'Nimbus Roman No9 L', Georgia, serif !important;
+    /* Universal Crisp Font Smoothing & Rendering */
+    * {
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
+        text-rendering: optimizeLegibility !important;
+    }
+
+    html, body, .stApp {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif !important;
+        color: #1e293b !important;
+    }
+
+    /* Human Editorial Display Serifs: Story Headings, Scientific Nomenclature */
+    h1, h2, h3, h4, h5, h6,
+    .intera-hero-title,
+    .species-hero-title {
+        font-family: -apple-system-ui-serif, 'Newsreader', 'Charter', 'Iowan Old Style', 'Palatino', Georgia, 'Times New Roman', serif !important;
+        font-weight: 600 !important;
+        line-height: 1.18 !important;
+        color: #0f172a !important;
+        letter-spacing: -0.025em !important;
+    }
+
+    /* Human Editorial Narrative & Prose */
+    p, .intera-hero-subtitle, .species-hero-desc, .intera-card p {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", -apple-system-ui-serif, Georgia, serif !important;
+        font-size: 1.15rem !important;
+        line-height: 1.68 !important;
+        color: #334155 !important;
+    }
+
+    /* macOS Native UI: Buttons, Tabs, Dropdowns, Badges, Metrics */
+    .stButton > button,
+    .stTabs [data-baseweb="tab"],
+    div[data-testid="stRadio"],
+    div[data-testid="stRadio"] label,
+    div[data-testid="stRadio"] div[role="radiogroup"] > label,
+    div[data-testid="stSelectbox"],
+    div[data-baseweb="select"],
+    div[data-baseweb="popover"],
+    .intera-pill,
+    .intera-brand-title,
+    .intera-brand-tag,
+    .intera-nav,
+    [data-testid="stMetricValue"],
+    [data-testid="stMetricLabel"],
+    .stressor-name, .stressor-val, .stressor-context,
+    table, th, td {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", system-ui, sans-serif !important;
+    }
+
+    [data-testid="stMetricValue"], .stressor-val {
+        font-variant-numeric: tabular-nums lining-nums !important;
     }
 
     /* Protect all icons and Material Symbols from font override to prevent ligature overlap */
@@ -123,15 +168,38 @@ st.markdown("""
         pointer-events: none !important;
     }
 
-    /* Atmospheric Motion-Blurred Iridescent Gradient Canvas */
+    /* ========================================================
+       Living Kinetic Aurora Ambient Canvas (Moving Rich Gradient)
+       ======================================================== */
+    @keyframes kineticAuroraFlow {
+        0% {
+            background-position: 0% 12%, 100% 85%, 45% 92%, 85% 15%;
+            background-size: 155% 155%, 175% 175%, 165% 165%, 145% 145%;
+        }
+        33% {
+            background-position: 55% 75%, 28% 18%, 88% 45%, 15% 72%;
+            background-size: 175% 175%, 145% 145%, 155% 155%, 180% 180%;
+        }
+        66% {
+            background-position: 92% 32%, 72% 88%, 15% 30%, 58% 92%;
+            background-size: 145% 145%, 180% 180%, 170% 170%, 155% 155%;
+        }
+        100% {
+            background-position: 0% 12%, 100% 85%, 45% 92%, 85% 15%;
+            background-size: 155% 155%, 175% 175%, 165% 165%, 145% 145%;
+        }
+    }
+
     .stApp, [data-testid="stAppViewContainer"] {
-        background-color: #ffffff !important;
+        background-color: #f7f9fd !important;
         background-image: 
-            radial-gradient(circle at 12% 14%, rgba(190, 255, 247, 0.40) 0%, transparent 42%),
-            radial-gradient(circle at 88% 18%, rgba(71, 73, 254, 0.16) 0%, transparent 48%),
-            radial-gradient(circle at 50% 88%, rgba(77, 27, 199, 0.12) 0%, transparent 55%) !important;
+            radial-gradient(ellipse 65% 55% at 15% 20%, rgba(56, 232, 225, 0.50) 0%, transparent 68%),
+            radial-gradient(ellipse 70% 60% at 85% 15%, rgba(99, 102, 241, 0.40) 0%, transparent 66%),
+            radial-gradient(ellipse 75% 65% at 50% 85%, rgba(168, 85, 247, 0.32) 0%, transparent 72%),
+            radial-gradient(ellipse 60% 50% at 85% 75%, rgba(251, 146, 60, 0.28) 0%, transparent 65%) !important;
         background-attachment: fixed !important;
-        color: var(--intera-text-body) !important;
+        animation: kineticAuroraFlow 20s ease-in-out infinite alternate !important;
+        color: #334155 !important;
     }
 
     /* Main Container Padding — Generous, Centered Editorial Canvas */
@@ -440,14 +508,16 @@ st.markdown("""
         color: #ffffff !important;
     }
 
-    /* Architectural Content Cards */
+    /* Architectural Content Cards (Frosted Glass Depth) */
     .intera-card,
     [data-testid="stVerticalBlockBorderWrapper"] {
-        background-color: #ffffff !important;
-        border: 1px solid var(--intera-border) !important;
-        border-radius: 0px !important;
-        box-shadow: 0 4px 24px -3px rgba(77, 27, 199, 0.04) !important;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+        background-color: rgba(255, 255, 255, 0.88) !important;
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+        border: 1px solid rgba(226, 229, 236, 0.85) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 24px -3px rgba(77, 27, 199, 0.05) !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease !important;
         margin-bottom: 24px !important;
     }
 
@@ -940,9 +1010,9 @@ st.markdown("""
 # --- HUMAN EDITORIAL HERO ---
 st.markdown("""
 <div class="intera-hero">
-    <div class="intera-hero-title">Listening to the Sentinels of the Living Earth</div>
+    <div class="intera-hero-title">Listening to the Sentinels of the Earth</div>
     <div class="intera-hero-subtitle">
-        Avian biophonies perceive planetary turbulence hours before modern seismographs and barometers trigger. Project INTERA decodes these acoustic distress signals into planetary early-warning intelligence &mdash; forecasting earthquakes, cyclones, and tornadic infrasound.
+        Birds sense approaching storms and earthquakes hours before instruments pick them up. When danger nears, their calls change. Project INTERA listens to these distress patterns to warn communities before disaster strikes.
     </div>
 </div>
 """, unsafe_allow_html=True)
