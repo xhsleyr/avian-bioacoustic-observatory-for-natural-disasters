@@ -11,6 +11,7 @@ Designed in the visual system of Project CETI with strict Times New Roman editor
 
 import os
 import glob
+import html
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
@@ -680,6 +681,8 @@ input_mode = st.radio(
 audio_data = None
 audio_label = ""
 
+MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024  # 25 MB security limit
+
 if input_mode == "Upload Audio Recording":
     col_u_l, col_u_m, col_u_r = st.columns([1, 2.8, 1])
     with col_u_m:
@@ -688,8 +691,13 @@ if input_mode == "Upload Audio Recording":
             type=["wav", "mp3", "ogg", "flac"]
         )
         if uploaded_file is not None:
-            audio_data = uploaded_file.read()
-            audio_label = uploaded_file.name
+            if uploaded_file.size > MAX_UPLOAD_SIZE_BYTES:
+                st.error("Security Alert: Uploaded file exceeds the 25 MB maximum size limit.")
+            elif uploaded_file.size < 64:
+                st.error("Invalid Audio: Uploaded file is empty or corrupted.")
+            else:
+                audio_data = uploaded_file.read()
+                audio_label = uploaded_file.name
 
 elif input_mode == "Live Microphone Stream":
     col_m_l, col_m_m, col_m_r = st.columns([1, 2.8, 1])
@@ -732,10 +740,20 @@ else:
 
 if audio_data is not None:
     # 0ms Instant Response via Cached Pipeline
-    with st.spinner("Decoding bioacoustic signals with Cornell BirdNET & verifying biometrics..."):
-        y, sr, duration, features, results, species_info, spoof_info = cached_process_audio(audio_data)
+    try:
+        with st.spinner("Decoding bioacoustic signals with Cornell BirdNET & verifying biometrics..."):
+            y, sr, duration, features, results, species_info, spoof_info = cached_process_audio(audio_data)
+    except Exception as exc:
+        st.error(f"Bioacoustic Ingestion Error: Unable to decode audio stream ({type(exc).__name__}). Please provide a valid, uncorrupted audio recording.")
+        audio_data = None
 
+if audio_data is not None:
     prim_sp = species_info["primary_species"]
+    safe_audio_label = html.escape(str(audio_label))
+    safe_com_name = html.escape(str(prim_sp['common_name']))
+    safe_sci_name = html.escape(str(prim_sp['scientific_name']))
+    safe_spoof_label = html.escape(str(spoof_info['status_label']))
+    safe_spoof_summary = html.escape(str(spoof_info['status_summary']))
 
     # Header for acquired feed
     st.markdown(f"""
@@ -745,7 +763,7 @@ if audio_data is not None:
                 ACOUSTIC FEED ACQUIRED
             </div>
             <div style="font-size: 2rem; font-weight: 700; color: #000000;">
-                {audio_label}
+                {safe_audio_label}
             </div>
         </div>
         <div style="font-size: 14px; color: #8c93a8;">
@@ -761,14 +779,14 @@ if audio_data is not None:
         <div class="ceti-content-card" style="border-left: 4px solid #4749fe; padding: 20px 28px; margin-top: 14px;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
                 <span class="ceti-pill-badge ceti-pill-verified">
-                    {ICON_SHIELD} {spoof_info['status_label']}
+                    {ICON_SHIELD} {safe_spoof_label}
                 </span>
                 <span style="font-size: 13px; color: #8c93a8;">
                     BIRDNET CONFIDENCE: <strong>{spoof_info['birdnet_conf']}%</strong> &bull; SYRINX CONFIRMED
                 </span>
             </div>
             <p style="margin: 10px 0 0 0; font-size: 1.08rem; color: #4e5a7c; line-height: 1.55;">
-                {spoof_info['status_summary']}
+                {safe_spoof_summary}
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -777,14 +795,14 @@ if audio_data is not None:
         <div class="ceti-content-card" style="border-left: 4px solid #e63946; padding: 20px 28px; margin-top: 14px;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
                 <span class="ceti-pill-badge ceti-pill-warning">
-                    {ICON_ALERT} {spoof_info['status_label']}
+                    {ICON_ALERT} {safe_spoof_label}
                 </span>
                 <span style="font-size: 13px; color: #e63946; font-weight: 700;">
                     ADVERSARIAL SPOOFING DETECTED
                 </span>
             </div>
             <p style="margin: 10px 0 0 0; font-size: 1.08rem; color: #4e5a7c; line-height: 1.55;">
-                {spoof_info['status_summary']}
+                {safe_spoof_summary}
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -799,7 +817,7 @@ if audio_data is not None:
             with col_photo:
                 st.image(
                     visuals["image_url"],
-                    caption=f"{prim_sp['common_name']} ({visuals['source']})",
+                    caption=f"{safe_com_name} ({visuals['source']})",
                     width="stretch"
                 )
             
@@ -811,8 +829,8 @@ if audio_data is not None:
                     </span>
                     <span style="font-size: 13px; color: #8c93a8;">GLOBAL DATABASE: 6,522 SPECIES</span>
                 </div>
-                <div class="ceti-species-heading">{prim_sp['common_name']}</div>
-                <div class="ceti-species-sci">{prim_sp['scientific_name']}</div>
+                <div class="ceti-species-heading">{safe_com_name}</div>
+                <div class="ceti-species-sci">{safe_sci_name}</div>
                 <div class="ceti-species-desc">
                     {visuals['description']}
                 </div>
@@ -831,7 +849,7 @@ if audio_data is not None:
             <span style="background-color: #000000; color: #ffffff; font-size: 12px; padding: 4px 14px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700;">
                 NON-AVIAN ACOUSTIC PROFILE
             </span>
-            <div class="ceti-species-heading" style="margin-top: 10px;">{prim_sp['common_name']}</div>
+            <div class="ceti-species-heading" style="margin-top: 10px;">{safe_com_name}</div>
             <p style="font-size: 1.15rem; color: #4e5a7c; margin-top: 12px; line-height: 1.65;">
                 The sound profile exhibits human oral cavity formant constraints and breath turbulence rather than authentic avian syrinx modulation.
             </p>
