@@ -33,6 +33,7 @@ ICON_ALERT = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stro
 ICON_CHECK = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14 recovery"/></svg>"""
 ICON_CROSS = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>"""
 ICON_MIC = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>"""
+ICON_UPLOAD_FIGMA = """<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4749fe" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>"""
 
 
 def get_image_data_uri(path_or_url: str) -> str:
@@ -142,17 +143,52 @@ st.markdown("""
         font-family: "Material Symbols Rounded", "Material Symbols Outlined", sans-serif !important;
     }
 
-    /* Fix Streamlit File Uploader "uploadUpload" text clash */
+    /* Figma-Grade File Uploader Dropzone */
     [data-testid="stFileUploaderDropzone"] button span:first-child {
         display: none !important;
     }
 
     [data-testid="stFileUploaderDropzone"] {
-        border: 1px dashed var(--intera-border) !important;
-        background-color: #fafbfc !important;
-        border-radius: 4px !important;
-        padding: 24px 16px !important;
+        background: rgba(255, 255, 255, 0.88) !important;
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+        border: 1.5px dashed rgba(71, 73, 254, 0.35) !important;
+        border-radius: 14px !important;
+        padding: 26px 20px !important;
         text-align: center !important;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        box-shadow: 0 4px 16px rgba(30, 27, 75, 0.04) !important;
+    }
+
+    [data-testid="stFileUploaderDropzone"]:hover {
+        border-color: var(--intera-accent) !important;
+        background: #ffffff !important;
+        box-shadow: 0 8px 28px rgba(71, 73, 254, 0.15) !important;
+        transform: translateY(-2px) !important;
+    }
+
+    [data-testid="stFileUploaderDropzone"] button {
+        background-color: var(--intera-accent) !important;
+        color: #ffffff !important;
+        border-radius: 8px !important;
+        padding: 10px 28px !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        border: 1px solid var(--intera-accent) !important;
+        box-shadow: 0 4px 14px rgba(71, 73, 254, 0.28) !important;
+        transition: all 0.2s ease !important;
+        cursor: pointer !important;
+    }
+
+    [data-testid="stFileUploaderDropzone"] button:hover {
+        background-color: #3b3de0 !important;
+        border-color: #3b3de0 !important;
+        box-shadow: 0 6px 18px rgba(71, 73, 254, 0.38) !important;
+        transform: translateY(-1px) !important;
+    }
+
+    [data-testid="stFileUploaderDropzone"] button * {
+        color: #ffffff !important;
     }
 
     /* COMPLETELY REMOVE SIDEBAR AND LEFT TOGGLE ARROW BUTTON */
@@ -1099,11 +1135,25 @@ audio_label = ""
 MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024  # 25 MB
 
 if input_mode == "Upload Field Recording":
-    col_u_l, col_u_m, col_u_r = st.columns([1, 2.8, 1])
+    col_u_l, col_u_m, col_u_r = st.columns([1, 3.2, 1])
     with col_u_m:
+        st.markdown(f"""
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 16px; text-align: center;">
+            <div style="width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, rgba(71, 73, 254, 0.12) 0%, rgba(186, 247, 240, 0.45) 100%); border: 1.5px solid rgba(71, 73, 254, 0.22); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(71, 73, 254, 0.12); margin-bottom: 12px; transition: transform 0.2s ease;">
+                {ICON_UPLOAD_FIGMA}
+            </div>
+            <div style="font-size: 1.15rem; font-weight: 700; color: #1e1b4b; letter-spacing: 0.05em; text-transform: uppercase;">
+                Upload Bioacoustic Recording
+            </div>
+            <div style="font-size: 14px; color: #64748b; margin-top: 4px; max-width: 440px; line-height: 1.5;">
+                Drop high-fidelity avian audio files (.wav, .mp3, .ogg, .flac up to 25 MB) for automated BirdNET classification and syrinx verification.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         uploaded_file = st.file_uploader(
             "Upload raw bioacoustic field recording (.wav, .mp3, .ogg, .flac)",
-            type=["wav", "mp3", "ogg", "flac"]
+            type=["wav", "mp3", "ogg", "flac"],
+            label_visibility="collapsed"
         )
         if uploaded_file is not None:
             if uploaded_file.size > MAX_UPLOAD_SIZE_BYTES:
