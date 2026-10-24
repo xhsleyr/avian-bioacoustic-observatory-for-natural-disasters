@@ -169,37 +169,58 @@ st.markdown("""
     }
 
     /* ========================================================
-       Living Kinetic Aurora Ambient Canvas (Moving Rich Gradient)
+       Project CETI Atmospheric Sky Gradient Canvas
+       (Authentic Periwinkle Sky, Cyan Aura, Violet Halo & Stipple Grain)
        ======================================================== */
-    @keyframes kineticAuroraFlow {
+    @keyframes cetiAuraMovement {
         0% {
-            background-position: 0% 12%, 100% 85%, 45% 92%, 85% 15%;
-            background-size: 155% 155%, 175% 175%, 165% 165%, 145% 145%;
+            background-position:
+                0% 0%,             /* Grain overlay */
+                86% 16%,           /* Top-right turquoise seafoam glow */
+                36% 44%,           /* Center-left ultraviolet halo */
+                94% 68%,           /* Lower-right lilac haze */
+                48% 115%,          /* Sculptural white bottom dune */
+                0% 0%;             /* Base sky periwinkle gradient */
         }
-        33% {
-            background-position: 55% 75%, 28% 18%, 88% 45%, 15% 72%;
-            background-size: 175% 175%, 145% 145%, 155% 155%, 180% 180%;
-        }
-        66% {
-            background-position: 92% 32%, 72% 88%, 15% 30%, 58% 92%;
-            background-size: 145% 145%, 180% 180%, 170% 170%, 155% 155%;
+        50% {
+            background-position:
+                0% 0%,
+                92% 22%,
+                32% 48%,
+                88% 74%,
+                50% 112%,
+                0% 0%;
         }
         100% {
-            background-position: 0% 12%, 100% 85%, 45% 92%, 85% 15%;
-            background-size: 155% 155%, 175% 175%, 165% 165%, 145% 145%;
+            background-position:
+                0% 0%,
+                86% 16%,
+                36% 44%,
+                94% 68%,
+                48% 115%,
+                0% 0%;
         }
     }
 
     .stApp, [data-testid="stAppViewContainer"] {
-        background-color: #f7f9fd !important;
-        background-image: 
-            radial-gradient(ellipse 65% 55% at 15% 20%, rgba(56, 232, 225, 0.50) 0%, transparent 68%),
-            radial-gradient(ellipse 70% 60% at 85% 15%, rgba(99, 102, 241, 0.40) 0%, transparent 66%),
-            radial-gradient(ellipse 75% 65% at 50% 85%, rgba(168, 85, 247, 0.32) 0%, transparent 72%),
-            radial-gradient(ellipse 60% 50% at 85% 75%, rgba(251, 146, 60, 0.28) 0%, transparent 65%) !important;
+        background-color: #9bb8f5 !important;
+        background-image:
+            /* 1. Project CETI Tactile Film Grain / Stipple Texture */
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.052'/%3E%3C/svg%3E"),
+            /* 2. Top-Right Luminous Aqua / Turquoise Seafoam Glow */
+            radial-gradient(ellipse 55% 45% at 86% 16%, rgba(186, 247, 240, 0.92) 0%, rgba(186, 247, 240, 0.45) 45%, transparent 72%),
+            /* 3. Center-Left Glowing Ultraviolet Arc & Violet Halo */
+            radial-gradient(ellipse 52% 64% at 36% 44%, rgba(88, 56, 248, 0.78) 0%, rgba(109, 40, 217, 0.45) 38%, transparent 68%),
+            /* 4. Lower-Right Soft Lilac / Violet Haze */
+            radial-gradient(ellipse 50% 50% at 94% 68%, rgba(216, 180, 254, 0.75) 0%, transparent 62%),
+            /* 5. Sculptural Sweeping White Dune / Horizon Curve across bottom */
+            radial-gradient(ellipse 135% 65% at 48% 115%, #ffffff 0%, #ffffff 52%, transparent 54%),
+            /* 6. Base Sky Periwinkle & Azure Gradient */
+            linear-gradient(175deg, #9bb8f5 0%, #b4cef8 30%, #d5e4fd 60%, #edf3fe 100%) !important;
         background-attachment: fixed !important;
-        animation: kineticAuroraFlow 20s ease-in-out infinite alternate !important;
-        color: #334155 !important;
+        background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
+        animation: cetiAuraMovement 24s ease-in-out infinite alternate !important;
+        color: #1e1b4b !important;
     }
 
     /* Main Container Padding — Generous, Centered Editorial Canvas */
@@ -264,31 +285,55 @@ st.markdown("""
         flex-wrap: wrap;
     }
 
-    /* Human Editorial Hero Section */
+    /* Project CETI Editorial Hero Section */
     .intera-hero {
         text-align: center;
-        margin-bottom: 38px;
+        margin-bottom: 42px;
+        position: relative;
     }
 
-    .intera-hero-title {
-        font-size: clamp(2.6rem, 5vw, 4.2rem);
-        font-weight: 700;
-        line-height: 1.12;
-        color: var(--intera-text-dark);
-        margin-bottom: 18px;
-        letter-spacing: -0.02em;
-        max-width: 980px;
-        margin-left: auto;
-        margin-right: auto;
+    .intera-hero-eyebrow {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif !important;
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.18em !important;
+        text-transform: uppercase !important;
+        color: #1e1b4b !important;
+        margin-bottom: 8px !important;
+    }
+
+    .intera-hero-understand {
+        font-family: -apple-system-ui-serif, 'Playfair Display', 'Bodoni MT', 'Didot', 'Times New Roman', serif !important;
+        font-size: clamp(3.8rem, 8vw, 6.4rem) !important;
+        font-weight: 700 !important;
+        line-height: 0.98 !important;
+        color: #ffffff !important;
+        letter-spacing: -0.02em !important;
+        text-shadow: 0 4px 28px rgba(30, 27, 75, 0.20), 0 1px 3px rgba(30, 27, 75, 0.14) !important;
+        display: block !important;
+    }
+
+    .intera-hero-saying {
+        font-family: -apple-system-ui-serif, 'Playfair Display', 'Bodoni MT', 'Times New Roman', serif !important;
+        font-size: clamp(2.9rem, 6.2vw, 5.0rem) !important;
+        font-weight: 800 !important;
+        font-style: italic !important;
+        line-height: 1.05 !important;
+        color: #000000 !important;
+        letter-spacing: -0.015em !important;
+        margin-top: -6px !important;
+        margin-bottom: 22px !important;
+        display: block !important;
     }
 
     .intera-hero-subtitle {
-        font-size: 1.25rem;
-        line-height: 1.65;
-        color: var(--intera-text-body);
-        max-width: 860px;
-        margin: 0 auto 32px auto;
-        font-weight: 400;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif !important;
+        font-size: 1.2rem !important;
+        line-height: 1.68 !important;
+        color: #1e293b !important;
+        max-width: 820px !important;
+        margin: 0 auto !important;
+        font-weight: 450 !important;
     }
 
     /* Perfectly Centered Mode Switcher */
@@ -999,18 +1044,21 @@ st.markdown("""
         <span class="intera-brand-tag">Bioacoustic Observatory</span>
     </div>
     <div class="intera-nav">
-        <span>Research</span>
-        <span>Species Atlas (6,522)</span>
-        <span>Anti-Spoofing</span>
-        <span>Early Warning</span>
+        <span style="color: #4749fe; font-weight: 700;">HOME</span>
+        <span>RESEARCH</span>
+        <span>SPECIES ATLAS (6,522)</span>
+        <span>ANTI-SPOOFING</span>
+        <span>EARLY WARNING</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-# --- HUMAN EDITORIAL HERO ---
+# --- HUMAN EDITORIAL HERO (PROJECT CETI ART DIRECTION) ---
 st.markdown("""
 <div class="intera-hero">
-    <div class="intera-hero-title">Listening to the Sentinels of the Earth</div>
+    <div class="intera-hero-eyebrow">WHAT WOULD IT MEAN TO</div>
+    <div class="intera-hero-understand">Understand</div>
+    <div class="intera-hero-saying">What the Birds are Saying</div>
     <div class="intera-hero-subtitle">
         Birds sense approaching storms and earthquakes hours before instruments pick them up. When danger nears, their calls change. Project INTERA listens to these distress patterns to warn communities before disaster strikes.
     </div>
