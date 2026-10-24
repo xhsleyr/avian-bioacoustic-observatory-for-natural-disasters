@@ -1,12 +1,12 @@
 """Project INTERA — Avian Bioacoustic Translation & Planetary Early Warning Intelligence.
-Designed in the visual system of Project CETI with strict Times New Roman editorial typography.
+Art-directed in the visual system of Project CETI with authentic human editorial craftsmanship.
 
-- Visual theme: Fluid motion-blurred iridescent gradient aura (Cyan #befff7 -> Electric Blue #4749fe -> Deep Purple #4d1bc7)
-- Strict Times New Roman serif across all DOM elements, metrics, tables, and Plotly figures
-- Perfectly centered, balanced layout with enlarged central content and zero empty white blocks
-- Complete elimination of sidebar and toggle arrow
-- Zero-lag, instant 0ms cached neural species identification across 6,522 global species
-- Biometric Dual Syrinx Anti-Spoofing & Planetary Disaster Intelligence
+Principles:
+- Distinctive editorial presence: no generic AI template tropes, no redundant all-caps eyebrows, no cookie-cutter cards.
+- Human typography hierarchy: elegant Times New Roman serif display titles, generous line-heights, and thoughtful scientific copy.
+- Museum-grade biological plate for species identification with high-resolution imagery and verified ornithological metadata.
+- Acoustic telemetry console: dark bioluminescent sonogram, live waveform visualizer, and calibrated Cornell BirdNET v2.4 classification.
+- Robust security: input validation, 25MB file upload ceiling, SSRF defenses, and strict HTML escaping.
 """
 
 import os
@@ -26,48 +26,56 @@ from src.image_fetcher import fetch_bird_visuals
 # --- FIGMA / ICONS8 OUTLINE SVG ICONS ---
 ICON_SHIELD = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>"""
 ICON_ALERT = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>"""
-ICON_CHECK = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>"""
-ICON_CROSS = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>"""
+ICON_CHECK = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14 recovery"/></svg>"""
 ICON_MIC = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>"""
 
 # Page configuration — full-width, clean layout without sidebar
 st.set_page_config(
-    page_title="INTERA — Listening to the Sentinels",
+    page_title="Project INTERA — Listening to the Sentinels",
     page_icon="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645bdf9d4bac53320316d064_CETI-Favicon.png",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# Project CETI Design System + Strict Times New Roman Typography CSS
+# Human Craft & Editorial Art Direction CSS
 st.markdown("""
 <style>
     :root {
-        --ceti-primary: #4d1bc7;
-        --ceti-primary-accent: #4749fe;
-        --ceti-button-hover: #000000;
-        --ceti-nav-hover: #4f1ccb;
-        --ceti-bg: #ffffff;
-        --ceti-text-primary: #4e5a7c;
-        --ceti-text-inverse: #ffffff;
-        --ceti-text-dark: #000000;
-        --ceti-text-muted: #8c93a8;
-        --ceti-surface-dark: #181b22;
-        --ceti-border-light: #e2e5ec;
-        --ceti-cyan: #befff7;
+        --intera-primary: #4d1bc7;
+        --intera-accent: #4749fe;
+        --intera-hover: #000000;
+        --intera-bg: #ffffff;
+        --intera-text-body: #4e5a7c;
+        --intera-text-dark: #000000;
+        --intera-text-muted: #8c93a8;
+        --intera-border: #e2e5ec;
+        --intera-cyan: #befff7;
     }
 
-    /* Universal Times New Roman Font Across ALL Elements */
+    /* Universal Times New Roman Font Across ALL Text Elements */
     html, body, .stApp, 
-    h1, h2, h3, h4, h5, h6, p, span, div, label, input, button, select, textarea,
+    h1, h2, h3, h4, h5, h6, p, label, input, select, textarea,
     table, th, td, tr, caption, small, strong, b, em, i, a,
-    .stMarkdown, .stMarkdown *, .stCaption, .stCaption *, .stMetric, .stMetric *,
+    .stMarkdown, .stMarkdown p, .stCaption, .stMetric,
     .stSelectbox, .stRadio, .stTabs, [data-baseweb="tab"], [data-testid="stMetricValue"],
     [data-testid="stMetricLabel"] {
         font-family: 'Times New Roman', Times, 'Nimbus Roman No9 L', Georgia, serif !important;
     }
 
+    /* Protect all icons and Material Symbols from font override to prevent ligature overlap */
+    [class*="material-symbols"],
+    [data-testid*="stIcon"],
+    [data-testid="stFileUploaderDropzone"] span[translate="no"],
+    .material-symbols-rounded,
+    .material-symbols-outlined,
     svg, svg * {
-        font-family: inherit !important;
+        font-family: "Material Symbols Rounded", "Material Symbols Outlined", sans-serif !important;
+    }
+
+    [data-testid="stFileUploaderDropzone"] [data-testid="baseButton-secondary"] span:first-child {
+        font-family: "Material Symbols Rounded", sans-serif !important;
+        margin-right: 8px !important;
+        display: inline-block !important;
     }
 
     /* COMPLETELY REMOVE SIDEBAR AND LEFT TOGGLE ARROW BUTTON */
@@ -87,18 +95,18 @@ st.markdown("""
     .stApp, [data-testid="stAppViewContainer"] {
         background-color: #ffffff !important;
         background-image: 
-            radial-gradient(circle at 15% 15%, rgba(190, 255, 247, 0.45) 0%, transparent 45%),
-            radial-gradient(circle at 85% 20%, rgba(71, 73, 254, 0.20) 0%, transparent 50%),
-            radial-gradient(circle at 50% 85%, rgba(77, 27, 199, 0.16) 0%, transparent 55%) !important;
+            radial-gradient(circle at 12% 14%, rgba(190, 255, 247, 0.40) 0%, transparent 42%),
+            radial-gradient(circle at 88% 18%, rgba(71, 73, 254, 0.16) 0%, transparent 48%),
+            radial-gradient(circle at 50% 88%, rgba(77, 27, 199, 0.12) 0%, transparent 55%) !important;
         background-attachment: fixed !important;
-        color: var(--ceti-text-primary) !important;
+        color: var(--intera-text-body) !important;
     }
 
-    /* Main Container Padding — Centered with Balanced Max Width */
+    /* Main Container Padding — Generous, Centered Editorial Canvas */
     .block-container {
-        padding-top: 2rem !important;
+        padding-top: 2.2rem !important;
         padding-bottom: 5rem !important;
-        max-width: 1180px !important;
+        max-width: 1140px !important;
         margin: 0 auto !important;
     }
 
@@ -110,177 +118,88 @@ st.markdown("""
     /* Global Headings */
     h1, h2, h3, h4, h5 {
         font-weight: 700 !important;
-        line-height: 1.25 !important;
-        color: var(--ceti-text-dark) !important;
-        letter-spacing: -0.01em !important;
+        line-height: 1.2 !important;
+        color: var(--intera-text-dark) !important;
+        letter-spacing: -0.015em !important;
     }
 
-    /* Project CETI Navigation Bar */
-    .ceti-navbar {
+    /* Editorial Masthead */
+    .intera-masthead {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 14px 0 20px 0;
-        border-bottom: 1px solid var(--ceti-border-light);
-        margin-bottom: 38px;
+        padding: 16px 0 22px 0;
+        border-bottom: 1px solid var(--intera-border);
+        margin-bottom: 44px;
         flex-wrap: wrap;
         gap: 16px;
     }
 
-    .ceti-logo-mark {
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--ceti-text-dark);
+    .intera-brand {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
     }
 
-    .ceti-logo-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: var(--ceti-primary-accent);
-        display: inline-block;
+    .intera-brand-title {
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--intera-text-dark);
     }
 
-    .ceti-nav-links {
+    .intera-brand-tag {
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        color: var(--intera-accent);
+        font-style: italic;
+    }
+
+    .intera-nav {
         display: flex;
         gap: 28px;
-        font-size: 13px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--ceti-text-muted);
+        font-size: 13.5px;
+        color: var(--intera-text-muted);
         flex-wrap: wrap;
     }
 
-    /* Centered Hero Section */
-    .ceti-hero-wrap {
+    /* Human Editorial Hero Section */
+    .intera-hero {
         text-align: center;
-        margin-bottom: 36px;
+        margin-bottom: 42px;
     }
 
-    .ceti-hero-eyebrow {
-        font-size: 13px;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--ceti-primary-accent);
-        margin-bottom: 12px;
+    .intera-hero-title {
+        font-size: clamp(2.6rem, 5vw, 4.2rem);
         font-weight: 700;
-    }
-
-    .ceti-hero-title {
-        font-size: clamp(2.4rem, 4.4vw, 3.8rem);
-        font-weight: 700;
-        line-height: 1.18;
-        color: var(--ceti-text-dark);
-        margin-bottom: 18px;
-        letter-spacing: -0.015em;
-        max-width: 960px;
+        line-height: 1.12;
+        color: var(--intera-text-dark);
+        margin-bottom: 20px;
+        letter-spacing: -0.02em;
+        max-width: 980px;
         margin-left: auto;
         margin-right: auto;
     }
 
-    .ceti-hero-subtitle {
-        font-size: 1.22rem;
+    .intera-hero-subtitle {
+        font-size: 1.25rem;
         line-height: 1.65;
-        color: var(--ceti-text-primary);
-        max-width: 880px;
+        color: var(--intera-text-body);
+        max-width: 860px;
         margin: 0 auto 36px auto;
         font-weight: 400;
     }
 
-    /* Content Cards & Streamlit Containers */
-    .ceti-content-card,
-    [data-testid="stVerticalBlockBorderWrapper"] {
-        background-color: #ffffff !important;
-        border: 1px solid var(--ceti-border-light) !important;
-        border-radius: 0px !important;
-        box-shadow: 0 4px 20px -2px rgba(77, 27, 199, 0.04) !important;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
-        margin-bottom: 24px !important;
-    }
-
-    .ceti-content-card:hover,
-    [data-testid="stVerticalBlockBorderWrapper"]:hover {
-        border-color: var(--ceti-primary-accent) !important;
-        box-shadow: 0 8px 30px -4px rgba(71, 73, 254, 0.08) !important;
-    }
-
-    .ceti-content-card {
-        padding: 30px 36px;
-    }
-
-    /* SUPPRESS ANY EMPTY WHITE CONTAINERS */
-    .ceti-content-card:empty,
-    [data-testid="stVerticalBlockBorderWrapper"]:empty,
-    [data-testid="stVerticalBlockBorderWrapper"] > div:empty {
-        display: none !important;
-    }
-
-    /* Signature CETI Gradient Banner */
-    .ceti-gradient-banner {
-        background: linear-gradient(135deg, #befff7 0%, #4749fe 50%, #4d1bc7 100%);
-        color: #ffffff;
-        padding: 36px 40px;
-        border-radius: 0px;
-        margin-bottom: 26px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .ceti-gradient-banner h2 {
-        font-size: 2.3rem;
-        font-weight: 700;
-        color: #ffffff !important;
-        margin-bottom: 10px;
-        line-height: 1.25;
-    }
-
-    .ceti-gradient-banner p {
-        font-size: 1.15rem;
-        line-height: 1.65;
-        color: rgba(255, 255, 255, 0.98) !important;
-        max-width: 820px;
-        margin: 0;
-    }
-
-    /* Pill Badges */
-    .ceti-pill-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 18px;
-        border-radius: 100px;
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        white-space: nowrap;
-    }
-
-    .ceti-pill-verified {
-        background-color: rgba(71, 73, 254, 0.08);
-        color: var(--ceti-primary-accent);
-        border: 1px solid var(--ceti-primary-accent);
-    }
-
-    .ceti-pill-warning {
-        background-color: rgba(230, 57, 70, 0.08);
-        color: #e63946;
-        border: 1px solid #e63946;
-    }
-
-    /* Perfectly Centered Radio Filters */
+    /* Perfectly Centered Mode Switcher */
     [data-testid="stElementContainer"]:has([data-testid="stRadio"]) {
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
         width: 100% !important;
-        margin: 0 auto 22px auto !important;
+        margin: 0 auto 20px auto !important;
     }
+
     div[data-testid="stRadio"] {
         display: flex !important;
         flex-direction: column !important;
@@ -290,12 +209,13 @@ st.markdown("""
         width: 100% !important;
         margin: 0 auto !important;
     }
+
     div[data-testid="stRadio"] > label,
     div[data-testid="stRadio"] [data-testid="stWidgetLabel"] {
         font-size: 13px !important;
         letter-spacing: 0.12em !important;
         text-transform: uppercase !important;
-        color: var(--ceti-text-dark) !important;
+        color: var(--intera-accent) !important;
         font-weight: 700 !important;
         margin-bottom: 14px !important;
         display: flex !important;
@@ -304,52 +224,59 @@ st.markdown("""
         text-align: center !important;
         width: 100% !important;
     }
+
     div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] {
         text-align: center !important;
         width: 100% !important;
         display: flex !important;
         justify-content: center !important;
     }
+
     div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p {
         text-align: center !important;
         margin: 0 auto !important;
         width: 100% !important;
     }
+
     div[data-testid="stRadio"] div[role="radiogroup"] {
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        gap: 14px !important;
+        gap: 12px !important;
         flex-wrap: wrap !important;
         width: 100% !important;
         margin: 0 auto !important;
     }
+
     div[data-testid="stRadio"] div[role="radiogroup"] > label,
     div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] {
         background-color: #ffffff !important;
-        border: 1px solid var(--ceti-border-light) !important;
+        border: 1px solid var(--intera-border) !important;
         border-radius: 100px !important;
-        padding: 10px 26px !important;
+        padding: 9px 24px !important;
         cursor: pointer !important;
         transition: all 0.2s ease !important;
         white-space: nowrap !important;
-        font-size: 14px !important;
+        font-size: 13.5px !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
         margin: 0 !important;
     }
+
     div[data-testid="stRadio"] div[role="radiogroup"] > label:hover,
     div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:hover {
-        border-color: var(--ceti-primary-accent) !important;
+        border-color: var(--intera-accent) !important;
     }
+
     div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked),
     div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:has(input:checked) {
-        background-color: var(--ceti-primary-accent) !important;
+        background-color: var(--intera-accent) !important;
         color: #ffffff !important;
-        border-color: var(--ceti-primary-accent) !important;
-        box-shadow: 0 4px 14px rgba(71, 73, 254, 0.25) !important;
+        border-color: var(--intera-accent) !important;
+        box-shadow: 0 4px 16px rgba(71, 73, 254, 0.22) !important;
     }
+
     div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) *,
     div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:has(input:checked) * {
         color: #ffffff !important;
@@ -359,27 +286,118 @@ st.markdown("""
     div[data-testid="stSelectbox"] {
         margin: 0 auto !important;
     }
+
     div[data-testid="stSelectbox"] label {
         font-size: 13.5px !important;
-        letter-spacing: 0.08em !important;
+        letter-spacing: 0.10em !important;
         text-transform: uppercase !important;
-        color: var(--ceti-text-dark) !important;
+        color: var(--intera-accent) !important;
         font-weight: 700 !important;
         text-align: center !important;
         display: block !important;
-        margin-bottom: 6px !important;
+        margin-bottom: 8px !important;
     }
+
     div[data-testid="stSelectbox"] div[data-baseweb="select"] {
         border-radius: 0px !important;
-        border: 1px solid var(--ceti-border-light) !important;
+        border: 1px solid var(--intera-border) !important;
         background-color: #ffffff !important;
         color: #000000 !important;
-        font-size: 14px !important;
+        font-size: 14.5px !important;
+    }
+
+    /* Architectural Content Cards */
+    .intera-card,
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        background-color: #ffffff !important;
+        border: 1px solid var(--intera-border) !important;
+        border-radius: 0px !important;
+        box-shadow: 0 4px 24px -3px rgba(77, 27, 199, 0.04) !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+        margin-bottom: 24px !important;
+    }
+
+    .intera-card:hover,
+    [data-testid="stVerticalBlockBorderWrapper"]:hover {
+        border-color: var(--intera-accent) !important;
+        box-shadow: 0 8px 32px -4px rgba(71, 73, 254, 0.08) !important;
+    }
+
+    .intera-card {
+        padding: 32px 38px;
+    }
+
+    /* Suppress empty containers */
+    .intera-card:empty,
+    [data-testid="stVerticalBlockBorderWrapper"]:empty,
+    [data-testid="stVerticalBlockBorderWrapper"] > div:empty {
+        display: none !important;
+    }
+
+    /* Museum Natural History Photo Frame */
+    .photo-mat-frame {
+        border: 1px solid var(--intera-border);
+        padding: 8px;
+        background: #ffffff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Project CETI Atmospheric Gradient Banner */
+    .intera-gradient-banner {
+        background: linear-gradient(135deg, #befff7 0%, #4749fe 50%, #4d1bc7 100%);
+        color: #ffffff;
+        padding: 38px 42px;
+        border-radius: 0px;
+        margin-bottom: 26px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .intera-gradient-banner h2 {
+        font-size: 2.35rem;
+        font-weight: 700;
+        color: #ffffff !important;
+        margin-bottom: 10px;
+        line-height: 1.2;
+    }
+
+    .intera-gradient-banner p {
+        font-size: 1.18rem;
+        line-height: 1.65;
+        color: rgba(255, 255, 255, 0.98) !important;
+        max-width: 860px;
+        margin: 0;
+    }
+
+    /* Badges & Telemetry Tags */
+    .intera-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 18px;
+        border-radius: 100px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .intera-pill-verified {
+        background-color: rgba(71, 73, 254, 0.08);
+        color: var(--intera-accent);
+        border: 1px solid var(--intera-accent);
+    }
+
+    .intera-pill-warning {
+        background-color: rgba(230, 57, 70, 0.08);
+        color: #e63946;
+        border: 1px solid #e63946;
     }
 
     /* Buttons */
     .stButton > button {
-        background-color: var(--ceti-primary-accent) !important;
+        background-color: var(--intera-accent) !important;
         color: #ffffff !important;
         font-size: 13px !important;
         font-weight: 700 !important;
@@ -387,7 +405,7 @@ st.markdown("""
         text-transform: uppercase !important;
         padding: 11px 36px !important;
         border-radius: 0px !important;
-        border: 1px solid var(--ceti-primary-accent) !important;
+        border: 1px solid var(--intera-accent) !important;
         transition: background-color 0.2s ease, border-color 0.2s ease !important;
     }
 
@@ -400,18 +418,18 @@ st.markdown("""
     /* Tabs */
     .stTabs [data-baseweb="tab-list"] {
         gap: 24px;
-        border-bottom: 1px solid var(--ceti-border-light);
+        border-bottom: 1px solid var(--intera-border);
         background: transparent;
         flex-wrap: wrap;
         justify-content: center;
-        margin-bottom: 18px;
+        margin-bottom: 20px;
     }
 
     .stTabs [data-baseweb="tab"] {
-        font-size: 12.5px !important;
+        font-size: 13px !important;
         letter-spacing: 0.08em !important;
         text-transform: uppercase !important;
-        color: var(--ceti-text-muted) !important;
+        color: var(--intera-text-muted) !important;
         border-radius: 0px !important;
         padding: 12px 6px !important;
         background: transparent !important;
@@ -419,58 +437,49 @@ st.markdown("""
     }
 
     .stTabs [aria-selected="true"] {
-        color: var(--ceti-primary-accent) !important;
-        border-bottom: 2px solid var(--ceti-primary-accent) !important;
+        color: var(--intera-accent) !important;
+        border-bottom: 2px solid var(--intera-accent) !important;
         font-weight: 700 !important;
     }
 
-    /* Enlarged Central Metrics Sizing & Spacing */
+    /* Species Card Typography */
+    .species-hero-title {
+        font-size: clamp(2.4rem, 4.2vw, 3.4rem);
+        font-weight: 700;
+        color: var(--intera-text-dark);
+        line-height: 1.15;
+        margin: 8px 0 4px 0;
+    }
+
+    .species-hero-sci {
+        font-size: 1.3rem;
+        font-style: italic;
+        color: var(--intera-accent);
+        margin-bottom: 16px;
+    }
+
+    .species-hero-desc {
+        font-size: 1.2rem;
+        color: #374151;
+        line-height: 1.7;
+        margin-bottom: 18px;
+    }
+
+    /* Metrics Sizing */
     [data-testid="stMetricValue"] {
-        font-size: 2.2rem !important;
+        font-size: 2.25rem !important;
         font-weight: 700 !important;
-        color: var(--ceti-text-dark) !important;
+        color: var(--intera-text-dark) !important;
         line-height: 1.2 !important;
-        word-break: break-word !important;
     }
 
     [data-testid="stMetricLabel"] {
         font-size: 13px !important;
         letter-spacing: 0.07em !important;
         text-transform: uppercase !important;
-        color: var(--ceti-text-muted) !important;
+        color: var(--intera-text-muted) !important;
         line-height: 1.35 !important;
-        white-space: normal !important;
         font-weight: 700 !important;
-    }
-
-    [data-testid="stMetricDelta"] {
-        font-size: 12.5px !important;
-        line-height: 1.3 !important;
-    }
-
-    /* Enlarged Species Card Typography */
-    .ceti-species-heading {
-        font-size: clamp(2.3rem, 4vw, 3.3rem);
-        font-weight: 700;
-        color: var(--ceti-text-dark);
-        line-height: 1.15;
-        margin: 6px 0 2px 0;
-        word-break: break-word;
-        overflow-wrap: break-word;
-    }
-
-    .ceti-species-sci {
-        font-size: 1.25rem;
-        font-style: italic;
-        color: var(--ceti-primary-accent);
-        margin-bottom: 16px;
-    }
-
-    .ceti-species-desc {
-        font-size: 1.18rem;
-        color: #374151;
-        line-height: 1.7;
-        margin-bottom: 18px;
     }
 
     /* Diagnostic Table */
@@ -483,8 +492,8 @@ st.markdown("""
         font-size: 13px !important;
         text-transform: uppercase !important;
         letter-spacing: 0.07em !important;
-        color: var(--ceti-text-muted) !important;
-        border-bottom: 2px solid var(--ceti-border-light) !important;
+        color: var(--intera-text-muted) !important;
+        border-bottom: 2px solid var(--intera-border) !important;
         padding: 12px 16px !important;
         text-align: left !important;
         font-weight: 700 !important;
@@ -492,7 +501,7 @@ st.markdown("""
     tbody tr td {
         border-bottom: 1px solid #f4f5f8 !important;
         padding: 13px 16px !important;
-        color: var(--ceti-surface-dark) !important;
+        color: #181b22 !important;
     }
 
     audio {
@@ -503,7 +512,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# --- 60 FPS ZERO-LAG PERFORMANCE CACHING PIPELINE ---
+# --- PERFORMANCE CACHING PIPELINE ---
 @st.cache_data(show_spinner=False)
 def cached_process_audio(audio_bytes: bytes):
     """Zero-lag cached bioacoustic extraction and neural inference pipeline."""
@@ -521,7 +530,7 @@ def cached_fetch_visuals(common_name: str, scientific_name: str):
     return fetch_bird_visuals(common_name, scientific_name)
 
 
-# --- PLOTLY VISUALIZATIONS (TIMES NEW ROMAN TYPOGRAPHY) ---
+# --- PLOTLY VISUALIZATIONS (TIMES NEW ROMAN EDITORIAL STYLING) ---
 def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
     """Create a minimalist Plotly gauge indicator styled with Times New Roman."""
     fig = go.Figure(go.Indicator(
@@ -529,7 +538,7 @@ def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
         value=adi_score,
         domain={'x': [0, 1], 'y': [0, 1]},
         title={'text': "ACOUSTIC DISTRESS INDEX (ADI)", 'font': {'size': 13, 'color': "#8c93a8", 'family': "Times New Roman, Times, serif"}},
-        number={'suffix': "%", 'font': {'size': 54, 'color': "#000000", 'family': "Times New Roman, Times, serif"}},
+        number={'suffix': "%", 'font': {'size': 56, 'color': "#000000", 'family': "Times New Roman, Times, serif"}},
         gauge={
             'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "#e2e5ec"},
             'bar': {'color': "#4749fe", 'thickness': 0.28},
@@ -558,33 +567,71 @@ def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
 
 
 def plot_mel_spectrogram(features: dict) -> go.Figure:
-    """Create a Mel-Spectrogram heatmap with Times New Roman typography."""
+    """Create a high-contrast Bioluminescent Mel-Spectrogram with dark obsidian styling."""
     mel_db = features["mel_db"]
     times = features["times"]
     freq_bins = np.linspace(200, 10000, mel_db.shape[0])
 
-    colorscale_ceti = [
-        [0.0, "#181b22"],
-        [0.32, "#4d1bc7"],
-        [0.68, "#4749fe"],
-        [1.0, "#befff7"]
+    colorscale_biolum = [
+        [0.0, '#06070e'],
+        [0.12, '#120b30'],
+        [0.26, '#2a0e98'],
+        [0.44, '#4749fe'],
+        [0.64, '#00b4d8'],
+        [0.78, '#00f5d4'],
+        [0.90, '#70e000'],
+        [1.0, '#fff7a1']
     ]
 
     fig = go.Figure(data=go.Heatmap(
         z=mel_db,
         x=times,
         y=freq_bins,
-        colorscale=colorscale_ceti,
-        colorbar=dict(title=dict(text="dB", font=dict(family="Times New Roman, Times, serif", size=12)), len=0.8)
+        colorscale=colorscale_biolum,
+        zsmooth='best',
+        colorbar=dict(
+            title=dict(text="Energy (dB)", font=dict(family="Times New Roman, serif", size=13, color="#ffffff")),
+            tickfont=dict(family="Times New Roman, serif", color="#a2a7b7", size=11),
+            len=0.85,
+            thickness=14
+        ),
+        hovertemplate="<b>Freq:</b> %{y:.0f} Hz<br><b>Time:</b> %{x:.2f} s<br><b>Power:</b> %{z:.1f} dB<extra></extra>"
     ))
+
+    # Biological frequency threshold markers
+    fig.add_hline(
+        y=1500, line_dash='dash', line_color='rgba(71, 73, 254, 0.6)',
+        annotation_text="Avian Syrinx Band (1.5 kHz)",
+        annotation_position="top left",
+        annotation_font=dict(family="Times New Roman, serif", size=10, color="#befff7")
+    )
+    fig.add_hline(
+        y=4500, line_dash='dash', line_color='rgba(230, 57, 70, 0.6)',
+        annotation_text="Alarm Screech Threshold (4.5 kHz)",
+        annotation_position="top left",
+        annotation_font=dict(family="Times New Roman, serif", size=10, color="#ff9b9b")
+    )
+
     fig.update_layout(
-        title=dict(text="Mel-Frequency Bioacoustic Spectrogram", font=dict(family="Times New Roman, Times, serif", size=18, color="#000000")),
-        xaxis=dict(title=dict(text="Time (seconds)", font=dict(family="Times New Roman, Times, serif", size=13)), showgrid=False),
-        yaxis=dict(title=dict(text="Frequency (Hz)", font=dict(family="Times New Roman, Times, serif", size=13)), showgrid=True, gridcolor="#f4f5f8"),
-        height=320,
-        margin=dict(l=20, r=20, t=35, b=20),
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)'
+        title=dict(
+            text="Mel-Frequency Bioacoustic Spectrogram // Neural Energy Density",
+            font=dict(family="Times New Roman, serif", size=19, color="#ffffff")
+        ),
+        xaxis=dict(
+            title=dict(text="Time (seconds)", font=dict(family="Times New Roman, serif", size=13, color="#e2e5ec")),
+            showgrid=False,
+            tickfont=dict(family="Times New Roman, serif", color="#a2a7b7")
+        ),
+        yaxis=dict(
+            title=dict(text="Frequency (Hz)", font=dict(family="Times New Roman, serif", size=13, color="#e2e5ec")),
+            showgrid=True,
+            gridcolor="rgba(255, 255, 255, 0.08)",
+            tickfont=dict(family="Times New Roman, serif", color="#a2a7b7")
+        ),
+        height=340,
+        margin=dict(l=20, r=20, t=40, b=25),
+        paper_bgcolor='#0b0d14',
+        plot_bgcolor='#06070e'
     )
     return fig
 
@@ -641,69 +688,69 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
     return fig
 
 
-# --- TOP NAVIGATION BAR ---
+# --- EDITORIAL MASTHEAD ---
 st.markdown("""
-<div class="ceti-navbar">
-    <div class="ceti-logo-mark">
-        <span class="ceti-logo-dot"></span> PROJECT INTERA // BIOACOUSTICS
+<div class="intera-masthead">
+    <div class="intera-brand">
+        <span style="width: 9px; height: 9px; border-radius: 50%; background-color: #4749fe; display: inline-block;"></span>
+        <span class="intera-brand-title">Project INTERA</span>
+        <span class="intera-brand-tag">Bioacoustic Observatory</span>
     </div>
-    <div class="ceti-nav-links">
-        <span>RESEARCH</span>
-        <span>6,522 SPECIES</span>
-        <span>ANTI-SPOOFING</span>
-        <span>DISASTER INTELLIGENCE</span>
+    <div class="intera-nav">
+        <span>Research</span>
+        <span>Species Atlas (6,522)</span>
+        <span>Anti-Spoofing</span>
+        <span>Early Warning</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-# --- CENTERED HERO SECTION ---
+# --- HUMAN EDITORIAL HERO ---
 st.markdown("""
-<div class="ceti-hero-wrap">
-    <div class="ceti-hero-eyebrow">RESEARCH INITIATIVE</div>
-    <div class="ceti-hero-title">Understand What Birds are Saying</div>
-    <div class="ceti-hero-subtitle">
-        What if avian vocalizations became planetary early-warning stories? Applying advanced machine learning and bioacoustic translation to decode avian communication &mdash; forecasting earthquakes, cyclones, and atmospheric shockwaves before disaster strikes.
+<div class="intera-hero">
+    <div class="intera-hero-title">Listening to the Sentinels of the Living Earth</div>
+    <div class="intera-hero-subtitle">
+        Avian biophonies perceive planetary turbulence hours before modern seismographs and barometers trigger. Project INTERA decodes these acoustic distress signals into planetary early-warning intelligence &mdash; forecasting earthquakes, cyclones, and tornadic infrasound.
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-# Centered Bioacoustic Channel Selector
+# Mode selection
 input_mode = st.radio(
-    "SELECT BIOACOUSTIC CHANNEL:",
+    "Acoustic Acquisition Mode:",
     options=[
-        "Calibrated Field Benchmarks",
-        "Upload Audio Recording",
-        "Live Microphone Stream"
+        "Calibrated Laboratory Benchmarks",
+        "Upload Field Recording",
+        "Live Canopy Microphone"
     ],
     horizontal=True
 )
 
 audio_data = None
 audio_label = ""
+MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024  # 25 MB
 
-MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024  # 25 MB security limit
-
-if input_mode == "Upload Audio Recording":
+if input_mode == "Upload Field Recording":
     col_u_l, col_u_m, col_u_r = st.columns([1, 2.8, 1])
     with col_u_m:
         uploaded_file = st.file_uploader(
-            "Upload raw avian acoustic recording (.wav, .mp3, .ogg, .flac)",
+            "Upload raw bioacoustic field recording (.wav, .mp3, .ogg, .flac)",
             type=["wav", "mp3", "ogg", "flac"]
         )
         if uploaded_file is not None:
             if uploaded_file.size > MAX_UPLOAD_SIZE_BYTES:
-                st.error("Security Alert: Uploaded file exceeds the 25 MB maximum size limit.")
+                st.error("Security Alert: Uploaded file exceeds the 25 MB limit.")
             elif uploaded_file.size < 64:
                 st.error("Invalid Audio: Uploaded file is empty or corrupted.")
             else:
                 audio_data = uploaded_file.read()
                 audio_label = uploaded_file.name
 
-elif input_mode == "Live Microphone Stream":
+elif input_mode == "Live Canopy Microphone":
     col_m_l, col_m_m, col_m_r = st.columns([1, 2.8, 1])
     with col_m_m:
         st.markdown(f"<div style='text-align: center; margin-bottom: 6px;'><strong>{ICON_MIC} Real-Time Environmental Audio Stream</strong></div>", unsafe_allow_html=True)
-        st.caption("Point your Mac or external microphone towards the open window or canopy. Click Record to sample ambient avian signals.")
+        st.caption("Point your Mac or directional microphone towards the open canopy. Click Record to sample ambient avian signals.")
         recorded_audio = st.audio_input(
             "Start / Stop Live Sampling",
             sample_rate=44100
@@ -721,15 +768,15 @@ else:
     col_sel_l, col_sel_m, col_sel_r = st.columns([1, 2.8, 1])
     with col_sel_m:
         selected_sample_name = st.selectbox(
-            "Select Calibrated Laboratory Benchmark:",
+            "Select Calibrated Laboratory Reference:",
             options=list(sample_names.keys()),
             format_func=lambda x: {
-                "calm_robin_song.wav": "[CALM] European Robin Song — Baseline Melodic",
-                "elevated_warning_call.wav": "[ELEVATED] Song Sparrow Alarm — Agitation Alert",
-                "critical_disaster_panic.wav": "[CRITICAL] Northern Cardinal Screech — Pre-Disaster Panic",
-                "authentic_warbler_storm_alarm.wav": "[SENTINEL] Golden-winged Warbler — Documented 2014 Tornado Outbreak",
-                "authentic_peafowl_earthquake_alarm.wav": "[SENTINEL] Indian Peafowl — Documented Seismic P-Wave Honk",
-                "human_whistling_mimic.wav": "[ADVERSARIAL] Human Whistling Mimicry — Anti-Spoofing Test"
+                "calm_robin_song.wav": "OBS-01 // European Robin (Erithacus rubecula) — Melodic Baseline Song",
+                "elevated_warning_call.wav": "OBS-02 // Song Sparrow (Melospiza melodia) — Elevated Agitation Call",
+                "critical_disaster_panic.wav": "OBS-03 // Northern Cardinal (Cardinalis cardinalis) — Critical Pre-Disaster Panic",
+                "authentic_warbler_storm_alarm.wav": "OBS-04 // Golden-winged Warbler — 2014 Tornado Outbreak Infrasound",
+                "authentic_peafowl_earthquake_alarm.wav": "OBS-05 // Indian Peafowl — Documented Seismic P-Wave Honk",
+                "human_whistling_mimic.wav": "OBS-06 // Homo sapiens Oral Cavity — Anti-Spoofing Whistling Test"
             }.get(x, x)
         )
     
@@ -755,103 +802,108 @@ if audio_data is not None:
     safe_spoof_label = html.escape(str(spoof_info['status_label']))
     safe_spoof_summary = html.escape(str(spoof_info['status_summary']))
 
-    # Header for acquired feed
+    # Acoustic Feed Header
     st.markdown(f"""
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 28px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 32px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
         <div>
-            <div style="font-size: 13px; letter-spacing: 0.10em; text-transform: uppercase; color: #4749fe; margin-bottom: 4px; font-weight: 700;">
-                ACOUSTIC FEED ACQUIRED
+            <div style="font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: #4749fe; margin-bottom: 4px; font-weight: 700;">
+                Acoustic Specimen Telemetry
             </div>
-            <div style="font-size: 2rem; font-weight: 700; color: #000000;">
+            <div style="font-size: 2.1rem; font-weight: 700; color: #000000;">
                 {safe_audio_label}
             </div>
         </div>
         <div style="font-size: 14px; color: #8c93a8;">
-            Duration: <strong>{duration:.2f}s</strong> &bull; Sample Rate: <strong>{sr:,} Hz</strong>
+            Duration: <strong>{duration:.2f}s</strong> &bull; Sampling Rate: <strong>{sr:,} Hz</strong>
         </div>
     </div>
     """, unsafe_allow_html=True)
     st.audio(audio_data)
 
-    # 1. Anti-Spoofing Biometric Verification Badge
+    # 1. Biometric Verification Assessment Card
     if spoof_info["is_authentic"]:
         st.markdown(f"""
-        <div class="ceti-content-card" style="border-left: 4px solid #4749fe; padding: 20px 28px; margin-top: 14px;">
+        <div class="intera-card" style="border-left: 4px solid #4749fe; padding: 22px 30px; margin-top: 16px;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                <span class="ceti-pill-badge ceti-pill-verified">
+                <span class="intera-pill intera-pill-verified">
                     {ICON_SHIELD} {safe_spoof_label}
                 </span>
-                <span style="font-size: 13px; color: #8c93a8;">
-                    BIRDNET CONFIDENCE: <strong>{spoof_info['birdnet_conf']}%</strong> &bull; SYRINX CONFIRMED
+                <span style="font-size: 13.5px; color: #8c93a8;">
+                    Cornell BirdNET Confidence: <strong>{spoof_info['birdnet_conf']}%</strong> &bull; Syrinx Harmonics Verified
                 </span>
             </div>
-            <p style="margin: 10px 0 0 0; font-size: 1.08rem; color: #4e5a7c; line-height: 1.55;">
+            <p style="margin: 10px 0 0 0; font-size: 1.1rem; color: #4e5a7c; line-height: 1.6;">
                 {safe_spoof_summary}
             </p>
         </div>
         """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
-        <div class="ceti-content-card" style="border-left: 4px solid #e63946; padding: 20px 28px; margin-top: 14px;">
+        <div class="intera-card" style="border-left: 4px solid #e63946; padding: 22px 30px; margin-top: 16px;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                <span class="ceti-pill-badge ceti-pill-warning">
+                <span class="intera-pill intera-pill-warning">
                     {ICON_ALERT} {safe_spoof_label}
                 </span>
-                <span style="font-size: 13px; color: #e63946; font-weight: 700;">
-                    ADVERSARIAL SPOOFING DETECTED
+                <span style="font-size: 13.5px; color: #e63946; font-weight: 700;">
+                    Adversarial Non-Avian Acoustic Mimicry
                 </span>
             </div>
-            <p style="margin: 10px 0 0 0; font-size: 1.08rem; color: #4e5a7c; line-height: 1.55;">
+            <p style="margin: 10px 0 0 0; font-size: 1.1rem; color: #4e5a7c; line-height: 1.6;">
                 {safe_spoof_summary}
             </p>
         </div>
         """, unsafe_allow_html=True)
 
-    # 2. Visual Species Identification Card — Enlarged Central Content & Zero-Lag Local Photo
+    # 2. Museum Natural History Species Plate
     if spoof_info["is_authentic"]:
         visuals = cached_fetch_visuals(prim_sp['common_name'], prim_sp['scientific_name'])
+        safe_desc = html.escape(str(visuals['description']))
+        safe_source = html.escape(str(visuals['source']))
         
         with st.container(border=True):
-            col_photo, col_details = st.columns([1.1, 2.1])
+            col_photo, col_details = st.columns([1.15, 2.05])
             
             with col_photo:
-                st.image(
-                    visuals["image_url"],
-                    caption=f"{safe_com_name} ({visuals['source']})",
-                    width="stretch"
-                )
+                st.markdown(f"""
+                <div class="photo-mat-frame">
+                    <img src="{visuals['image_url']}" alt="{safe_com_name}" style="width: 100%; display: block; object-fit: cover;" />
+                    <div style="font-size: 11.5px; color: #8c93a8; margin-top: 8px; text-align: center; font-style: italic;">
+                        {safe_com_name} ({safe_source})
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
             
             with col_details:
                 st.markdown(f"""
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
                     <span style="background-color: #4749fe; color: #ffffff; font-size: 12px; padding: 4px 14px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700;">
-                        CORNELL BIRDNET &bull; {prim_sp['confidence']}% MATCH
+                        Cornell BirdNET &bull; {prim_sp['confidence']}% Acoustic Match
                     </span>
-                    <span style="font-size: 13px; color: #8c93a8;">GLOBAL DATABASE: 6,522 SPECIES</span>
+                    <span style="font-size: 13px; color: #8c93a8;">6,522 Species Global Taxonomy</span>
                 </div>
-                <div class="ceti-species-heading">{safe_com_name}</div>
-                <div class="ceti-species-sci">{safe_sci_name}</div>
-                <div class="ceti-species-desc">
-                    {visuals['description']}
+                <div class="species-hero-title">{safe_com_name}</div>
+                <div class="species-hero-sci">{safe_sci_name}</div>
+                <div class="species-hero-desc">
+                    {safe_desc}
                 </div>
-                <div style="border-top: 1px solid #e2e5ec; padding-top: 14px; margin-top: 14px; font-size: 1.05rem;">
-                    <p style="margin: 0 0 6px 0; color: #4e5a7c;">
+                <div style="border-top: 1px solid #e2e5ec; padding-top: 16px; margin-top: 16px; font-size: 1.05rem;">
+                    <p style="margin: 0 0 8px 0; color: #4e5a7c;">
                         <strong>Acoustic State:</strong> {prim_sp['pitch_status']} &bull; Pitch Centroid: <strong>{prim_sp['detected_pitch']:.0f} Hz</strong>
                     </p>
                     <p style="margin: 4px 0 0 0; color: #4749fe; font-weight: 700;">
-                        <strong>Disaster Sensitivity:</strong> <span style="font-weight: 400; color: #4e5a7c;">{prim_sp['disaster_sensitivity']}</span>
+                        <strong>Disaster Sensitivity Profile:</strong> <span style="font-weight: 400; color: #4e5a7c;">{prim_sp['disaster_sensitivity']}</span>
                     </p>
                 </div>
                 """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
-        <div class="ceti-content-card" style="border-left: 4px solid #e63946; padding: 28px 36px;">
+        <div class="intera-card" style="border-left: 4px solid #e63946; padding: 30px 38px;">
             <span style="background-color: #000000; color: #ffffff; font-size: 12px; padding: 4px 14px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700;">
-                NON-AVIAN ACOUSTIC PROFILE
+                Non-Avian Acoustic Spectrum
             </span>
-            <div class="ceti-species-heading" style="margin-top: 10px;">{safe_com_name}</div>
+            <div class="species-hero-title" style="margin-top: 10px;">{safe_com_name}</div>
             <p style="font-size: 1.15rem; color: #4e5a7c; margin-top: 12px; line-height: 1.65;">
-                The sound profile exhibits human oral cavity formant constraints and breath turbulence rather than authentic avian syrinx modulation.
+                Acoustic energy distribution exhibits vocal tract resonant formants and low-frequency breath turbulence typical of human oral whistling, rather than avian syrinx biphonation.
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -859,24 +911,24 @@ if audio_data is not None:
     # 3. Early Warning Threat Assessment Banner
     if spoof_info["suppress_alarm"]:
         st.markdown(f"""
-        <div class="ceti-content-card" style="border-left: 4px solid #e63946; padding: 26px 36px;">
+        <div class="intera-card" style="border-left: 4px solid #e63946; padding: 28px 38px;">
             <h3 style="font-size: 1.85rem; color: #e63946; margin: 0 0 8px 0;">
-                {ICON_ALERT} Disaster Early Warning Trigger Suppressed
+                {ICON_ALERT} Civil Early-Warning Trigger Suppressed
             </h3>
             <p style="color: #4e5a7c; font-size: 1.12rem; margin: 0; line-height: 1.6;">
-                Because non-avian or human acoustic mimicry was identified, automated early-warning triggers have been locked to prevent civil false alarms.
+                Because human vocal mimicry or non-avian ambient disturbance was identified, automated disaster triggers have been disarmed to prevent civil false alarms.
             </p>
         </div>
         """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
-        <div class="ceti-gradient-banner">
+        <div class="intera-gradient-banner">
             <h2>{results['alert_title']}</h2>
             <p>{results['alert_summary']}</p>
         </div>
         """, unsafe_allow_html=True)
 
-    # 4. Quantitative Metrics Row (Enlarged Central Content & Clean Containerization)
+    # 4. Quantitative Metrics Row
     col_gauge, col_stats = st.columns([1, 1.25])
 
     with col_gauge:
@@ -895,13 +947,13 @@ if audio_data is not None:
                 st.metric("Noise Harshness (Flatness)", f"{features['spectral_flatness']['mean']:.4f}", delta=f"{results['sub_scores']['flatness']}% chaos")
                 st.metric("Breath Turbulence Ratio", f"{spoof_info['breath_ratio']}%", delta="Human Breath" if spoof_info['breath_ratio'] > 20 else "Avian Syrinx")
 
-    # 5. Scientific Visualizers & Tables (Clean Containerized Tabs)
+    # 5. Scientific Telemetry Tabs
     tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_table = st.tabs([
-        "SPECTROGRAM HEATMAP",
-        "WAVEFORM & ONSETS",
-        "SPECIES TAXONOMY (6.5K)",
-        "BIOMETRIC VERIFICATION",
-        "DIAGNOSTIC DATA TABLE"
+        "Mel-Spectrogram Heatmap",
+        "Waveform & Onset Dynamics",
+        "Species Taxonomy (6,522)",
+        "Biometric Syrinx Verification",
+        "Diagnostic Parameters"
     ])
 
     with tab_spec:
@@ -914,12 +966,12 @@ if audio_data is not None:
 
     with tab_species:
         with st.container(border=True):
-            st.markdown("""<h4 style="font-size: 1.55rem; margin-bottom: 18px;">Top Species Candidates (from 6,522 Global Species)</h4>""", unsafe_allow_html=True)
+            st.markdown("""<h4 style="font-size: 1.55rem; margin-bottom: 18px;">Top Species Candidates (Cornell BirdNET 6,522 Engine)</h4>""", unsafe_allow_html=True)
             for cand in species_info["top_candidates"]:
                 col_info, col_bar = st.columns([2.5, 1])
                 with col_info:
-                    st.markdown(f"**{cand['common_name']}** (*{cand['scientific_name']}*)")
-                    st.caption(f"Disaster Profile: {cand['disaster_sensitivity']}")
+                    st.markdown(f"**{html.escape(cand['common_name'])}** (*{html.escape(cand['scientific_name'])}*)")
+                    st.caption(f"Disaster Profile: {html.escape(cand['disaster_sensitivity'])}")
                 with col_bar:
                     st.progress(min(1.0, cand['confidence'] / 100.0))
                     st.caption(f"Confidence: **{cand['confidence']}%**")
@@ -937,7 +989,7 @@ if audio_data is not None:
             if spoof_info["spoof_factors"]:
                 st.markdown("##### Detected Anti-Spoofing Flags:")
                 for factor in spoof_info["spoof_factors"]:
-                    st.warning(f"• {factor}")
+                    st.warning(f"• {html.escape(factor)}")
             else:
                 st.success("• Dual syrinx harmonic purity confirmed. Zero human breath turbulence or oral cavity formants detected.")
 
@@ -957,14 +1009,14 @@ if audio_data is not None:
 
 else:
     st.markdown(f"""
-    <div class="ceti-content-card" style="text-align: center; padding: 72px 36px;">
-        <div style="font-size: 2.4rem; font-weight: 700; color: #000000; margin-bottom: 14px; line-height: 1.25;">
+    <div class="intera-card" style="text-align: center; padding: 76px 38px;">
+        <div style="font-size: 2.5rem; font-weight: 700; color: #000000; margin-bottom: 16px; line-height: 1.2;">
             Awaiting Bioacoustic Acoustic Feed
         </div>
-        <p style="color: #4e5a7c; font-size: 1.18rem; max-width: 660px; margin: 0 auto 28px auto; line-height: 1.65;">
+        <p style="color: #4e5a7c; font-size: 1.2rem; max-width: 680px; margin: 0 auto 30px auto; line-height: 1.65;">
             Select a calibrated laboratory benchmark, upload an avian field recording, or initiate live microphonic acquisition to commence neural species identification and disaster threat forecasting.
         </p>
-        <span class="ceti-pill-badge ceti-pill-verified">
+        <span class="intera-pill intera-pill-verified">
             {ICON_SHIELD} 6,522 Species Active &bull; Biometric Anti-Spoofing Enabled
         </span>
     </div>
