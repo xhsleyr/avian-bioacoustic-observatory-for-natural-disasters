@@ -3,7 +3,7 @@
 Typography: Strict Times New Roman serif across all headings, body text, metrics, and charts.
 - Fluid motion-blurred iridescent gradient aura (Cyan #befff7 -> Electric Blue #4749fe -> Deep Purple #4d1bc7)
 - Times New Roman typography for classic editorial elegance across all DOM elements
-- Responsive, glitch-free layout with collision-free text hierarchy and clean sidebar collapse controls
+- Responsive, glitch-free full-width layout with zero empty blocks and sidebar removed
 - Global Cornell BirdNET 6,522 Species Intelligence, Biometric Anti-Spoofing, and Early Warning
 - Standard Figma-style vector SVG icons (Lucide / Icons8 minimal outline style)
 - 60 FPS zero-lag cached neural inference pipeline
@@ -31,12 +31,12 @@ ICON_MIC = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke
 ICON_WAVE = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><path d="M2 10v4"/><path d="M6 6v12"/><path d="M10 3v18"/><path d="M14 8v8"/><path d="M18 5v14"/><path d="M22 10v4"/></svg>"""
 ICON_NETWORK = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect width="6" height="6" x="9" y="2" rx="1"/><rect width="6" height="6" x="2" y="16" rx="1"/><rect width="6" height="6" x="16" y="16" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>"""
 
-# Page configuration
+# Page configuration — full-width, clean layout without sidebar
 st.set_page_config(
     page_title="Project AEWS — Listening to the Sentinels",
     page_icon="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645bdf9d4bac53320316d064_CETI-Favicon.png",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Project CETI Design System + Times New Roman Typography CSS
@@ -65,11 +65,22 @@ st.markdown("""
         font-family: 'Times New Roman', Times, 'Nimbus Roman No9 L', Georgia, serif !important;
     }
 
-    /* Preserve SVG Icon rendering so chevrons and vector graphics are never distorted */
-    svg, svg *, [data-testid="stIcon"], [data-testid="stIcon"] *,
-    button[kind="header"] svg, [data-testid="collapsedControl"] svg,
-    [data-testid="stSidebarCollapseButton"] svg {
+    /* Preserve SVG Icon rendering so vector graphics are crisp */
+    svg, svg * {
         font-family: inherit !important;
+    }
+
+    /* COMPLETELY REMOVE SIDEBAR AND LEFT TOGGLE BUTTON */
+    [data-testid="stSidebar"],
+    [data-testid="stSidebarCollapseButton"],
+    [data-testid="collapsedControl"],
+    section[data-testid="stSidebar"],
+    button[data-testid="stSidebarCollapseButton"] {
+        display: none !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        height: 0 !important;
+        pointer-events: none !important;
     }
 
     /* Atmospheric Motion-Blurred Gradient Canvas */
@@ -83,50 +94,18 @@ st.markdown("""
         color: var(--ceti-text-primary) !important;
     }
 
-    /* Streamlit Main Content Padding to Prevent Overlaps with Header */
+    /* Main Container Padding — Full Width without Sidebar */
     .block-container {
-        padding-top: 2.2rem !important;
+        padding-top: 2rem !important;
         padding-bottom: 4rem !important;
         max-width: 1260px !important;
+        margin: 0 auto !important;
     }
 
     /* Top Transparent Header */
     [data-testid="stHeader"] {
         background: transparent !important;
-        z-index: 99 !important;
-    }
-
-    /* Sidebar Styling with Crisp Controls */
-    [data-testid="stSidebar"] {
-        background-color: #fafbfc !important;
-        border-right: 1px solid var(--ceti-border-light) !important;
-        z-index: 100 !important;
-    }
-
-    [data-testid="stSidebar"] * {
-        color: var(--ceti-text-primary) !important;
-    }
-
-    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] h4, [data-testid="stSidebar"] h5 {
-        color: var(--ceti-text-dark) !important;
-    }
-
-    /* Sidebar Collapse & Expand Toggle Buttons (Arrow Slide Bar) */
-    [data-testid="stSidebarCollapseButton"],
-    [data-testid="collapsedControl"] {
-        color: var(--ceti-text-dark) !important;
-        background-color: #ffffff !important;
-        border: 1px solid var(--ceti-border-light) !important;
-        border-radius: 50% !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
-        transition: all 0.2s ease !important;
-    }
-
-    [data-testid="stSidebarCollapseButton"]:hover,
-    [data-testid="collapsedControl"]:hover {
-        border-color: var(--ceti-primary-accent) !important;
-        background-color: #f4f5f8 !important;
-        color: var(--ceti-primary-accent) !important;
+        display: none !important;
     }
 
     /* Global Typography Rules — Times New Roman */
@@ -188,7 +167,7 @@ st.markdown("""
         color: var(--ceti-primary);
     }
 
-    /* Hero Section — Fluid Responsive Typography to Prevent Collisions */
+    /* Hero Section — Fluid Responsive Typography */
     .ceti-hero-title {
         font-size: clamp(2.2rem, 4.2vw, 3.4rem);
         font-weight: 700;
@@ -209,20 +188,31 @@ st.markdown("""
         font-weight: 400;
     }
 
-    /* Content Cards */
-    .ceti-content-card {
-        background-color: #ffffff;
-        border: 1px solid var(--ceti-border-light);
-        border-radius: 0px;
-        padding: 28px 32px;
-        margin-bottom: 22px;
-        box-shadow: 0 4px 20px -2px rgba(77, 27, 199, 0.04);
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    /* Content Cards & Streamlit Bordered Containers */
+    .ceti-content-card,
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        background-color: #ffffff !important;
+        border: 1px solid var(--ceti-border-light) !important;
+        border-radius: 0px !important;
+        box-shadow: 0 4px 20px -2px rgba(77, 27, 199, 0.04) !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+        margin-bottom: 22px !important;
     }
 
-    .ceti-content-card:hover {
-        border-color: var(--ceti-primary-accent);
-        box-shadow: 0 8px 30px -4px rgba(71, 73, 254, 0.08);
+    .ceti-content-card:hover,
+    [data-testid="stVerticalBlockBorderWrapper"]:hover {
+        border-color: var(--ceti-primary-accent) !important;
+        box-shadow: 0 8px 30px -4px rgba(71, 73, 254, 0.08) !important;
+    }
+
+    .ceti-content-card {
+        padding: 28px 32px;
+    }
+
+    /* Suppress any empty container or empty card */
+    .ceti-content-card:empty,
+    [data-testid="stVerticalBlockBorderWrapper"]:empty {
+        display: none !important;
     }
 
     /* Signature CETI Gradient Banner */
@@ -363,7 +353,7 @@ st.markdown("""
         font-weight: 700 !important;
     }
 
-    /* Metrics Sizing & Spacing — Fixed Overlaps */
+    /* Metrics Sizing & Spacing */
     [data-testid="stMetricValue"] {
         font-size: 1.75rem !important;
         font-weight: 700 !important;
@@ -571,37 +561,6 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
     return fig
 
 
-# --- SIDEBAR ---
-with st.sidebar:
-    st.markdown("""
-    <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #4749fe; margin-bottom: 8px;">
-        RESEARCH INITIATIVE
-    </div>
-    <div style="font-size: 2.1rem; font-weight: 700; color: #000000; line-height: 1.15; margin-bottom: 8px;">
-        Project AEWS
-    </div>
-    <div style="font-size: 0.95rem; color: #4e5a7c; margin-bottom: 24px; line-height: 1.5;">
-        Avian Bioacoustic Translation & Planetary Early Warning Intelligence.
-    </div>
-    """, unsafe_allow_html=True)
-    st.divider()
-
-    st.markdown(f"##### {ICON_WAVE} Bioacoustic Principles", unsafe_allow_html=True)
-    st.caption("""
-    * **Non-Human Communication:** Decoding avian flock vocalizations before seismic and atmospheric disruptions.
-    * **Dual Syrinx Biphonation:** Verifying authentic multi-tonal avian biological markers.
-    * **Planetary Sensing:** Detecting compressional P-waves & storm infrasound (< 20 Hz).
-    """)
-
-    st.divider()
-    st.markdown(f"##### {ICON_NETWORK} Neural Architecture", unsafe_allow_html=True)
-    st.markdown("""
-    * **Classifier:** Cornell BirdNET v2.4 (6,522 Species)
-    * **Biometrics:** Syrinx vs Oral Cavity Anti-Spoofing
-    * **Compute Core:** Apple Silicon M1 Local Neural Core (0ms rerun)
-    """)
-
-
 # --- TOP NAVIGATION BAR ---
 st.markdown("""
 <div class="ceti-navbar">
@@ -747,44 +706,42 @@ if audio_data is not None:
         </div>
         """, unsafe_allow_html=True)
 
-    # 2. Visual Species Identification Card
+    # 2. Visual Species Identification Card (Contained in clean bordered card without empty boxes)
     if spoof_info["is_authentic"]:
         visuals = cached_fetch_visuals(prim_sp['common_name'], prim_sp['scientific_name'])
         
-        st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        col_photo, col_details = st.columns([1, 2.2])
-        
-        with col_photo:
-            st.image(
-                visuals["image_url"],
-                caption=f"{prim_sp['common_name']} ({visuals['source']})",
-                use_container_width=True
-            )
-        
-        with col_details:
-            st.markdown(f"""
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 6px;">
-                <span style="background-color: #4749fe; color: #ffffff; font-size: 11px; padding: 3px 12px; letter-spacing: 0.08em; text-transform: uppercase;">
-                    CORNELL BIRDNET &bull; {prim_sp['confidence']}% MATCH
-                </span>
-                <span style="font-size: 12px; color: #a2a7b7;">GLOBAL DATABASE: 6,522 SPECIES</span>
-            </div>
-            <div class="ceti-species-heading">{prim_sp['common_name']}</div>
-            <div class="ceti-species-sci">{prim_sp['scientific_name']}</div>
-            <p style="font-size: 1rem; color: #4e5a7c; line-height: 1.6; margin-bottom: 14px;">
-                {visuals['description']}
-            </p>
-            <div style="border-top: 1px solid #e6e8ee; padding-top: 12px; margin-top: 12px; font-size: 0.95rem;">
-                <p style="margin: 0 0 6px 0; color: #4e5a7c;">
-                    <strong>Acoustic State:</strong> {prim_sp['pitch_status']} &bull; Pitch Centroid: <strong>{prim_sp['detected_pitch']:.0f} Hz</strong>
+        with st.container(border=True):
+            col_photo, col_details = st.columns([1, 2.2])
+            
+            with col_photo:
+                st.image(
+                    visuals["image_url"],
+                    caption=f"{prim_sp['common_name']} ({visuals['source']})",
+                    use_container_width=True
+                )
+            
+            with col_details:
+                st.markdown(f"""
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 6px;">
+                    <span style="background-color: #4749fe; color: #ffffff; font-size: 11px; padding: 3px 12px; letter-spacing: 0.08em; text-transform: uppercase;">
+                        CORNELL BIRDNET &bull; {prim_sp['confidence']}% MATCH
+                    </span>
+                    <span style="font-size: 12px; color: #a2a7b7;">GLOBAL DATABASE: 6,522 SPECIES</span>
+                </div>
+                <div class="ceti-species-heading">{prim_sp['common_name']}</div>
+                <div class="ceti-species-sci">{prim_sp['scientific_name']}</div>
+                <p style="font-size: 1rem; color: #4e5a7c; line-height: 1.6; margin-bottom: 14px;">
+                    {visuals['description']}
                 </p>
-                <p style="margin: 4px 0 0 0; color: #4749fe;">
-                    <strong>Disaster Sensitivity:</strong> {prim_sp['disaster_sensitivity']}
-                </p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
+                <div style="border-top: 1px solid #e6e8ee; padding-top: 12px; margin-top: 12px; font-size: 0.95rem;">
+                    <p style="margin: 0 0 6px 0; color: #4e5a7c;">
+                        <strong>Acoustic State:</strong> {prim_sp['pitch_status']} &bull; Pitch Centroid: <strong>{prim_sp['detected_pitch']:.0f} Hz</strong>
+                    </p>
+                    <p style="margin: 4px 0 0 0; color: #4749fe;">
+                        <strong>Disaster Sensitivity:</strong> {prim_sp['disaster_sensitivity']}
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
         <div class="ceti-content-card" style="border-left: 3px solid #e63946;">
@@ -818,28 +775,26 @@ if audio_data is not None:
         </div>
         """, unsafe_allow_html=True)
 
-    # 4. Quantitative Metrics Row (Protected from Column Collisions)
+    # 4. Quantitative Metrics Row (Protected from Column Collisions & Empty Box Free)
     col_gauge, col_stats = st.columns([1, 1.2])
 
     with col_gauge:
-        st.markdown('<div class="ceti-content-card" style="padding: 20px;">', unsafe_allow_html=True)
-        gauge_fig = create_gauge_chart(results["adi"], results["threat_color"])
-        st.plotly_chart(gauge_fig, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        with st.container(border=True):
+            gauge_fig = create_gauge_chart(results["adi"], results["threat_color"])
+            st.plotly_chart(gauge_fig, use_container_width=True)
 
     with col_stats:
-        st.markdown('<div class="ceti-content-card" style="padding: 24px 28px;">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-size: 1.5rem; color: #000000; margin-bottom: 16px;">Bioacoustic Signal Descriptors</h4>""", unsafe_allow_html=True)
-        c1, c2 = st.columns(2)
-        with c1:
-            st.metric("Pitch Center (Centroid)", f"{features['spectral_centroid']['mean']:.0f} Hz", delta=f"{results['sub_scores']['pitch']}% stress")
-            st.metric("Call Burst Rate", f"{features['call_rate']:.2f} calls/s", delta=f"{results['sub_scores']['call_rate']}% density")
-        with c2:
-            st.metric("Noise Harshness (Flatness)", f"{features['spectral_flatness']['mean']:.4f}", delta=f"{results['sub_scores']['flatness']}% chaos")
-            st.metric("Breath Turbulence Ratio", f"{spoof_info['breath_ratio']}%", delta="Human Breath" if spoof_info['breath_ratio'] > 20 else "Avian Syrinx")
-        st.markdown('</div>', unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown("""<h4 style="font-size: 1.5rem; color: #000000; margin-bottom: 16px;">Bioacoustic Signal Descriptors</h4>""", unsafe_allow_html=True)
+            c1, c2 = st.columns(2)
+            with c1:
+                st.metric("Pitch Center (Centroid)", f"{features['spectral_centroid']['mean']:.0f} Hz", delta=f"{results['sub_scores']['pitch']}% stress")
+                st.metric("Call Burst Rate", f"{features['call_rate']:.2f} calls/s", delta=f"{results['sub_scores']['call_rate']}% density")
+            with c2:
+                st.metric("Noise Harshness (Flatness)", f"{features['spectral_flatness']['mean']:.4f}", delta=f"{results['sub_scores']['flatness']}% chaos")
+                st.metric("Breath Turbulence Ratio", f"{spoof_info['breath_ratio']}%", delta="Human Breath" if spoof_info['breath_ratio'] > 20 else "Avian Syrinx")
 
-    # 5. Scientific Visualizers & Tables
+    # 5. Scientific Visualizers & Tables (Clean Containerized Tabs)
     tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_table = st.tabs([
         "SPECTROGRAM HEATMAP",
         "WAVEFORM & ONSETS",
@@ -849,60 +804,55 @@ if audio_data is not None:
     ])
 
     with tab_spec:
-        st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.plotly_chart(plot_mel_spectrogram(features), use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        with st.container(border=True):
+            st.plotly_chart(plot_mel_spectrogram(features), use_container_width=True)
 
     with tab_wave:
-        st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.plotly_chart(plot_waveform_and_dynamics(y, sr, features), use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        with st.container(border=True):
+            st.plotly_chart(plot_waveform_and_dynamics(y, sr, features), use_container_width=True)
 
     with tab_species:
-        st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-size: 1.5rem; margin-bottom: 16px;">Top Species Candidates (from 6,522 Global Species)</h4>""", unsafe_allow_html=True)
-        for cand in species_info["top_candidates"]:
-            col_info, col_bar = st.columns([2.5, 1])
-            with col_info:
-                st.markdown(f"**{cand['common_name']}** (*{cand['scientific_name']}*)")
-                st.caption(f"Disaster Profile: {cand['disaster_sensitivity']}")
-            with col_bar:
-                st.progress(min(1.0, cand['confidence'] / 100.0))
-                st.caption(f"Confidence: **{cand['confidence']}%**")
-            st.divider()
-        st.markdown('</div>', unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown("""<h4 style="font-size: 1.5rem; margin-bottom: 16px;">Top Species Candidates (from 6,522 Global Species)</h4>""", unsafe_allow_html=True)
+            for cand in species_info["top_candidates"]:
+                col_info, col_bar = st.columns([2.5, 1])
+                with col_info:
+                    st.markdown(f"**{cand['common_name']}** (*{cand['scientific_name']}*)")
+                    st.caption(f"Disaster Profile: {cand['disaster_sensitivity']}")
+                with col_bar:
+                    st.progress(min(1.0, cand['confidence'] / 100.0))
+                    st.caption(f"Confidence: **{cand['confidence']}%**")
+                st.divider()
 
     with tab_anti_spoof:
-        st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-size: 1.5rem; margin-bottom: 16px;">Biometric Verification & Anti-Spoofing Assessment</h4>""", unsafe_allow_html=True)
-        
-        status_html = f"{ICON_CHECK} <strong>Authentic Avian Syrinx Verified</strong>" if spoof_info['is_authentic'] else f"{ICON_CROSS} <strong>Rejected (Human Oral Mimicry / Spoofing)</strong>"
-        st.markdown(f"<div style='margin-bottom: 10px;'>{status_html}</div>", unsafe_allow_html=True)
-        st.write(f"**Spoofing Likelihood Score:** `{spoof_info['spoof_score']} / 100`")
-        st.write(f"**Sub-600Hz Breath Turbulence Ratio:** `{spoof_info['breath_ratio']}%` (Threshold: > 28% indicates human exhalation)")
-        
-        if spoof_info["spoof_factors"]:
-            st.markdown("##### Detected Anti-Spoofing Flags:")
-            for factor in spoof_info["spoof_factors"]:
-                st.warning(f"• {factor}")
-        else:
-            st.success("• Dual syrinx harmonic purity confirmed. Zero human breath turbulence or oral cavity formants detected.")
-        st.markdown('</div>', unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown("""<h4 style="font-size: 1.5rem; margin-bottom: 16px;">Biometric Verification & Anti-Spoofing Assessment</h4>""", unsafe_allow_html=True)
+            
+            status_html = f"{ICON_CHECK} <strong>Authentic Avian Syrinx Verified</strong>" if spoof_info['is_authentic'] else f"{ICON_CROSS} <strong>Rejected (Human Oral Mimicry / Spoofing)</strong>"
+            st.markdown(f"<div style='margin-bottom: 10px;'>{status_html}</div>", unsafe_allow_html=True)
+            st.write(f"**Spoofing Likelihood Score:** `{spoof_info['spoof_score']} / 100`")
+            st.write(f"**Sub-600Hz Breath Turbulence Ratio:** `{spoof_info['breath_ratio']}%` (Threshold: > 28% indicates human exhalation)")
+            
+            if spoof_info["spoof_factors"]:
+                st.markdown("##### Detected Anti-Spoofing Flags:")
+                for factor in spoof_info["spoof_factors"]:
+                    st.warning(f"• {factor}")
+            else:
+                st.success("• Dual syrinx harmonic purity confirmed. Zero human breath turbulence or oral cavity formants detected.")
 
     with tab_table:
-        st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-size: 1.5rem; margin-bottom: 16px;">Detailed Bioacoustic Diagnostic Parameters</h4>""", unsafe_allow_html=True)
-        diag_rows = []
-        for d in results["diagnostics"]:
-            diag_rows.append({
-                "Diagnostic Factor": d["name"],
-                "Detected Value": d["value"],
-                "Normal Range": d["normal_range"],
-                "Stress Score (0-100)": f"{d['score']}%",
-                "Status": d["status"]
-            })
-        st.table(diag_rows)
-        st.markdown('</div>', unsafe_allow_html=True)
+        with st.container(border=True):
+            st.markdown("""<h4 style="font-size: 1.5rem; margin-bottom: 16px;">Detailed Bioacoustic Diagnostic Parameters</h4>""", unsafe_allow_html=True)
+            diag_rows = []
+            for d in results["diagnostics"]:
+                diag_rows.append({
+                    "Diagnostic Factor": d["name"],
+                    "Detected Value": d["value"],
+                    "Normal Range": d["normal_range"],
+                    "Stress Score (0-100)": f"{d['score']}%",
+                    "Status": d["status"]
+                })
+            st.table(diag_rows)
 
 else:
     st.markdown(f"""
