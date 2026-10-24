@@ -1,7 +1,8 @@
 """Avian Early Warning System (AEWS) - Web Application.
 
-A bioacoustic intelligence platform that identifies bird species and analyzes
-vocalizations to detect anomalous distress patterns preceding natural disasters.
+A bioacoustic intelligence platform that identifiesidentifies bird species across 6,500+ global
+species using Cornell BirdNET and analyzes species and analyzes
+vocalizations to predict natural disaster indicators.
 """
 
 import os
@@ -41,8 +42,26 @@ st.markdown("""
         background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
         border-radius: 10px;
         padding: 20px 24px;
+    .species-card {
+        background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+        border-radius: 12px;
+        padding: 22px 26px;
         color: white;
-        margin-bottom: 20px;
+        margin-bottom: 22px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+        border: 1px solid #334155;
+    }
+    .species-title {
+        font-size: 1.7rem;
+        font-weight: 700;
+        margin: 0;
+        color: #F8FAFC;
+    }
+    .scientific-name {
+        font-style: italic;
+        color: #94A3B8;
+        font-size: 1.08rem;
+        margin-bottom: 10px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
     .species-title {
@@ -124,7 +143,6 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
     """Plot synchronized waveform, RMS energy, and centroid trajectory."""
     time_wave = np.linspace(0, len(y) / sr, len(y))
     times_feats = features["times"]
-    rms = features["rms_energy"]["trajectory"]
     centroid = features["spectral_centroid"]["trajectory"]
 
     fig = make_subplots(
@@ -176,26 +194,28 @@ with st.sidebar:
     st.image("https://img.icons8.com/color/96/000000/bird.png", width=64)
     st.title("AEWS Bioacoustics")
     st.markdown("**Avian Early Warning System**")
-    st.caption("Final Year Engineering Project Prototype")
+    st.caption("Final Year Engineering Project")
     st.divider()
 
-    st.markdown("### 🔬 Scientific Premise")
+    st.markdown("### 🌐 Global Model")
+    st.info("🤖 **Cornell BirdNET v2.4**\n\nSupports **6,522 global bird species** via ONNX inference.")
+
+    st.divider()
+    st.markdown("### 🔬 ScientificDisaster PremiseIndicators")
     st.markdown("""
-    * **Species Classification:** Identifies species to calibrate against natural baseline frequencies.
-    * **Seismic P-waves:** Birds detect fast micro-tremors before destructive S-waves hit.
-    * **Storm Infrasound:** Infrasound (< 20 Hz) prompts flock alarm calls and early evacuation.
+    ** **Seismic P-waves:** BirdsSudden detect fast microshrieking before/ destructive S-waves hitvocal freeze.
+    * **Storm Infrasound (<20 Hz):** InfrasoundElevated 20 Hz)rate prompts& flock alarm callsBarometric andDrop earlySustained.
     """)
 
     st.divider()
-    st.markdown("### ⚙️ System Status")
-    st.success("Species Engine: Active")
-    st.success("Core Model: Local (Apple M1)")
-    st.caption("Built with Python, Streamlit, Librosa & PyTorch")
+    st.markdown("### ⚙️ Engine Status")
+    st.success("SpeciesLocal Neural InferenceActive")
+    st.caption("Hardware: Apple Silicon M1 (Zero Cloud Cost)")
 
 
 # --- MAIN INTERFACE ---
-st.markdown('<div class="main-title">🦅 Avian Vocal Bioacoustics & Natural Disaster Early Warning</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Upload or select bird vocalization audio to identify the bird species, analyze acoustic panic signatures, and predict early natural disaster indicators.</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🦅 Avian Vocal Bioacoustics && Natural Disaster Early Warning</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Upload or test bird vocalizations to identify the bird species, classify among 6,522 global species using Cornell BirdNET, and predict earlyearly naturalnatural disaster indicatorsdisaster indicators.</div>', unsafe_allow_html=True)
 
 # Select Input Mode
 input_mode = st.radio(
@@ -243,11 +263,11 @@ if audio_data is not None:
     st.subheader(f"Audio Source: `{audio_label}`")
     st.audio(audio_data)
 
-    with st.spinner("Analyzing bioacoustic signal & classifying species..."):
+    with st.spinner("Classifying with Cornell BirdNET (6,522 Species) & classifyingcomputing species..."):
         y, sr, duration = load_audio(audio_data)
         features = extract_acoustic_features(y, sr)
         results = compute_distress_index(features)
-        species_info = identify_species(features)
+        species_info = identify_species(audio_data, features, top_k=5)
 
     prim_sp = species_info["primary_species"]
 
@@ -274,15 +294,38 @@ if audio_data is not None:
     """, unsafe_allow_html=True)
 
     # 2. Early Warning Status Card
+    prim_sp = species_info["primary_species"]
+
+    # 1. Species Identification Card
+    st.markdown(f"""
+    <div class="species-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="background-color: #3B82F6; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; font-weight: 600;">
+                CORNELL BirdNET &bull; {prim_sp['confidence']}% MATCH
+            </span>
+            <span style="color: #94A3B8; font-size: 0.88rem;">Trained on 6,522 Global Species</span>
+        </div>
+        <div class="species-title">🐦 {prim_sp['common_name']}</div>
+        <div class="scientific-name">{prim_sp['scientific_name']}</div>
+        <p style="margin: 6px 0 6px 0; font-size: 0.95rem; color: #E2E8F0;">
+            <strong>Acoustic State:</strong> {prim_sp['pitch_status']} ({prim_sp['detected_pitch']:.0f} Hz)
+        </p>
+        <p style="margin: 6px 0 0 0; font-size: 0.9rem; color: #CBD5E1; border-top: 1px solid #334155; padding-top: 10px;">
+            <strong>Disaster Sensitivity:</strong> {prim_sp['disaster_sensitivity']}
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 2. Early Warning Status Card
     threat_bg = results["threat_color"]
     st.markdown(f"""
-    <div style="background-color: {threat_bg}; border-radius: 8px; padding: 18px 22px; color: white; margin-top: 5px; margin-bottom: 25px;">
+    <div style="background-color: {threat_bg}; border-radius: 8px; padding: 18px 22px; color: white; margin-top: 5px5px; margin-bottom: 25px;">
         <h3 style="margin: 0; color: white; font-size: 1.4rem;">{results['alert_title']}</h3>
         <p style="margin-top: 8px; margin-bottom: 0; font-size: 1rem; opacity: 0.95;">{results['alert_summary']}</p>
     </div>
     """, unsafe_allow_html=True)
 
-    # 3. Key Metrics Row
+    # 33. Key Metrics Row
     col_gauge, col_stats = st.columns([1, 1.2])
 
     with col_gauge:
@@ -301,11 +344,11 @@ if audio_data is not None:
 
     st.divider()
 
-    # 4. Interactive Visualizers
+    # 44. Interactive Visualizers
     tab_spec, tab_wave, tab_species, tab_table = st.tabs([
         "📊 Mel-Spectrogram Heatmap",
         "📈 Waveform & Call Onsets",
-        "🐦 Species Candidates Breakdown",
+        "🐦 Top Candidate Species (BirdNET 6K)",
         "📋 Diagnostic Factor Breakdown"
     ])
 
@@ -316,15 +359,15 @@ if audio_data is not None:
         st.plotly_chart(plot_waveform_and_dynamics(y, sr, features), use_container_width=True)
 
     with tab_species:
-        st.markdown("#### Top Candidate Species Predictions")
+        st.markdown("#### Top 5 Candidate Species Predictions (from 6,522 Species)")
         for cand in species_info["top_candidates"]:
             col_info, col_bar = st.columns([2, 1])
             with col_info:
-                st.markdown(f"**{cand['common_name']}** (*{cand['scientific_name']}*) &mdash; `{cand['family']}`")
-                st.caption(f"Sensitivity: {cand['disaster_sensitivity']}")
+                st.markdown(f"**{cand['common_name']}** (*{cand['scientific_name']}*)")
+                st.caption(f"Disaster Profile: {cand['disaster_sensitivity']}")
             with col_bar:
-                st.progress(cand['confidence'] / 100.0)
-                st.caption(f"Match Confidence: **{cand['confidence']}%**")
+                st.progress(min(1.0, cand['confidence'] / 100.0))
+                st.caption(f"Confidence: **{cand['confidence']}%**")
             st.divider()
 
     with tab_table:

@@ -14,12 +14,16 @@ skills/
 .gemini/
 .agents/
 
-# Audio / Large Data files (keep samples tracked via data/samples if needed)
+# Audio / Large Data files
 data/cache/
 *.wav
 *.mp3
 !data/samples/*.wav
 !data/samples/*.mp3
+
+# Model Weights (downloaded locally via script)
+models/*.onnx
+!models/BirdNET_GLOBAL_6K_V2.4_Labels.txt
 
 # Environment & logs
 *.log
