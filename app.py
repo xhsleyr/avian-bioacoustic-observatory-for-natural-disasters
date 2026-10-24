@@ -1,7 +1,8 @@
 """Avian Early Warning System (AEWS) - Web Application.
 
 A bioacoustic intelligence platform that verifies avian biometrics, detects human mimicry,
-identifies species using Cornell BirdNET, and predicts natural disaster indicators.
+identifies species using Cornell BirdNET, and predicts natural disaster indicators from
+uploaded files, live microphone streams, or calibrated benchmark samples.
 """
 
 import os
@@ -180,6 +181,14 @@ with st.sidebar:
     st.caption("Final Year Engineering Project")
     st.divider()
 
+    st.markdown("### 🎙️ Audio Sources")
+    st.markdown("""
+    * **Live Mic:** Record wild birds via Mac mic or external USB mic.
+    * **File Upload:** Process field `.wav`, `.mp3`, `.ogg`, `.flac`.
+    * **Benchmark Presets:** Test authentic documented disaster calls.
+    """)
+
+    st.divider()
     st.markdown("### 🌪️ Documented Disasters")
     st.markdown("""
     * **Golden-winged Warbler:** Fled 48h before 84 tornadoes (*Current Biology, 2014*).
@@ -197,12 +206,16 @@ with st.sidebar:
 
 # --- MAIN INTERFACE ---
 st.markdown('<div class="main-title">🦅 Avian Vocal Bioacoustics & Natural Disaster Early Warning</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Upload or test bird vocalizations to verify avian biometrics, classify species (BirdNET 6.5K), and predict early natural disaster indicators.</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Capture real-time environmental bird sound or upload audio to verify avian biometrics, identify species (BirdNET 6.5K), and predict natural disaster indicators.</div>', unsafe_allow_html=True)
 
 # Select Input Mode
 input_mode = st.radio(
     "Select Audio Source:",
-    options=["📂 Upload Audio File", "🧪 Preset Benchmark Samples (Instant Demo)"],
+    options=[
+        "📂 Upload Audio File",
+        "🎙️ Live Microphone (Real-Time Environment)",
+        "🧪 Preset Benchmark Samples (Instant Demo)"
+    ],
     horizontal=True
 )
 
@@ -217,6 +230,19 @@ if input_mode == "📂 Upload Audio File":
     if uploaded_file is not None:
         audio_data = uploaded_file.read()
         audio_label = uploaded_file.name
+
+elif input_mode == "🎙️ Live Microphone (Real-Time Environment)":
+    st.markdown("##### 🎙️ Record Environmental Bird Sound Live")
+    st.caption("Point your Mac or external microphone towards your window, garden, or balcony. Click Record, capture the bird sounds, and click Stop.")
+    
+    recorded_audio = st.audio_input(
+        "Click below to start / stop recording",
+        sample_rate=44100
+    )
+    if recorded_audio is not None:
+        audio_data = recorded_audio.read()
+        audio_label = f"Live Mic Capture ({len(audio_data)//1024} KB)"
+
 else:
     sample_files = sorted(glob.glob("data/samples/*.wav"))
     sample_names = {
@@ -378,4 +404,4 @@ if audio_data is not None:
         st.table(diag_rows)
 
 else:
-    st.info("👆 Please upload an audio file or select a preset benchmark sample to begin bioacoustic analysis.")
+    st.info("👆 Please upload an audio file, record using your microphone, or select a preset benchmark sample to begin bioacoustic analysis.")
