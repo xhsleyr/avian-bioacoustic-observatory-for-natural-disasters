@@ -1,8 +1,7 @@
 """Avian Early Warning System (AEWS) - Web Application.
 
-A bioacoustic intelligence platform that identifiesidentifies bird species across 6,500+ global
-species using Cornell BirdNET and analyzes species and analyzes
-vocalizations to predict natural disaster indicators.
+A bioacoustic intelligence platform that identifies bird species across 6,500+ global
+species using Cornell BirdNET and analyzes vocalizations to predict natural disaster indicators.
 """
 
 import os
@@ -39,10 +38,6 @@ st.markdown("""
         margin-bottom: 1.5rem;
     }
     .species-card {
-        background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
-        border-radius: 10px;
-        padding: 20px 24px;
-    .species-card {
         background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
         border-radius: 12px;
         padding: 22px 26px;
@@ -62,19 +57,6 @@ st.markdown("""
         color: #94A3B8;
         font-size: 1.08rem;
         margin-bottom: 10px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-    .species-title {
-        font-size: 1.6rem;
-        font-weight: 700;
-        margin: 0;
-        color: #F8FAFC;
-    }
-    .scientific-name {
-        font-style: italic;
-        color: #94A3B8;
-        font-size: 1.05rem;
-        margin-bottom: 8px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -201,21 +183,22 @@ with st.sidebar:
     st.info("🤖 **Cornell BirdNET v2.4**\n\nSupports **6,522 global bird species** via ONNX inference.")
 
     st.divider()
-    st.markdown("### 🔬 ScientificDisaster PremiseIndicators")
+    st.markdown("### 🔬 Disaster Indicators")
     st.markdown("""
-    ** **Seismic P-waves:** BirdsSudden detect fast microshrieking before/ destructive S-waves hitvocal freeze.
-    * **Storm Infrasound (<20 Hz):** InfrasoundElevated 20 Hz)rate prompts& flock alarm callsBarometric andDrop earlySustained.
+    * **Seismic P-waves:** Sudden shrieking / vocal freeze.
+    * **Storm Infrasound (<20 Hz):** Elevated call rate & flock panic.
+    * **Barometric Drop:** Sustained agitation chatter.
     """)
 
     st.divider()
     st.markdown("### ⚙️ Engine Status")
-    st.success("SpeciesLocal Neural InferenceActive")
+    st.success("Local Neural Inference: Active")
     st.caption("Hardware: Apple Silicon M1 (Zero Cloud Cost)")
 
 
 # --- MAIN INTERFACE ---
-st.markdown('<div class="main-title">🦅 Avian Vocal Bioacoustics && Natural Disaster Early Warning</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Upload or test bird vocalizations to identify the bird species, classify among 6,522 global species using Cornell BirdNET, and predict earlyearly naturalnatural disaster indicatorsdisaster indicators.</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🦅 Avian Vocal Bioacoustics & Natural Disaster Early Warning</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Upload or test bird vocalizations to classify among 6,522 global species using Cornell BirdNET and predict early natural disaster indicators.</div>', unsafe_allow_html=True)
 
 # Select Input Mode
 input_mode = st.radio(
@@ -263,37 +246,12 @@ if audio_data is not None:
     st.subheader(f"Audio Source: `{audio_label}`")
     st.audio(audio_data)
 
-    with st.spinner("Classifying with Cornell BirdNET (6,522 Species) & classifyingcomputing species..."):
+    with st.spinner("Classifying with Cornell BirdNET (6,522 Species) & computing distress indices..."):
         y, sr, duration = load_audio(audio_data)
         features = extract_acoustic_features(y, sr)
         results = compute_distress_index(features)
         species_info = identify_species(audio_data, features, top_k=5)
 
-    prim_sp = species_info["primary_species"]
-
-    # 1. Species Identification Card
-    st.markdown(f"""
-    <div class="species-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <span style="background-color: #3B82F6; color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; font-weight: 600;">
-                IDENTIFIED SPECIES ({prim_sp['confidence']}% MATCH)
-            </span>
-            <span style="color: #94A3B8; font-size: 0.9rem;">Family: {prim_sp['family']}</span>
-        </div>
-        <div class="species-title">🐦 {prim_sp['common_name']}</div>
-        <div class="scientific-name">{prim_sp['scientific_name']}</div>
-        <p style="margin: 8px 0 4px 0; font-size: 0.95rem; color: #E2E8F0;">
-            <strong>Typical Call:</strong> {prim_sp['call_type']} &bull; 
-            <strong>Baseline Pitch:</strong> ~{prim_sp['base_pitch_hz']} Hz &bull; 
-            <strong>Status:</strong> {prim_sp['vocal_deviation_state']}
-        </p>
-        <p style="margin: 4px 0 0 0; font-size: 0.88rem; color: #CBD5E1; border-top: 1px solid #475569; padding-top: 8px;">
-            <strong>Disaster Sensitivity:</strong> {prim_sp['disaster_sensitivity']}
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # 2. Early Warning Status Card
     prim_sp = species_info["primary_species"]
 
     # 1. Species Identification Card
@@ -319,13 +277,13 @@ if audio_data is not None:
     # 2. Early Warning Status Card
     threat_bg = results["threat_color"]
     st.markdown(f"""
-    <div style="background-color: {threat_bg}; border-radius: 8px; padding: 18px 22px; color: white; margin-top: 5px5px; margin-bottom: 25px;">
+    <div style="background-color: {threat_bg}; border-radius: 8px; padding: 18px 22px; color: white; margin-top: 5px; margin-bottom: 25px;">
         <h3 style="margin: 0; color: white; font-size: 1.4rem;">{results['alert_title']}</h3>
         <p style="margin-top: 8px; margin-bottom: 0; font-size: 1rem; opacity: 0.95;">{results['alert_summary']}</p>
     </div>
     """, unsafe_allow_html=True)
 
-    # 33. Key Metrics Row
+    # 3. Key Metrics Row
     col_gauge, col_stats = st.columns([1, 1.2])
 
     with col_gauge:
@@ -344,7 +302,7 @@ if audio_data is not None:
 
     st.divider()
 
-    # 44. Interactive Visualizers
+    # 4. Interactive Visualizers
     tab_spec, tab_wave, tab_species, tab_table = st.tabs([
         "📊 Mel-Spectrogram Heatmap",
         "📈 Waveform & Call Onsets",
