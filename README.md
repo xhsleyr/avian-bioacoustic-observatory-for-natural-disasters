@@ -1,11 +1,11 @@
-# 🦅 Avian Early Warning System (AEWS)
+# 🦅 Project INTERA
 ### Bioacoustic Translation & Disaster Early-Warning Intelligence
 **Final Year Engineering Project — Milestone: First Final Demo (v1.0.0)**
 
 ---
 
 ## 📌 Executive Summary
-The **Avian Early Warning System (AEWS)** is an end-to-end bioacoustic intelligence platform running 100% locally on Apple Silicon (Mac M1) with **zero cloud API costs**. It decodes environmental bird vocalizations in real time to forecast natural disasters (e.g., pre-seismic P-waves, severe storms, tornado infrasound) before conventional civil detection instruments trigger.
+The **Project INTERA** is an end-to-end bioacoustic intelligence platform running 100% locally on Apple Silicon (Mac M1) with **zero cloud API costs**. It decodes environmental bird vocalizations in real time to forecast natural disasters (e.g., pre-seismic P-waves, severe storms, tornado infrasound) before conventional civil detection instruments trigger.
 
 The system combines **Cornell BirdNET neural species classification across 6,522 global species**, a **Biometric Anti-Spoofing & Human Mimicry Shield**, **dynamic Wikimedia photographic biology retrieval**, and a **calibrated Acoustic Distress Index (ADI)** engine wrapped in an editorial visual design inspired by **Project CETI** with **Times New Roman** typography and Figma-style vector line SVG icons.
 

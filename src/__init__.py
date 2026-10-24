@@ -1,1 +1,1 @@
-"""Avian Early Warning System (AEWS) - Audio & Distress Processing Engine."""
+"""Project INTERA - Avian Bioacoustic Translation & Distress Processing Engine."""
