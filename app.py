@@ -143,19 +143,22 @@ st.markdown("""
         font-family: 'JetBrains Mono', monospace !important;
     }
 
-    /* Ponder Minimal Header */
+    /* Ponder Minimal Header — Centered */
     .ponder-header {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         align-items: center;
+        justify-content: center;
         padding: 20px 0 24px 0;
         border-bottom: 1px solid var(--ds-border);
         margin-bottom: 36px;
+        gap: 14px;
     }
 
     .ponder-brand {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 10px;
         font-size: 15px;
         font-weight: 500;
@@ -175,6 +178,7 @@ st.markdown("""
     .ponder-nav-pills {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 8px;
     }
 
@@ -195,7 +199,7 @@ st.markdown("""
         border-color: var(--ds-border-strong);
     }
 
-    /* Hero Section — Minimal, Cinematic, High-Contrast */
+    /* Hero Section — Centered, Cinematic, High-Contrast */
     .ponder-hero-display {
         font-size: 34px;
         font-weight: 500;
@@ -203,6 +207,7 @@ st.markdown("""
         letter-spacing: -0.015em;
         color: var(--ds-on-surface);
         margin-bottom: 12px;
+        text-align: center;
     }
 
     .ponder-hero-sub {
@@ -211,8 +216,9 @@ st.markdown("""
         line-height: 26px;
         color: var(--ds-on-surface-secondary);
         max-width: 820px;
-        margin-bottom: 32px;
+        margin: 0 auto 32px auto;
         letter-spacing: -0.005em;
+        text-align: center;
     }
 
     /* Tonal Surface Cards (z=1) */
@@ -280,9 +286,11 @@ st.markdown("""
         color: var(--ds-on-surface-secondary) !important;
         letter-spacing: -0.005em !important;
         margin-bottom: 12px !important;
+        text-align: center !important;
     }
     div[data-testid="stRadio"] div[role="radiogroup"] {
         gap: 8px !important;
+        justify-content: center !important;
     }
     div[data-testid="stRadio"] div[role="radiogroup"] > label {
         background-color: var(--ds-surface) !important;
@@ -619,7 +627,6 @@ st.markdown(f"""
     <div class="ponder-nav-pills">
         <span class="ponder-nav-chip">{ICON_RADAR} 6,522 SPECIES</span>
         <span class="ponder-nav-chip">{ICON_SHIELD} BIOMETRIC SHIELD</span>
-        <span class="ponder-nav-chip">{ICON_AUDIO} 60 FPS ZERO-LAG</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -708,16 +715,14 @@ if audio_data is not None:
 
     # Header for acquired feed
     st.markdown(f"""
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 24px; margin-bottom: 8px;">
-        <div>
-            <div style="font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #4a9eed;">
-                ACOUSTIC FEED ACQUIRED
-            </div>
-            <div style="font-size: 22px; font-weight: 500; color: #fafafa; letter-spacing: -0.01em;">
-                {audio_label}
-            </div>
+    <div style="text-align: center; margin-top: 24px; margin-bottom: 8px;">
+        <div style="font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #4a9eed;">
+            ACOUSTIC FEED ACQUIRED
         </div>
-        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(250, 250, 250, 0.58);">
+        <div style="font-size: 22px; font-weight: 500; color: #fafafa; letter-spacing: -0.01em;">
+            {audio_label}
+        </div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(250, 250, 250, 0.58); margin-top: 4px;">
             Duration: {duration:.2f}s • Sample Rate: {sr:,} Hz
         </div>
     </div>
