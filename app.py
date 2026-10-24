@@ -2,7 +2,7 @@
 
 Recreating https://www.projectceti.org/ exactly:
 - Fluid motion-blurred iridescent gradient aura (Cyan #befff7 -> Electric Blue #4749fe -> Deep Purple #4d1bc7)
-- GT Super Display high-contrast editorial serif typography for headlines
+- Savate display typography for expressive, organic biological headlines & titles
 - Clean Sohne / Plus Jakarta Sans for body and metadata
 - Sharp 0px architectural containers and 100px pill buttons
 - Global Cornell BirdNET 6,522 Species Intelligence, Biometric Anti-Spoofing, and Early Warning
@@ -39,11 +39,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Project CETI Exact Design System CSS
+# Project CETI Exact Design System CSS + Savate Typography
 st.markdown("""
 <style>
-    /* Google Fonts: GT Super equivalent (Playfair Display) & Sohne equivalent (Plus Jakarta Sans) */
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+    /* Google Fonts: Savate Display Font + Playfair Display & Plus Jakarta Sans */
+    @import url('https://fonts.googleapis.com/css2?family=Savate&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
     :root {
         --ceti-primary: #4d1bc7;
@@ -87,16 +87,17 @@ st.markdown("""
     }
 
     [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] h4, [data-testid="stSidebar"] h5 {
+        font-family: 'Savate', 'Playfair Display', serif !important;
         color: var(--ceti-text-dark) !important;
     }
 
-    /* Global Typography Rules from DESIGN-projectceti-org.md */
+    /* Global Typography Rules — Savate Display Font */
     h1, h2, h3, .ceti-display, .ceti-headline {
-        font-family: 'Playfair Display', Georgia, serif !important;
+        font-family: 'Savate', 'Playfair Display', Georgia, serif !important;
         font-weight: 400 !important;
         line-height: 1.15 !important;
         color: var(--ceti-text-dark) !important;
-        letter-spacing: -0.02em !important;
+        letter-spacing: -0.01em !important;
     }
 
     p, span, div, label, input, .stMarkdown {
@@ -154,15 +155,15 @@ st.markdown("""
         color: var(--ceti-primary);
     }
 
-    /* Hero Section */
+    /* Hero Section with Savate */
     .ceti-hero-title {
-        font-family: 'Playfair Display', Georgia, serif;
-        font-size: 3.8rem;
+        font-family: 'Savate', 'Playfair Display', Georgia, serif;
+        font-size: 3.9rem;
         font-weight: 400;
         line-height: 1.1;
         color: var(--ceti-text-dark);
         margin-bottom: 16px;
-        letter-spacing: -0.025em;
+        letter-spacing: -0.015em;
     }
 
     .ceti-hero-subtitle {
@@ -202,8 +203,8 @@ st.markdown("""
     }
 
     .ceti-gradient-banner h2 {
-        font-family: 'Playfair Display', serif;
-        font-size: 2.3rem;
+        font-family: 'Savate', 'Playfair Display', serif;
+        font-size: 2.4rem;
         font-weight: 400;
         color: #ffffff !important;
         margin-bottom: 10px;
@@ -327,10 +328,10 @@ st.markdown("""
         font-weight: 700 !important;
     }
 
-    /* Metric Cards */
+    /* Metric Cards with Savate */
     [data-testid="stMetricValue"] {
-        font-family: 'Playfair Display', serif !important;
-        font-size: 2rem !important;
+        font-family: 'Savate', 'Playfair Display', serif !important;
+        font-size: 2.1rem !important;
         color: var(--ceti-text-dark) !important;
     }
 
@@ -342,10 +343,10 @@ st.markdown("""
         color: var(--ceti-text-muted) !important;
     }
 
-    /* Species Card Visual Styling */
+    /* Species Card Visual Styling with Savate */
     .ceti-species-heading {
-        font-family: 'Playfair Display', serif;
-        font-size: 2.4rem;
+        font-family: 'Savate', 'Playfair Display', serif;
+        font-size: 2.5rem;
         font-weight: 400;
         color: var(--ceti-text-dark);
         line-height: 1.1;
@@ -386,13 +387,13 @@ st.markdown("""
 
 
 def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
-    """Create a minimalist Plotly gauge indicator styled with Project CETI palette."""
+    """Create a minimalist Plotly gauge indicator styled with Project CETI palette and Savate font."""
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=adi_score,
         domain={'x': [0, 1], 'y': [0, 1]},
         title={'text': "ACOUSTIC DISTRESS INDEX (ADI)", 'font': {'size': 11, 'color': "#a2a7b7", 'family': "Space Mono"}},
-        number={'suffix': "%", 'font': {'size': 46, 'color': "#000000", 'family': "Playfair Display"}},
+        number={'suffix': "%", 'font': {'size': 46, 'color': "#000000", 'family': "Savate, Playfair Display"}},
         gauge={
             'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "#e6e8ee"},
             'bar': {'color': "#4749fe", 'thickness': 0.28},
@@ -441,7 +442,7 @@ def plot_mel_spectrogram(features: dict) -> go.Figure:
         colorbar=dict(title=dict(text="dB", font=dict(family="Space Mono", size=11)), len=0.8)
     ))
     fig.update_layout(
-        title=dict(text="Mel-Frequency Bioacoustic Spectrogram", font=dict(family="Playfair Display", size=19, color="#000000")),
+        title=dict(text="Mel-Frequency Bioacoustic Spectrogram", font=dict(family="Savate, Playfair Display", size=20, color="#000000")),
         xaxis=dict(title=dict(text="Time (seconds)", font=dict(family="Plus Jakarta Sans", size=12)), showgrid=False),
         yaxis=dict(title=dict(text="Frequency (Hz)", font=dict(family="Plus Jakarta Sans", size=12)), showgrid=True, gridcolor="#f4f5f8"),
         height=320,
@@ -510,7 +511,7 @@ with st.sidebar:
     <div style="font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #4749fe; margin-bottom: 8px;">
         RESEARCH INITIATIVE
     </div>
-    <div style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.8rem; font-weight: 400; color: #000000; line-height: 1.1; margin-bottom: 8px;">
+    <div style="font-family: 'Savate', 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 400; color: #000000; line-height: 1.1; margin-bottom: 8px;">
         Project AEWS
     </div>
     <div style="font-size: 0.88rem; color: #4e5a7c; margin-bottom: 24px; line-height: 1.5;">
@@ -550,7 +551,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- HERO SECTION (MATCHES PROJECT CETI HOMEPAGE) ---
+# --- HERO SECTION WITH SAVATE HEADLINE ---
 st.markdown("""
 <div class="ceti-hero-title">
     Understand What Birds are Saying
@@ -626,7 +627,7 @@ if audio_data is not None:
     <div style="font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #4749fe; margin-top: 24px; margin-bottom: 2px;">
         ACOUSTIC FEED ACQUIRED
     </div>
-    <div style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #000000; margin-bottom: 12px;">
+    <div style="font-family: 'Savate', 'Playfair Display', serif; font-size: 1.8rem; color: #000000; margin-bottom: 12px;">
         {audio_label}
     </div>
     """, unsafe_allow_html=True)
@@ -730,7 +731,7 @@ if audio_data is not None:
     if spoof_info["suppress_alarm"]:
         st.markdown(f"""
         <div class="ceti-content-card" style="border-left: 3px solid #e63946;">
-            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #e63946; margin: 0 0 6px 0;">
+            <h3 style="font-family: 'Savate', 'Playfair Display', serif; font-size: 1.6rem; color: #e63946; margin: 0 0 6px 0;">
                 {ICON_ALERT} Disaster Early Warning Trigger Suppressed
             </h3>
             <p style="color: #4e5a7c; font-size: 0.95rem; margin: 0;">
@@ -757,7 +758,7 @@ if audio_data is not None:
 
     with col_stats:
         st.markdown('<div class="ceti-content-card" style="padding: 26px 30px;">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #000000; margin-bottom: 18px;">Bioacoustic Signal Descriptors</h4>""", unsafe_allow_html=True)
+        st.markdown("""<h4 style="font-family: 'Savate', 'Playfair Display', serif; font-size: 1.6rem; color: #000000; margin-bottom: 18px;">Bioacoustic Signal Descriptors</h4>""", unsafe_allow_html=True)
         c1, c2 = st.columns(2)
         with c1:
             st.metric("Pitch Center (Centroid)", f"{features['spectral_centroid']['mean']:.0f} Hz", delta=f"{results['sub_scores']['pitch']}% stress")
@@ -788,7 +789,7 @@ if audio_data is not None:
 
     with tab_species:
         st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 16px;">Top Species Candidates (from 6,522 Global Species)</h4>""", unsafe_allow_html=True)
+        st.markdown("""<h4 style="font-family: 'Savate', 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 16px;">Top Species Candidates (from 6,522 Global Species)</h4>""", unsafe_allow_html=True)
         for cand in species_info["top_candidates"]:
             col_info, col_bar = st.columns([2.5, 1])
             with col_info:
@@ -802,7 +803,7 @@ if audio_data is not None:
 
     with tab_anti_spoof:
         st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 16px;">Biometric Verification & Anti-Spoofing Assessment</h4>""", unsafe_allow_html=True)
+        st.markdown("""<h4 style="font-family: 'Savate', 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 16px;">Biometric Verification & Anti-Spoofing Assessment</h4>""", unsafe_allow_html=True)
         
         status_html = f"{ICON_CHECK} <strong>Authentic Avian Syrinx Verified</strong>" if spoof_info['is_authentic'] else f"{ICON_CROSS} <strong>Rejected (Human Oral Mimicry / Spoofing)</strong>"
         st.markdown(f"<div style='margin-bottom: 10px;'>{status_html}</div>", unsafe_allow_html=True)
@@ -819,7 +820,7 @@ if audio_data is not None:
 
     with tab_table:
         st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
-        st.markdown("""<h4 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 16px;">Detailed Bioacoustic Diagnostic Parameters</h4>""", unsafe_allow_html=True)
+        st.markdown("""<h4 style="font-family: 'Savate', 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 16px;">Detailed Bioacoustic Diagnostic Parameters</h4>""", unsafe_allow_html=True)
         diag_rows = []
         for d in results["diagnostics"]:
             diag_rows.append({
@@ -835,7 +836,7 @@ if audio_data is not None:
 else:
     st.markdown(f"""
     <div class="ceti-content-card" style="text-align: center; padding: 72px 32px;">
-        <div style="font-family: 'Playfair Display', serif; font-size: 2.4rem; color: #000000; margin-bottom: 12px;">
+        <div style="font-family: 'Savate', 'Playfair Display', serif; font-size: 2.5rem; color: #000000; margin-bottom: 12px;">
             Awaiting Bioacoustic Acoustic Feed
         </div>
         <p style="color: #4e5a7c; font-size: 1.05rem; max-width: 620px; margin: 0 auto 28px auto; line-height: 1.6;">
