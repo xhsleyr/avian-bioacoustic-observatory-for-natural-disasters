@@ -6,6 +6,7 @@ Recreating https://www.projectceti.org/ exactly:
 - Clean Sohne / Plus Jakarta Sans for body and metadata
 - Sharp 0px architectural containers and 100px pill buttons
 - Global Cornell BirdNET 6,522 Species Intelligence, Biometric Anti-Spoofing, and Early Warning
+- Standard Figma-style vector SVG icons (Lucide / Icons8 minimal outline style) replacing emojis
 """
 
 import os
@@ -21,10 +22,19 @@ from src.species_classifier import identify_species
 from src.spoof_detector import evaluate_avian_authenticity
 from src.image_fetcher import fetch_bird_visuals
 
+# --- FIGMA / ICONS8 STANDARD OUTLINE SVG ICONS ---
+ICON_SHIELD = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>"""
+ICON_ALERT = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>"""
+ICON_CHECK = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>"""
+ICON_CROSS = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>"""
+ICON_MIC = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>"""
+ICON_WAVE = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><path d="M2 10v4"/><path d="M6 6v12"/><path d="M10 3v18"/><path d="M14 8v8"/><path d="M18 5v14"/><path d="M22 10v4"/></svg>"""
+ICON_NETWORK = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect width="6" height="6" x="9" y="2" rx="1"/><rect width="6" height="6" x="2" y="16" rx="1"/><rect width="6" height="6" x="16" y="16" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>"""
+
 # Page configuration
 st.set_page_config(
     page_title="Project AEWS — Listening to the Sentinels",
-    page_icon="🌊",
+    page_icon="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645bdf9d4bac53320316d064_CETI-Favicon.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -144,7 +154,7 @@ st.markdown("""
         color: var(--ceti-primary);
     }
 
-    /* Hero Section (Matches "Understand What Whales are Saying") */
+    /* Hero Section */
     .ceti-hero-title {
         font-family: 'Playfair Display', Georgia, serif;
         font-size: 3.8rem;
@@ -164,7 +174,7 @@ st.markdown("""
         font-weight: 400;
     }
 
-    /* Content Cards (0px radius, clean whitespace, subtle hairline border) */
+    /* Content Cards */
     .ceti-content-card {
         background-color: #ffffff;
         border: 1px solid var(--ceti-border-light);
@@ -207,7 +217,7 @@ st.markdown("""
         margin: 0;
     }
 
-    /* Pill Badges (100px radius for category / status tags) */
+    /* Pill Badges */
     .ceti-pill-badge {
         display: inline-flex;
         align-items: center;
@@ -272,7 +282,7 @@ st.markdown("""
         color: #000000 !important;
     }
 
-    /* CETI Button Primary: Sharp 0px, electric blue -> black hover */
+    /* Buttons */
     .stButton > button {
         background-color: var(--ceti-primary-accent) !important;
         color: #ffffff !important;
@@ -293,7 +303,7 @@ st.markdown("""
         color: #ffffff !important;
     }
 
-    /* CETI Underline Tabs */
+    /* Tabs */
     .stTabs [data-baseweb="tab-list"] {
         gap: 28px;
         border-bottom: 1px solid var(--ceti-border-light);
@@ -317,7 +327,7 @@ st.markdown("""
         font-weight: 700 !important;
     }
 
-    /* Metric Cards Styling */
+    /* Metric Cards */
     [data-testid="stMetricValue"] {
         font-family: 'Playfair Display', serif !important;
         font-size: 2rem !important;
@@ -509,7 +519,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
     st.divider()
 
-    st.markdown("##### 🔬 Bioacoustic Principles")
+    st.markdown(f"##### {ICON_WAVE} Bioacoustic Principles", unsafe_allow_html=True)
     st.caption("""
     * **Non-Human Communication:** Decoding avian flock vocalizations before seismic and atmospheric disruptions.
     * **Dual Syrinx Biphonation:** Verifying authentic multi-tonal avian biological markers.
@@ -517,7 +527,7 @@ with st.sidebar:
     """)
 
     st.divider()
-    st.markdown("##### 🌐 Neural Architecture")
+    st.markdown(f"##### {ICON_NETWORK} Neural Architecture", unsafe_allow_html=True)
     st.markdown("""
     * **Classifier:** Cornell BirdNET v2.4 (6,522 Species)
     * **Biometrics:** Syrinx vs Oral Cavity Anti-Spoofing
@@ -554,9 +564,9 @@ st.markdown("""
 input_mode = st.radio(
     "SELECT BIOACOUSTIC CHANNEL:",
     options=[
-        "📂 Upload Audio Recording",
-        "🎙️ Live Microphone Stream",
-        "🧪 Calibrated Field Benchmarks"
+        "Upload Audio Recording",
+        "Live Microphone Stream",
+        "Calibrated Field Benchmarks"
     ],
     horizontal=True
 )
@@ -564,7 +574,7 @@ input_mode = st.radio(
 audio_data = None
 audio_label = ""
 
-if input_mode == "📂 Upload Audio Recording":
+if input_mode == "Upload Audio Recording":
     uploaded_file = st.file_uploader(
         "Upload raw avian acoustic recording (.wav, .mp3, .ogg, .flac)",
         type=["wav", "mp3", "ogg", "flac"]
@@ -573,8 +583,8 @@ if input_mode == "📂 Upload Audio Recording":
         audio_data = uploaded_file.read()
         audio_label = uploaded_file.name
 
-elif input_mode == "🎙️ Live Microphone Stream":
-    st.markdown("##### 🎙️ Real-Time Environmental Audio Stream")
+elif input_mode == "Live Microphone Stream":
+    st.markdown(f"##### {ICON_MIC} Real-Time Environmental Audio Stream", unsafe_allow_html=True)
     st.caption("Point your Mac or external microphone towards the open window or canopy. Click Record to sample ambient avian signals.")
     
     recorded_audio = st.audio_input(
@@ -597,12 +607,12 @@ else:
             "Select Calibrated Laboratory Benchmark:",
             options=list(sample_names.keys()),
             format_func=lambda x: {
-                "calm_robin_song.wav": "🟢 Calm Robin Whistle (Baseline Melodic)",
-                "elevated_warning_call.wav": "🟡 Elevated Warning Call (Agitation Alert)",
-                "critical_disaster_panic.wav": "🔴 Critical Disaster Panic Screech (Pre-Tremor Evacuation)",
-                "authentic_warbler_storm_alarm.wav": "🌪️ Golden-winged Warbler (Documented 2014 Tornado Outbreak)",
-                "authentic_peafowl_earthquake_alarm.wav": "🦚 Indian Peafowl (Documented Seismic P-Wave Honk)",
-                "human_whistling_mimic.wav": "👤 Human Whistle / Oral Cavity Mimicry (Anti-Spoofing Test)"
+                "calm_robin_song.wav": "[CALM] Robin Whistle — Baseline Melodic",
+                "elevated_warning_call.wav": "[ELEVATED] Warning Call — Agitation Alert",
+                "critical_disaster_panic.wav": "[CRITICAL] Disaster Panic Screech — Pre-Tremor Evacuation",
+                "authentic_warbler_storm_alarm.wav": "[SENTINEL] Golden-winged Warbler — Documented 2014 Tornado Outbreak",
+                "authentic_peafowl_earthquake_alarm.wav": "[SENTINEL] Indian Peafowl — Documented Seismic P-Wave Honk",
+                "human_whistling_mimic.wav": "[ADVERSARIAL] Human Whistling Mimicry — Anti-Spoofing Test"
             }.get(x, x)
         )
     
@@ -637,7 +647,7 @@ if audio_data is not None:
         <div class="ceti-content-card" style="border-left: 3px solid #4749fe; padding: 18px 24px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span class="ceti-pill-badge ceti-pill-verified">
-                    🛡️ {spoof_info['status_label']}
+                    {ICON_SHIELD} {spoof_info['status_label']}
                 </span>
                 <span style="font-family: 'Space Mono', monospace; font-size: 11px; color: #a2a7b7;">
                     BIRDNET CONFIDENCE: {spoof_info['birdnet_conf']}% &bull; SYRINX CONFIRMED
@@ -653,7 +663,7 @@ if audio_data is not None:
         <div class="ceti-content-card" style="border-left: 3px solid #e63946; padding: 18px 24px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span class="ceti-pill-badge ceti-pill-warning">
-                    ⚠️ {spoof_info['status_label']}
+                    {ICON_ALERT} {spoof_info['status_label']}
                 </span>
                 <span style="font-family: 'Space Mono', monospace; font-size: 11px; color: #e63946;">
                     ADVERSARIAL SPOOFING DETECTED
@@ -718,10 +728,10 @@ if audio_data is not None:
 
     # 3. Early Warning Threat Assessment Banner (Signature CETI Gradient)
     if spoof_info["suppress_alarm"]:
-        st.markdown("""
+        st.markdown(f"""
         <div class="ceti-content-card" style="border-left: 3px solid #e63946;">
             <h3 style="font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #e63946; margin: 0 0 6px 0;">
-                ⚠️ Disaster Early Warning Trigger Suppressed
+                {ICON_ALERT} Disaster Early Warning Trigger Suppressed
             </h3>
             <p style="color: #4e5a7c; font-size: 0.95rem; margin: 0;">
                 Because non-avian or human acoustic mimicry was identified, automated early-warning triggers have been locked to prevent civil false alarms.
@@ -757,13 +767,13 @@ if audio_data is not None:
             st.metric("Breath Turbulence Ratio", f"{spoof_info['breath_ratio']}%", delta="Human Breath" if spoof_info['breath_ratio'] > 20 else "Avian Syrinx")
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # 5. Scientific Visualizers & Tables
+    # 5. Scientific Visualizers & Tables (Clean Figma-Style Tab Headers)
     tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_table = st.tabs([
-        "📊 Mel-Spectrogram Heatmap",
-        "📈 Waveform & Call Onsets",
-        "🐦 Top Candidate Species (BirdNET 6.5K)",
-        "🛡️ Anti-Spoofing Biometrics",
-        "📋 Diagnostic Factor Breakdown"
+        "SPECTROGRAM HEATMAP",
+        "WAVEFORM & ONSETS",
+        "SPECIES TAXONOMY (6.5K)",
+        "BIOMETRIC VERIFICATION",
+        "DIAGNOSTIC DATA TABLE"
     ])
 
     with tab_spec:
@@ -793,7 +803,9 @@ if audio_data is not None:
     with tab_anti_spoof:
         st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
         st.markdown("""<h4 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 16px;">Biometric Verification & Anti-Spoofing Assessment</h4>""", unsafe_allow_html=True)
-        st.write(f"**Authenticity Determination:** {'✅ Authentic Avian' if spoof_info['is_authentic'] else '❌ Rejected (Human Mimicry / Spoofing)'}")
+        
+        status_html = f"{ICON_CHECK} <strong>Authentic Avian Syrinx Verified</strong>" if spoof_info['is_authentic'] else f"{ICON_CROSS} <strong>Rejected (Human Oral Mimicry / Spoofing)</strong>"
+        st.markdown(f"<div style='margin-bottom: 10px;'>{status_html}</div>", unsafe_allow_html=True)
         st.write(f"**Spoofing Likelihood Score:** `{spoof_info['spoof_score']} / 100`")
         st.write(f"**Sub-600Hz Breath Turbulence Ratio:** `{spoof_info['breath_ratio']}%` (Threshold: > 28% indicates human exhalation)")
         
@@ -821,7 +833,7 @@ if audio_data is not None:
         st.markdown('</div>', unsafe_allow_html=True)
 
 else:
-    st.markdown("""
+    st.markdown(f"""
     <div class="ceti-content-card" style="text-align: center; padding: 72px 32px;">
         <div style="font-family: 'Playfair Display', serif; font-size: 2.4rem; color: #000000; margin-bottom: 12px;">
             Awaiting Bioacoustic Acoustic Feed
@@ -830,7 +842,7 @@ else:
             Select a calibrated laboratory benchmark, upload an avian field recording, or initiate live microphonic acquisition to commence neural species identification and disaster threat forecasting.
         </p>
         <span class="ceti-pill-badge ceti-pill-verified">
-            6,522 Species Active &bull; Biometric Anti-Spoofing Enabled
+            {ICON_SHIELD} 6,522 Species Active &bull; Biometric Anti-Spoofing Enabled
         </span>
     </div>
     """, unsafe_allow_html=True)
