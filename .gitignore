@@ -1,0 +1,26 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Mac OS
+.DS_Store
+
+# IDE / Zed / Antigravity skill injections
+skills/
+.gemini/
+.agents/
+
+# Audio / Large Data files (keep samples tracked via data/samples if needed)
+data/cache/
+*.wav
+*.mp3
+!data/samples/*.wav
+!data/samples/*.mp3
+
+# Environment & logs
+*.log
+.env
