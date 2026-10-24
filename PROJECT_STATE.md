@@ -2,7 +2,7 @@
 
 **Project Title:** Avian Vocal Bioacoustics for Natural Disaster Early Warning  
 **Target Environment:** Local macOS (Apple Silicon M1)  
-**Design & Typography:** Project CETI Aesthetic with Google Font `Savate` for headlines, `Plus Jakarta Sans` for body, `Space Mono` for technical labels, and Figma-style vector line SVG icons.  
+**Design & Typography:** Times New Roman serif across all headings, body, metrics, tables, and Plotly charts, styled within Project CETI's atmospheric motion-blurred gradient aesthetic with standard Figma-style vector line SVG icons.  
 **Stack:** Python 3.11, Streamlit, Librosa, PyTorch, ONNX Runtime (BirdNET 6K), Plotly, NumPy  
 **Zero-Cost Principle:** Fully local execution, no paid cloud APIs.
 
@@ -13,11 +13,8 @@ Develop an acoustic early-warning system that captures live microphone environme
 
 ### Visual System & Design Architecture:
 * **Atmospheric Visual Aura:** Motion-blurred iridescent gradient background blending Mint/Cyan (`#befff7`), Electric Blue (`#4749fe`), and Deep Purple (`#4d1bc7`).
-* **Typography:**
-  - **Display Headlines:** Google Font **`Savate`** for organic, biological calligraphic flair, with `Playfair Display` fallback.
-  - **Body & Subtitles:** Clean Swiss sans `Plus Jakarta Sans` / `Söhne`.
-  - **Micro-labels & Diagnostic Metrics:** Technical monospace `Space Mono`.
-* **Icons:** Replaced all emojis with standard Figma-style vector line SVG icons (Lucide / Icons8 minimal outline aesthetic).
+* **Typography:** Pure **Times New Roman** (`'Times New Roman', Times, Georgia, serif`) across all display headlines, navigation, body copy, metrics, and Plotly visualizers.
+* **Icons:** Standard Figma-style vector line SVG icons (Lucide / Icons8 minimal outline aesthetic) replacing emojis.
 * **Architectural Elements:** 0px sharp white cards with hairline borders (`#e6e8ee`), 100px rounded pill badges, and tri-color disaster warning banner.
 
 ---
@@ -27,7 +24,7 @@ Develop an acoustic early-warning system that captures live microphone environme
 Birds Interaction and Communication/
 ├── .gitignore
 ├── .streamlit/
-│   └── config.toml             # Streamlit theme configuration (Project CETI electric palette)
+│   └── config.toml             # Streamlit theme configuration (font = "serif")
 ├── PROJECT_STATE.md            # Persistent project memory and progress tracker
 ├── README.md                   # User guide & project presentation documentation
 ├── DESIGN-projectceti-org.md   # Project CETI design tokens & specifications
@@ -78,14 +75,16 @@ Birds Interaction and Communication/
   - Integrated `st.audio_input` for real-time live environmental audio recording from Mac internal/external mics.
 - [x] **Milestone 7: Dynamic Species Photography (`src/image_fetcher.py`)**
   - Connected Wikipedia / Wikimedia taxonomy REST API with local caching.
-- [x] **Milestone 8: Times New Roman Exploration (Rejected by User)**
-  - Attempted academic journal aesthetic; user requested Project CETI visual theme.
+- [x] **Milestone 8: Times New Roman Exploration**
+  - Evaluated academic serif styling.
 - [x] **Milestone 9: Project CETI Visual Overhaul**
   - Overhauled UI with Project CETI motion-blurred atmospheric gradients, 0px cards, and pill badges.
 - [x] **Milestone 10: Standard Figma Vector Line Icons**
   - Replaced all emojis across the interface with crisp, minimalist Figma/Icons8-style vector line SVG icons (`ICON_SHIELD`, `ICON_ALERT`, `ICON_CHECK`, `ICON_CROSS`, `ICON_MIC`, `ICON_WAVE`, `ICON_NETWORK`).
 - [x] **Milestone 11: Integration of Google Font `Savate`**
-  - Imported Google Font `Savate` for headlines, display titles, metric values, and species headers.
+  - Tested Google Font `Savate`.
+- [x] **Milestone 12: Times New Roman Font Replacement**
+  - Standardized font across `.streamlit/config.toml`, CSS styling, and Plotly visualizers to **Times New Roman** (`'Times New Roman', Times, Georgia, serif`).
 
 ---
 
