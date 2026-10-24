@@ -2,7 +2,7 @@
 
 **Project Title:** Avian Vocal Bioacoustics for Natural Disaster Early Warning  
 **Target Environment:** Local macOS (Apple Silicon M1)  
-**Design System:** Inspired by [Project CETI](https://www.projectceti.org/) (Cyan-Blue-Purple motion gradients, GT Super editorial serif, Sohne body typography, architectural 0px cards)  
+**Design & Typography:** Academic Research Journal Aesthetic (Times New Roman / Scholarly Serif, Adaptive Light/Dark Mode)  
 **Stack:** Python 3.11, Streamlit, Librosa, PyTorch, ONNX Runtime (BirdNET 6K), Plotly, NumPy  
 **Zero-Cost Principle:** Fully local execution, no paid cloud APIs.
 
@@ -11,11 +11,10 @@
 ## 1. Project Goal & Scientific Foundation
 Develop an acoustic early-warning system that captures live microphone environmental sounds or audio files, identifies bird species across **6,522 global species**, dynamically retrieves high-resolution species photographs, verifies biological authenticity via an **Anti-Spoofing & Biometric Shield**, and analyzes authentic vocalizations to detect abnormal collective distress, acoustic panic, or sudden flock dispersion indicators preceding natural disasters (e.g., seismic P-waves, severe storms, cyclones).
 
-### Visual & Design System ([`DESIGN-projectceti-org.md`](file:///Users/xhselyr/My%20Projects/Birds%20Interaction%20and%20Communication/DESIGN-projectceti-org.md)):
-* **Color Palette:** Primary Deep Purple (`#4d1bc7`), Electric Blue Accent (`#4749fe`), Cyan Shimmer (`#befff7`), Slate Blue text (`#4e5a7c`), White background (`#ffffff`), and Dark Slate (`#181b22`).
-* **Atmospheric Motion Blur:** Radial gradient lighting mesh with ethereal blur overlays that recreate the living bioacoustic depth seen on Project CETI.
-* **Typography:** Editorial Serif display headlines (`Cormorant Garamond` / `GT Super Display`) paired with clean geometric body text (`Plus Jakarta Sans` / `Sohne`) and `JetBrains Mono` for metadata tags.
-* **Architectural Precision:** Sharp `0px` radius on cards and primary action buttons; `100px` pill badges for filter and status tags.
+### Academic Journal Design System:
+* **Typography:** Pure **Times New Roman** (`"Times New Roman", Times, Georgia, serif`) across all mastheads, display titles, body text, metrics, and tables.
+* **Seamless Dark / Light Mode Adaptation:** Configured `.streamlit/config.toml` and adaptive CSS variables (`--journal-bg`, `--journal-surface`, `--journal-text`, `--journal-border`) with `@media (prefers-color-scheme: dark)` and `[data-theme="dark"]` to eliminate theme-switching glitches, white-on-white text, or inverted container clipping.
+* **Scientific Presentation:** Mastheads, Figure labels (`Fig. 1`, `Fig. 2A`, `Table 1`, `Table 2`), academic status badges, and dual-column species taxonomy cards.
 
 ---
 
@@ -23,11 +22,13 @@ Develop an acoustic early-warning system that captures live microphone environme
 ```
 Birds Interaction and Communication/
 ├── .gitignore
-├── PROJECT_STATE.md        # Persistent project memory and progress tracker
-├── README.md               # User guide & project presentation documentation
-├── DESIGN-projectceti-org.md # Project CETI design system specifications
-├── requirements.txt        # Python dependencies
-├── app.py                  # Streamlit Web Application with Project CETI design system
+├── .streamlit/
+│   └── config.toml             # Streamlit theme configuration (Serif, warm scholarly palette)
+├── PROJECT_STATE.md            # Persistent project memory and progress tracker
+├── README.md                   # User guide & project presentation documentation
+├── DESIGN-projectceti-org.md   # Reference design system notes
+├── requirements.txt            # Python dependencies
+├── app.py                      # Academic Times New Roman Web Application
 ├── models/
 │   ├── birdnet_model.onnx                      # Cornell BirdNET Global ONNX weights (49.3 MB)
 │   └── BirdNET_GLOBAL_6K_V2.4_Labels.txt       # 6,522 Species labels (Common & Scientific names)
@@ -39,8 +40,8 @@ Birds Interaction and Communication/
 │   ├── spoof_detector.py       # Bioacoustic Anti-Spoofing Shield & false-alarm suppression
 │   └── image_fetcher.py        # Dynamic bird photo and taxonomy summary fetcher with offline caching
 └── data/
-    ├── cache/              # Local species image and taxonomy cache
-    └── samples/            # Benchmark audio samples (Normal, Elevated, Critical, Warbler, Peafowl, Human Mimic)
+    ├── cache/                  # Local species image and taxonomy cache
+    └── samples/                # Benchmark audio samples (Normal, Elevated, Critical, Warbler, Peafowl, Human Mimic)
 ```
 
 ---
@@ -74,11 +75,10 @@ Birds Interaction and Communication/
   - Integrated `st.audio_input` for real-time live environmental audio recording from Mac internal/external mics.
 - [x] **Milestone 7: Dynamic Species Photography (`src/image_fetcher.py`)**
   - Connected Wikipedia / Wikimedia taxonomy REST API with local caching.
-- [x] **Milestone 8: Complete Frontend Overhaul Inspired by Project CETI (`app.py`)**
-  - Atmospheric motion-blurred gradient backdrop (cyan-electric blue-purple aura).
-  - Editorial `GT Super Display` / `Cormorant Garamond` serif display typography.
-  - Clean `Sohne` / `Plus Jakarta Sans` body text and `JetBrains Mono` system badges.
-  - Architectural 0px card edges, 100px pill buttons, and CETI oceanic Spectrogram palette.
+- [x] **Milestone 8: Times New Roman Academic Redesign & Theme Glitch Resolution**
+  - Standardized all typography to authentic **Times New Roman** serif.
+  - Created `.streamlit/config.toml` to unify Streamlit's theme base.
+  - Added adaptive CSS variables supporting Light Mode and Dark Mode with zero color clipping or contrast clashes.
 
 ---
 
