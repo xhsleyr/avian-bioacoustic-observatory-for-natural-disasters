@@ -1,1 +1,1 @@
-"""INTERA - Audio & Distress Processing Engine."""
+"""Avian Early Warning System (AEWS) - Audio & Distress Processing Engine."""

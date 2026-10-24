@@ -51,7 +51,7 @@ def fetch_bird_visuals(common_name: str, scientific_name: str) -> Dict[str, Any]
     if key in cache:
         return cache[key]
 
-    headers = {'User-Agent': 'INTERA/1.0 (academic bioacoustics engineering project)'}
+    headers = {'User-Agent': 'AvianEarlyWarningSystem/1.0 (academic bioacoustics engineering project)'}
     
     # Try scientific name first (most accurate on Wikipedia), then common name
     search_queries = [scientific_name, common_name]

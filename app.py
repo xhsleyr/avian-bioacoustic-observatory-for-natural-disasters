@@ -1,14 +1,11 @@
-"""INTERA — Avian Bioacoustic Translation & Planetary Early Warning System.
+"""Avian Early Warning System (AEWS) — Designed in the visual system of Project CETI.
 
-Designed in the visual system of Project CETI (DESIGN-projectceti-org.md).
-- Typography: Times New Roman serif across all headings, body text, metrics, and charts.
-- Atmospheric aura: Iridescent flowing gradient (Cyan #befff7 -> Electric Blue #4749fe -> Deep Purple #4d1bc7).
-- Stark white content cards with subtle architectural borders and shadow elevation.
-- Signature CETI gradient banner: linear-gradient(135deg, #befff7 0%, #4749fe 50%, #4d1bc7 100%).
-- Centered editorial composition matching projectceti.org hero layout.
-- Global Cornell BirdNET 6,522 Species Intelligence, Biometric Anti-Spoofing Shield, and ADI Scoring.
-- Standard Figma/Lucide minimal vector outline icons (no emojis).
-- 60 FPS zero-lag cached neural inference pipeline.
+Typography: Times New Roman serif across all headings, body text, metrics, and charts.
+- Fluid motion-blurred iridescent gradient aura (Cyan #befff7 -> Electric Blue #4749fe -> Deep Purple #4d1bc7)
+- Times New Roman typography for classic editorial elegance
+- Sharp 0px architectural containers and 100px pill buttons
+- Global Cornell BirdNET 6,522 Species Intelligence, Biometric Anti-Spoofing, and Early Warning
+- Standard Figma-style vector SVG icons (Lucide / Icons8 minimal outline style)
 """
 
 import os
@@ -32,17 +29,16 @@ ICON_CROSS = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stro
 ICON_MIC = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>"""
 ICON_WAVE = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><path d="M2 10v4"/><path d="M6 6v12"/><path d="M10 3v18"/><path d="M14 8v8"/><path d="M18 5v14"/><path d="M22 10v4"/></svg>"""
 ICON_NETWORK = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><rect width="6" height="6" x="9" y="2" rx="1"/><rect width="6" height="6" x="2" y="16" rx="1"/><rect width="6" height="6" x="16" y="16" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>"""
-ICON_RADAR = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-4.2 4.2V2"/><path d="M12 16a4 4 0 1 0 0-8"/></svg>"""
 
-# Streamlit Page Configuration
+# Page configuration
 st.set_page_config(
-    page_title="INTERA — Listening to the Sentinels",
+    page_title="Project AEWS — Listening to the Sentinels",
     page_icon="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645bdf9d4bac53320316d064_CETI-Favicon.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Project CETI Design System (DESIGN-projectceti-org.md) + Times New Roman Typography CSS
+# Project CETI Design System + Times New Roman Typography CSS
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
@@ -66,9 +62,9 @@ st.markdown("""
     .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
         background-color: #ffffff !important;
         background-image: 
-            radial-gradient(circle at 12% 18%, rgba(190, 255, 247, 0.50) 0%, transparent 44%),
-            radial-gradient(circle at 88% 22%, rgba(71, 73, 254, 0.22) 0%, transparent 50%),
-            radial-gradient(circle at 50% 85%, rgba(77, 27, 199, 0.18) 0%, transparent 58%) !important;
+            radial-gradient(circle at 12% 18%, rgba(190, 255, 247, 0.45) 0%, transparent 42%),
+            radial-gradient(circle at 88% 22%, rgba(71, 73, 254, 0.20) 0%, transparent 48%),
+            radial-gradient(circle at 50% 85%, rgba(77, 27, 199, 0.16) 0%, transparent 55%) !important;
         background-attachment: fixed !important;
         font-family: 'Times New Roman', Times, Georgia, serif !important;
         color: var(--ceti-text-primary) !important;
@@ -76,28 +72,6 @@ st.markdown("""
 
     [data-testid="stHeader"] {
         background: transparent !important;
-    }
-
-    /* Minimal Custom Scrollbar */
-    ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-        background: #ffffff;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: #e6e8ee;
-        border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--ceti-primary-accent);
-    }
-
-    /* Text Selection */
-    ::selection {
-        background-color: rgba(71, 73, 254, 0.20);
-        color: var(--ceti-primary);
     }
 
     /* Sidebar Styling */
@@ -131,75 +105,57 @@ st.markdown("""
         color: var(--ceti-text-primary);
     }
 
-    /* Centered Project CETI Navigation Bar */
+    /* Project CETI Navigation Bar */
     .ceti-navbar {
         display: flex;
-        flex-direction: column;
+        justify-content: space-between;
         align-items: center;
-        justify-content: center;
-        padding: 22px 0 26px 0;
+        padding: 18px 0;
         border-bottom: 1px solid var(--ceti-border-light);
         margin-bottom: 40px;
-        gap: 14px;
     }
 
     .ceti-logo-mark {
         font-family: 'Times New Roman', Times, serif;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 700;
-        letter-spacing: 0.14em;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--ceti-text-dark);
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 10px;
+        gap: 8px;
     }
 
     .ceti-logo-dot {
-        width: 9px;
-        height: 9px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
         background-color: var(--ceti-primary-accent);
         display: inline-block;
-        box-shadow: 0 0 0 3px rgba(71, 73, 254, 0.22);
     }
 
     .ceti-nav-links {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 32px;
+        gap: 28px;
         font-family: 'Times New Roman', Times, serif;
         font-size: 13px;
-        letter-spacing: 0.10em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--ceti-text-muted);
     }
 
-    .ceti-nav-links a, .ceti-nav-links span {
+    .ceti-nav-links a {
         color: var(--ceti-text-dark);
         text-decoration: none;
         transition: color 0.2s ease;
-        cursor: pointer;
     }
 
-    .ceti-nav-links a:hover, .ceti-nav-links span:hover {
+    .ceti-nav-links a:hover {
         color: var(--ceti-primary);
     }
 
-    /* Hero Section with Centered Layout */
-    .ceti-hero-kicker {
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 13px;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--ceti-primary-accent);
-        text-align: center;
-        margin-bottom: 12px;
-        font-weight: 700;
-    }
-
+    /* Hero Section with Times New Roman */
     .ceti-hero-title {
         font-family: 'Times New Roman', Times, Georgia, serif;
         font-size: 3.8rem;
@@ -208,7 +164,6 @@ st.markdown("""
         color: var(--ceti-text-dark);
         margin-bottom: 16px;
         letter-spacing: -0.02em;
-        text-align: center;
     }
 
     .ceti-hero-subtitle {
@@ -217,9 +172,8 @@ st.markdown("""
         line-height: 1.6;
         color: var(--ceti-text-primary);
         max-width: 860px;
-        margin: 0 auto 36px auto;
+        margin-bottom: 36px;
         font-weight: 400;
-        text-align: center;
     }
 
     /* Content Cards */
@@ -271,7 +225,7 @@ st.markdown("""
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 6px 18px;
+        padding: 5px 16px;
         border-radius: 100px;
         font-size: 12px;
         font-weight: 700;
@@ -292,36 +246,29 @@ st.markdown("""
         border: 1px solid #e63946;
     }
 
-    /* Radio button filters styled as centered pills */
+    /* Radio button filters */
     div[data-testid="stRadio"] > label {
         font-family: 'Times New Roman', Times, Georgia, serif !important;
         font-size: 12px !important;
-        letter-spacing: 0.10em !important;
+        letter-spacing: 0.08em !important;
         text-transform: uppercase !important;
         color: var(--ceti-text-dark) !important;
         font-weight: 700 !important;
-        text-align: center !important;
-        margin-bottom: 12px !important;
     }
     div[data-testid="stRadio"] div[role="radiogroup"] {
         gap: 12px !important;
-        justify-content: center !important;
     }
     div[data-testid="stRadio"] div[role="radiogroup"] > label {
         background-color: #ffffff !important;
         border: 1px solid var(--ceti-border-light) !important;
         border-radius: 100px !important;
-        padding: 9px 24px !important;
+        padding: 8px 20px !important;
         cursor: pointer !important;
         transition: all 0.2s ease !important;
         font-family: 'Times New Roman', Times, Georgia, serif !important;
     }
     div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
         border-color: var(--ceti-primary-accent) !important;
-    }
-    div[data-testid="stRadio"] div[role="radiogroup"] > label[data-checked="true"] {
-        border-color: var(--ceti-primary-accent) !important;
-        background-color: rgba(71, 73, 254, 0.06) !important;
     }
 
     /* Selectbox */
@@ -340,7 +287,7 @@ st.markdown("""
         font-family: 'Times New Roman', Times, Georgia, serif !important;
     }
 
-    /* Buttons — CETI 0px Primary with Black Hover */
+    /* Buttons */
     .stButton > button {
         background-color: var(--ceti-primary-accent) !important;
         color: #ffffff !important;
@@ -356,8 +303,8 @@ st.markdown("""
     }
 
     .stButton > button:hover {
-        background-color: var(--ceti-button-hover) !important;
-        border-color: var(--ceti-button-hover) !important;
+        background-color: #000000 !important;
+        border-color: #000000 !important;
         color: #ffffff !important;
     }
 
@@ -441,34 +388,10 @@ st.markdown("""
         padding: 12px 14px !important;
         color: var(--ceti-surface-dark) !important;
     }
-
-    audio {
-        width: 100%;
-        margin-top: 8px;
-    }
 </style>
 """, unsafe_allow_html=True)
 
 
-# --- 60 FPS ZERO-LAG PERFORMANCE CACHING PIPELINE ---
-@st.cache_data(show_spinner=False)
-def cached_process_audio(audio_bytes: bytes):
-    """Zero-lag cached neural bioacoustics & biometric inference pipeline."""
-    y, sr, duration = load_audio(audio_bytes)
-    features = extract_acoustic_features(y, sr)
-    results = compute_distress_index(features)
-    species_info = identify_species(audio_bytes, features, top_k=5)
-    spoof_info = evaluate_avian_authenticity(y, sr, species_info, features)
-    return y, sr, duration, features, results, species_info, spoof_info
-
-
-@st.cache_data(show_spinner=False)
-def cached_fetch_visuals(common_name: str, scientific_name: str):
-    """Cached species photographic imagery and taxonomy description."""
-    return fetch_bird_visuals(common_name, scientific_name)
-
-
-# --- PLOTLY VISUALIZATIONS (PROJECT CETI COLOR SYSTEM) ---
 def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
     """Create a minimalist Plotly gauge indicator styled with Times New Roman."""
     fig = go.Figure(go.Indicator(
@@ -505,7 +428,7 @@ def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
 
 
 def plot_mel_spectrogram(features: dict) -> go.Figure:
-    """Create a Mel-Spectrogram heatmap with Times New Roman typography and CETI palette."""
+    """Create a Mel-Spectrogram heatmap with Times New Roman typography."""
     mel_db = features["mel_db"]
     times = features["times"]
     freq_bins = np.linspace(200, 10000, mel_db.shape[0])
@@ -595,7 +518,7 @@ with st.sidebar:
         RESEARCH INITIATIVE
     </div>
     <div style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 2.1rem; font-weight: 700; color: #000000; line-height: 1.1; margin-bottom: 8px;">
-        INTERA
+        Project AEWS
     </div>
     <div style="font-family: 'Times New Roman', Times, serif; font-size: 0.95rem; color: #4e5a7c; margin-bottom: 24px; line-height: 1.5;">
         Avian Bioacoustic Translation & Planetary Early Warning Intelligence.
@@ -615,15 +538,15 @@ with st.sidebar:
     st.markdown("""
     * **Classifier:** Cornell BirdNET v2.4 (6,522 Species)
     * **Biometrics:** Syrinx vs Oral Cavity Anti-Spoofing
-    * **Compute Core:** Apple Silicon M1 Local Neural Core (0ms rerun)
+    * **Compute Core:** Apple Silicon M1 Local Neural Inference
     """)
 
 
-# --- TOP NAVIGATION BAR (CENTERED CETI EDITORIAL COMPOSITION) ---
+# --- TOP NAVIGATION BAR ---
 st.markdown("""
 <div class="ceti-navbar">
     <div class="ceti-logo-mark">
-        <span class="ceti-logo-dot"></span> INTERA // BIOACOUSTICS
+        <span class="ceti-logo-dot"></span> PROJECT AEWS // BIOACOUSTICS
     </div>
     <div class="ceti-nav-links">
         <span>RESEARCH</span>
@@ -634,12 +557,8 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
-# --- HERO SECTION (CENTERED) ---
+# --- HERO SECTION ---
 st.markdown("""
-<div class="ceti-hero-kicker">
-    WHAT WOULD IT MEAN TO
-</div>
 <div class="ceti-hero-title">
     Understand What Birds are Saying
 </div>
@@ -648,14 +567,13 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
-# --- SELECT INPUT MODE ---
+# Select Input Mode
 input_mode = st.radio(
     "SELECT BIOACOUSTIC CHANNEL:",
     options=[
-        "Calibrated Field Benchmarks",
         "Upload Audio Recording",
-        "Live Microphone Stream"
+        "Live Microphone Stream",
+        "Calibrated Field Benchmarks"
     ],
     horizontal=True
 )
@@ -710,30 +628,25 @@ else:
             audio_data = f.read()
         audio_label = selected_sample_name
 
-
-# --- INFERENCE & PRESENTATION ---
 if audio_data is not None:
-    # 0ms Lag Cached Neural Pipeline
-    with st.spinner("Decoding bioacoustic signals with Cornell BirdNET & verifying biometrics..."):
-        y, sr, duration, features, results, species_info, spoof_info = cached_process_audio(audio_data)
-
-    prim_sp = species_info["primary_species"]
-
-    # Header for acquired feed (Centered)
     st.markdown(f"""
-    <div style="text-align: center; margin-top: 28px; margin-bottom: 12px;">
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #4749fe; margin-bottom: 2px;">
-            ACOUSTIC FEED ACQUIRED
-        </div>
-        <div style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 2rem; font-weight: 700; color: #000000; margin-bottom: 4px;">
-            {audio_label}
-        </div>
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 13px; color: #a2a7b7;">
-            Duration: {duration:.2f}s &bull; Sample Rate: {sr:,} Hz
-        </div>
+    <div style="font-family: 'Times New Roman', Times, serif; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #4749fe; margin-top: 24px; margin-bottom: 2px;">
+        ACOUSTIC FEED ACQUIRED
+    </div>
+    <div style="font-family: 'Times New Roman', Times, Georgia, serif; font-size: 1.8rem; font-weight: 700; color: #000000; margin-bottom: 12px;">
+        {audio_label}
     </div>
     """, unsafe_allow_html=True)
     st.audio(audio_data)
+
+    with st.spinner("Decoding bioacoustic signals with Cornell BirdNET & verifying biometrics..."):
+        y, sr, duration = load_audio(audio_data)
+        features = extract_acoustic_features(y, sr)
+        results = compute_distress_index(features)
+        species_info = identify_species(audio_data, features, top_k=5)
+        spoof_info = evaluate_avian_authenticity(y, sr, species_info, features)
+
+    prim_sp = species_info["primary_species"]
 
     # 1. Anti-Spoofing Biometric Verification Badge
     if spoof_info["is_authentic"]:
@@ -771,7 +684,7 @@ if audio_data is not None:
 
     # 2. Visual Species Identification Card
     if spoof_info["is_authentic"]:
-        visuals = cached_fetch_visuals(prim_sp['common_name'], prim_sp['scientific_name'])
+        visuals = fetch_bird_visuals(prim_sp['common_name'], prim_sp['scientific_name'])
         
         st.markdown('<div class="ceti-content-card">', unsafe_allow_html=True)
         col_photo, col_details = st.columns([1, 2.2])
