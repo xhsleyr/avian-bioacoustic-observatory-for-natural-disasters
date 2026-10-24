@@ -628,6 +628,35 @@ st.markdown("""
 
     .intera-card {
         padding: 32px 38px;
+        box-sizing: border-box !important;
+        max-width: 100% !important;
+    }
+
+    .intera-empty-state {
+        text-align: center !important;
+        padding: clamp(36px, 6vw, 68px) clamp(16px, 4vw, 36px) !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .intera-empty-title {
+        font-size: clamp(1.75rem, 4.2vw, 2.5rem) !important;
+        font-weight: 700 !important;
+        color: #000000 !important;
+        margin-bottom: 14px !important;
+        line-height: 1.22 !important;
+        letter-spacing: -0.015em !important;
+        word-break: break-word !important;
+    }
+
+    .intera-empty-desc {
+        color: #4e5a7c !important;
+        font-size: clamp(1.02rem, 1.9vw, 1.18rem) !important;
+        max-width: 680px !important;
+        margin: 0 auto 26px auto !important;
+        line-height: 1.65 !important;
+        word-break: break-word !important;
+        padding: 0 4px !important;
     }
 
     /* Suppress empty containers */
@@ -677,14 +706,20 @@ st.markdown("""
     .intera-pill {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 6px;
-        padding: 6px 18px;
+        padding: 7px 18px;
         border-radius: 100px;
         font-size: 12px;
         font-weight: 700;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.05em;
         text-transform: uppercase;
-        white-space: nowrap;
+        max-width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+        line-height: 1.45;
+        overflow-wrap: break-word;
+        word-break: normal;
     }
 
     .intera-pill-verified {
@@ -1191,6 +1226,21 @@ st.markdown("""
             font-size: 15px !important;
         }
 
+        /* Badges & Pills Responsive Wrapping */
+        .intera-pill {
+            white-space: normal !important;
+            border-radius: 16px !important;
+            padding: 8px 14px !important;
+            font-size: 11px !important;
+            line-height: 1.45 !important;
+            max-width: 100% !important;
+            display: inline-flex !important;
+            text-align: center !important;
+            box-sizing: border-box !important;
+            word-break: normal !important;
+            overflow-wrap: break-word !important;
+        }
+
         /* Cards and Visual Banners */
         .intera-card,
         [data-testid="stVerticalBlockBorderWrapper"] {
@@ -1300,6 +1350,17 @@ st.markdown("""
         .intera-card,
         [data-testid="stVerticalBlockBorderWrapper"] {
             padding: 18px 14px !important;
+        }
+
+        .intera-pill {
+            font-size: 10.5px !important;
+            padding: 7px 12px !important;
+            border-radius: 14px !important;
+            letter-spacing: 0.04em !important;
+        }
+
+        .intera-empty-state {
+            padding: 24px 14px !important;
         }
 
         .intera-hero-understand {
@@ -1987,15 +2048,17 @@ if audio_data is not None:
 
 else:
     st.markdown(f"""
-    <div class="intera-card" style="text-align: center; padding: 76px 38px;">
-        <div style="font-size: 2.5rem; font-weight: 700; color: #000000; margin-bottom: 16px; line-height: 1.2;">
-            Awaiting Bioacoustic Acoustic Feed
+    <div class="intera-card intera-empty-state">
+        <div class="intera-empty-title">
+            Awaiting Bioacoustic Feed
         </div>
-        <p style="color: #4e5a7c; font-size: 1.2rem; max-width: 680px; margin: 0 auto 30px auto; line-height: 1.65;">
+        <p class="intera-empty-desc">
             Select a calibrated laboratory benchmark, upload an avian field recording, or initiate live microphonic acquisition to commence neural species identification and disaster threat forecasting.
         </p>
-        <span class="intera-pill intera-pill-verified">
-            {ICON_SHIELD} 6,522 Species Active &bull; Biometric Anti-Spoofing Enabled
-        </span>
+        <div>
+            <span class="intera-pill intera-pill-verified">
+                {ICON_SHIELD} 6,522 Species Active &bull; Biometric Anti-Spoofing Enabled
+            </span>
+        </div>
     </div>
     """, unsafe_allow_html=True)
