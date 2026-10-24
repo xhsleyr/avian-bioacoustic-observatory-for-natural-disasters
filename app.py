@@ -12,6 +12,8 @@ Principles:
 import os
 import glob
 import html
+import base64
+import logging
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
@@ -23,11 +25,34 @@ from src.species_classifier import identify_species
 from src.spoof_detector import evaluate_avian_authenticity
 from src.image_fetcher import fetch_bird_visuals
 
+logger = logging.getLogger(__name__)
+
 # --- FIGMA / ICONS8 OUTLINE SVG ICONS ---
 ICON_SHIELD = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>"""
 ICON_ALERT = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>"""
 ICON_CHECK = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14 recovery"/></svg>"""
+ICON_CROSS = """<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e63946" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:6px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>"""
 ICON_MIC = """<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-3px; margin-right:6px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>"""
+
+
+def get_image_data_uri(path_or_url: str) -> str:
+    """Convert local image paths into base64 Data URIs for instant, zero-lag browser rendering."""
+    if not path_or_url:
+        return ""
+    if path_or_url.startswith("http://") or path_or_url.startswith("https://") or path_or_url.startswith("data:"):
+        return path_or_url
+    if os.path.exists(path_or_url):
+        try:
+            with open(path_or_url, "rb") as f:
+                encoded = base64.b64encode(f.read()).decode("utf-8")
+                ext = os.path.splitext(path_or_url)[1].lstrip(".").lower()
+                mime = "jpeg" if ext in ["jpg", "jpeg"] else ("png" if ext == "png" else "webp")
+                return f"data:image/{mime};base64,{encoded}"
+        except Exception as e:
+            logger.warning("Error reading species image '%s': %s", path_or_url, e)
+            return path_or_url
+    return path_or_url
+
 
 # Page configuration — full-width, clean layout without sidebar
 st.set_page_config(
@@ -72,10 +97,17 @@ st.markdown("""
         font-family: "Material Symbols Rounded", "Material Symbols Outlined", sans-serif !important;
     }
 
-    [data-testid="stFileUploaderDropzone"] [data-testid="baseButton-secondary"] span:first-child {
-        font-family: "Material Symbols Rounded", sans-serif !important;
-        margin-right: 8px !important;
-        display: inline-block !important;
+    /* Fix Streamlit File Uploader "uploadUpload" text clash */
+    [data-testid="stFileUploaderDropzone"] button span:first-child {
+        display: none !important;
+    }
+
+    [data-testid="stFileUploaderDropzone"] {
+        border: 1px dashed var(--intera-border) !important;
+        background-color: #fafbfc !important;
+        border-radius: 4px !important;
+        padding: 24px 16px !important;
+        text-align: center !important;
     }
 
     /* COMPLETELY REMOVE SIDEBAR AND LEFT TOGGLE ARROW BUTTON */
@@ -167,7 +199,7 @@ st.markdown("""
     /* Human Editorial Hero Section */
     .intera-hero {
         text-align: center;
-        margin-bottom: 42px;
+        margin-bottom: 38px;
     }
 
     .intera-hero-title {
@@ -175,7 +207,7 @@ st.markdown("""
         font-weight: 700;
         line-height: 1.12;
         color: var(--intera-text-dark);
-        margin-bottom: 20px;
+        margin-bottom: 18px;
         letter-spacing: -0.02em;
         max-width: 980px;
         margin-left: auto;
@@ -187,7 +219,7 @@ st.markdown("""
         line-height: 1.65;
         color: var(--intera-text-body);
         max-width: 860px;
-        margin: 0 auto 36px auto;
+        margin: 0 auto 32px auto;
         font-weight: 400;
     }
 
@@ -336,10 +368,11 @@ st.markdown("""
 
     /* Museum Natural History Photo Frame */
     .photo-mat-frame {
-        border: 1px solid var(--intera-border);
-        padding: 8px;
+        border: 1px solid #dcdfe6;
+        padding: 10px;
         background: #ffffff;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        border-radius: 3px;
     }
 
     /* Project CETI Atmospheric Gradient Banner */
@@ -465,6 +498,51 @@ st.markdown("""
         margin-bottom: 18px;
     }
 
+    /* Stressor Decomposition Architecture */
+    .stressor-card {
+        padding: 12px 0;
+        border-bottom: 1px solid #edf0f5;
+    }
+    .stressor-card:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+    .stressor-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 4px;
+    }
+    .stressor-name {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #000000;
+    }
+    .stressor-val {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #4749fe;
+    }
+    .stressor-context {
+        font-size: 0.92rem;
+        color: #6b7280;
+        line-height: 1.4;
+        margin-top: 3px;
+    }
+    .stressor-bar-track {
+        width: 100%;
+        height: 7px;
+        background-color: #f1f3f9;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-top: 6px;
+    }
+    .stressor-bar-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.5s ease-out;
+    }
+
     /* Metrics Sizing */
     [data-testid="stMetricValue"] {
         font-size: 2.25rem !important;
@@ -506,7 +584,7 @@ st.markdown("""
 
     audio {
         width: 100%;
-        margin-top: 10px;
+        margin-top: 8px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -530,36 +608,50 @@ def cached_fetch_visuals(common_name: str, scientific_name: str):
     return fetch_bird_visuals(common_name, scientific_name)
 
 
-# --- PLOTLY VISUALIZATIONS (TIMES NEW ROMAN EDITORIAL STYLING) ---
+# --- PLOTLY VISUALIZATIONS (HUMAN EDITORIAL PRECISION) ---
 def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
-    """Create a minimalist Plotly gauge indicator styled with Times New Roman."""
+    """Create a refined semi-circular bioacoustic distress gauge indicator."""
+    bar_color = "#00c49f" if adi_score < 38.0 else ("#f4a261" if adi_score < 70.0 else "#e63946")
+
     fig = go.Figure(go.Indicator(
         mode="gauge+number",
         value=adi_score,
         domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': "ACOUSTIC DISTRESS INDEX (ADI)", 'font': {'size': 13, 'color': "#8c93a8", 'family': "Times New Roman, Times, serif"}},
-        number={'suffix': "%", 'font': {'size': 56, 'color': "#000000", 'family': "Times New Roman, Times, serif"}},
+        title={
+            'text': "ACOUSTIC DISTRESS INDEX (ADI)",
+            'font': {'size': 13, 'color': "#8c93a8", 'family': "Times New Roman, Times, serif"}
+        },
+        number={
+            'suffix': "%",
+            'font': {'size': 54, 'color': "#000000", 'family': "Times New Roman, Times, serif"}
+        },
         gauge={
-            'axis': {'range': [0, 100], 'tickwidth': 1, 'tickcolor': "#e2e5ec"},
-            'bar': {'color': "#4749fe", 'thickness': 0.28},
+            'axis': {
+                'range': [0, 100],
+                'tickwidth': 1,
+                'tickcolor': "#cbd5e1",
+                'tickfont': {'family': "Times New Roman, serif", 'size': 11, 'color': "#94a3b8"},
+                'tickvals': [0, 25, 50, 75, 100]
+            },
+            'bar': {'color': bar_color, 'thickness': 0.32},
             'bgcolor': "#ffffff",
             'borderwidth': 1,
             'bordercolor': "#e2e5ec",
             'steps': [
-                {'range': [0, 38], 'color': 'rgba(190, 255, 247, 0.50)'},
-                {'range': [38, 70], 'color': 'rgba(71, 73, 254, 0.20)'},
-                {'range': [70, 100], 'color': 'rgba(77, 27, 199, 0.35)'}
+                {'range': [0, 38], 'color': 'rgba(0, 196, 159, 0.14)'},
+                {'range': [38, 70], 'color': 'rgba(244, 162, 97, 0.16)'},
+                {'range': [70, 100], 'color': 'rgba(230, 57, 70, 0.20)'}
             ],
             'threshold': {
-                'line': {'color': "#4d1bc7", 'width': 3},
-                'thickness': 0.85,
+                'line': {'color': "#000000", 'width': 3},
+                'thickness': 0.82,
                 'value': 70.0
             }
         }
     ))
     fig.update_layout(
-        height=280,
-        margin=dict(l=15, r=15, t=35, b=10),
+        height=260,
+        margin=dict(l=15, r=15, t=32, b=10),
         paper_bgcolor='rgba(0,0,0,0)',
         font=dict(family="Times New Roman, Times, serif")
     )
@@ -567,71 +659,109 @@ def create_gauge_chart(adi_score: float, threat_color: str) -> go.Figure:
 
 
 def plot_mel_spectrogram(features: dict) -> go.Figure:
-    """Create a high-contrast Bioluminescent Mel-Spectrogram with dark obsidian styling."""
+    """Create a high-contrast Bioluminescent Mel-Spectrogram with pitch contour overlay."""
     mel_db = features["mel_db"]
     times = features["times"]
     freq_bins = np.linspace(200, 10000, mel_db.shape[0])
 
+    # Dynamic floor thresholding to eliminate murky background noise
+    p22 = float(np.percentile(mel_db, 22))
+    p_max = float(mel_db.max())
+
     colorscale_biolum = [
-        [0.0, '#06070e'],
-        [0.12, '#120b30'],
-        [0.26, '#2a0e98'],
-        [0.44, '#4749fe'],
-        [0.64, '#00b4d8'],
-        [0.78, '#00f5d4'],
-        [0.90, '#70e000'],
-        [1.0, '#fff7a1']
+        [0.0, '#05070d'],   # Deep Obsidian Void
+        [0.10, '#100b2b'],  # Midnight Amethyst
+        [0.22, '#23126d'],  # Deep Electric Indigo
+        [0.38, '#3c35d9'],  # Vivid Bio-Cobalt
+        [0.55, '#0099cc'],  # Cerulean Ocean
+        [0.72, '#00f0ff'],  # Luminescent Cyan
+        [0.86, '#70e000'],  # Chartreuse Resonance
+        [1.0, '#fffbe0']    # Pure White-Gold Vocal Peak
     ]
 
-    fig = go.Figure(data=go.Heatmap(
+    fig = go.Figure()
+
+    # 1. Main Bioacoustic Heatmap
+    fig.add_trace(go.Heatmap(
         z=mel_db,
         x=times,
         y=freq_bins,
         colorscale=colorscale_biolum,
+        zmin=p22,
+        zmax=p_max,
         zsmooth='best',
         colorbar=dict(
-            title=dict(text="Energy (dB)", font=dict(family="Times New Roman, serif", size=13, color="#ffffff")),
-            tickfont=dict(family="Times New Roman, serif", color="#a2a7b7", size=11),
-            len=0.85,
-            thickness=14
+            title=dict(
+                text="Power (dB)",
+                font=dict(family="Times New Roman, serif", size=12, color="#ffffff")
+            ),
+            tickfont=dict(family="Times New Roman, serif", color="#94a3b8", size=11),
+            len=0.88,
+            thickness=13,
+            outlinewidth=0,
+            bgcolor="rgba(0,0,0,0)"
         ),
-        hovertemplate="<b>Freq:</b> %{y:.0f} Hz<br><b>Time:</b> %{x:.2f} s<br><b>Power:</b> %{z:.1f} dB<extra></extra>"
+        hovertemplate="<b>Freq:</b> %{y:.0f} Hz<br><b>Time:</b> %{x:.2f} s<br><b>Energy:</b> %{z:.1f} dB<extra></extra>"
     ))
 
-    # Biological frequency threshold markers
+    # 2. Harmonic Pitch Centroid Contour (Traced over the Spectrogram)
+    centroid_traj = features.get("spectral_centroid", {}).get("trajectory")
+    if centroid_traj is not None and len(centroid_traj) == len(times):
+        fig.add_trace(go.Scatter(
+            x=times,
+            y=centroid_traj,
+            mode='lines',
+            name='Vocal Pitch Centroid',
+            line=dict(color='#00e5ff', width=1.8),
+            hovertemplate="<b>Vocal Pitch Centroid:</b> %{y:.0f} Hz<br><b>Time:</b> %{x:.2f} s<extra></extra>"
+        ))
+
+    # 3. Syrinx and Alarm Biological Reference Bands
     fig.add_hline(
-        y=1500, line_dash='dash', line_color='rgba(71, 73, 254, 0.6)',
+        y=1500, line_dash='dash', line_color='rgba(0, 229, 255, 0.45)', line_width=1.2,
         annotation_text="Avian Syrinx Band (1.5 kHz)",
         annotation_position="top left",
-        annotation_font=dict(family="Times New Roman, serif", size=10, color="#befff7")
+        annotation_font=dict(family="Times New Roman, serif", size=11, color="#befff7")
     )
     fig.add_hline(
-        y=4500, line_dash='dash', line_color='rgba(230, 57, 70, 0.6)',
+        y=4500, line_dash='dash', line_color='rgba(230, 57, 70, 0.55)', line_width=1.2,
         annotation_text="Alarm Screech Threshold (4.5 kHz)",
         annotation_position="top left",
-        annotation_font=dict(family="Times New Roman, serif", size=10, color="#ff9b9b")
+        annotation_font=dict(family="Times New Roman, serif", size=11, color="#ff9b9b")
     )
 
     fig.update_layout(
         title=dict(
-            text="Mel-Frequency Bioacoustic Spectrogram // Neural Energy Density",
-            font=dict(family="Times New Roman, serif", size=19, color="#ffffff")
+            text="High-Definition Mel Bioacoustic Sonogram & Harmonic Contour",
+            font=dict(family="Times New Roman, serif", size=18, color="#ffffff")
         ),
         xaxis=dict(
-            title=dict(text="Time (seconds)", font=dict(family="Times New Roman, serif", size=13, color="#e2e5ec")),
-            showgrid=False,
-            tickfont=dict(family="Times New Roman, serif", color="#a2a7b7")
+            title=dict(text="Time Elapsed (seconds)", font=dict(family="Times New Roman, serif", size=13, color="#cbd5e1")),
+            showgrid=True,
+            gridcolor="rgba(255, 255, 255, 0.06)",
+            tickfont=dict(family="Times New Roman, serif", color="#94a3b8")
         ),
         yaxis=dict(
-            title=dict(text="Frequency (Hz)", font=dict(family="Times New Roman, serif", size=13, color="#e2e5ec")),
+            title=dict(text="Frequency (Hz)", font=dict(family="Times New Roman, serif", size=13, color="#cbd5e1")),
             showgrid=True,
-            gridcolor="rgba(255, 255, 255, 0.08)",
-            tickfont=dict(family="Times New Roman, serif", color="#a2a7b7")
+            gridcolor="rgba(255, 255, 255, 0.06)",
+            tickfont=dict(family="Times New Roman, serif", color="#94a3b8"),
+            range=[200, 10000]
         ),
-        height=340,
-        margin=dict(l=20, r=20, t=40, b=25),
-        paper_bgcolor='#0b0d14',
-        plot_bgcolor='#06070e'
+        height=380,
+        margin=dict(l=20, r=20, t=44, b=25),
+        paper_bgcolor='#070912',
+        plot_bgcolor='#05070d',
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+            font=dict(family="Times New Roman, serif", size=11, color="#94a3b8"),
+            bgcolor="rgba(0,0,0,0)"
+        )
     )
     return fig
 
@@ -859,6 +989,9 @@ if audio_data is not None:
         visuals = cached_fetch_visuals(prim_sp['common_name'], prim_sp['scientific_name'])
         safe_desc = html.escape(str(visuals['description']))
         safe_source = html.escape(str(visuals['source']))
+        photo_uri = get_image_data_uri(visuals.get("image_url", ""))
+        if not photo_uri:
+            photo_uri = "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=600&q=80"
         
         with st.container(border=True):
             col_photo, col_details = st.columns([1.15, 2.05])
@@ -866,9 +999,9 @@ if audio_data is not None:
             with col_photo:
                 st.markdown(f"""
                 <div class="photo-mat-frame">
-                    <img src="{visuals['image_url']}" alt="{safe_com_name}" style="width: 100%; display: block; object-fit: cover;" />
-                    <div style="font-size: 11.5px; color: #8c93a8; margin-top: 8px; text-align: center; font-style: italic;">
-                        {safe_com_name} ({safe_source})
+                    <img src="{photo_uri}" alt="{safe_com_name}" style="width: 100%; height: 260px; display: block; object-fit: cover; border-radius: 2px;" />
+                    <div style="font-size: 11.5px; color: #6b7280; margin-top: 10px; text-align: center; font-style: italic; line-height: 1.4;">
+                        Specimen Photographic Archive: {safe_com_name} ({safe_source})
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -928,24 +1061,108 @@ if audio_data is not None:
         </div>
         """, unsafe_allow_html=True)
 
-    # 4. Quantitative Metrics Row
+    # 4. Quantitative Metrics Row (Redesigned ADI Gauge & Multi-Factor Stressor Decomposition)
     col_gauge, col_stats = st.columns([1, 1.25])
+
+    adi_val = results["adi"]
+    if adi_val < 38.0:
+        adi_tier_label = "● Calm Baseline // Melodic Equilibrium"
+        adi_tier_color = "#00876c"
+        adi_tier_desc = "Vocalizations exhibit stable melodic contours, regular intervals, and tonal syrinx harmonic resonance."
+    elif adi_val < 70.0:
+        adi_tier_label = "▲ Elevated Vigilance // Canopy Agitation"
+        adi_tier_color = "#d97706"
+        adi_tier_desc = "Noticeable frequency shift and accelerated call density detected. Indicates local environmental agitation."
+    else:
+        adi_tier_label = "■ Acute Biotic Distress // Evacuation Call"
+        adi_tier_color = "#e63946"
+        adi_tier_desc = "Extreme high-frequency screeching and frantic burst pacing. Strongly correlates with imminent natural hazards."
 
     with col_gauge:
         with st.container(border=True):
             gauge_fig = create_gauge_chart(results["adi"], results["threat_color"])
             st.plotly_chart(gauge_fig, width="stretch")
+            st.markdown(f"""
+            <div style="text-align: center; margin-top: -6px; padding-bottom: 8px;">
+                <div style="font-size: 14px; font-weight: 700; color: {adi_tier_color}; letter-spacing: 0.05em; text-transform: uppercase;">
+                    {adi_tier_label}
+                </div>
+                <div style="font-size: 13px; color: #6b7280; margin-top: 4px; line-height: 1.45; font-style: italic;">
+                    {adi_tier_desc}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
     with col_stats:
         with st.container(border=True):
-            st.markdown("""<h4 style="font-size: 1.55rem; color: #000000; margin-bottom: 18px;">Bioacoustic Signal Descriptors</h4>""", unsafe_allow_html=True)
-            c1, c2 = st.columns(2)
-            with c1:
-                st.metric("Pitch Center (Centroid)", f"{features['spectral_centroid']['mean']:.0f} Hz", delta=f"{results['sub_scores']['pitch']}% stress")
-                st.metric("Call Burst Rate", f"{features['call_rate']:.2f} calls/s", delta=f"{results['sub_scores']['call_rate']}% density")
-            with c2:
-                st.metric("Noise Harshness (Flatness)", f"{features['spectral_flatness']['mean']:.4f}", delta=f"{results['sub_scores']['flatness']}% chaos")
-                st.metric("Breath Turbulence Ratio", f"{spoof_info['breath_ratio']}%", delta="Human Breath" if spoof_info['breath_ratio'] > 20 else "Avian Syrinx")
+            sub_pitch = results['sub_scores'].get('pitch', 0.0)
+            sub_rate = results['sub_scores'].get('call_rate', 0.0)
+            sub_flat = results['sub_scores'].get('flatness', 0.0)
+            sub_energy = results['sub_scores'].get('energy_volatility', results['sub_scores'].get('energy', 0.0))
+            
+            c_pitch = "#e63946" if sub_pitch > 65 else ("#f4a261" if sub_pitch > 35 else "#4749fe")
+            c_rate = "#e63946" if sub_rate > 65 else ("#f4a261" if sub_rate > 35 else "#4749fe")
+            c_flat = "#e63946" if sub_flat > 65 else ("#f4a261" if sub_flat > 35 else "#4749fe")
+            c_energy = "#e63946" if sub_energy > 65 else ("#f4a261" if sub_energy > 35 else "#4749fe")
+
+            st.markdown(f"""
+            <div style="margin-bottom: 14px;">
+                <div style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #4749fe; font-weight: 700; margin-bottom: 2px;">
+                    Bioacoustic Stress Decomposition
+                </div>
+                <div style="font-size: 1.45rem; font-weight: 700; color: #000000;">
+                    Empirical Stressor Attribution & Pacing
+                </div>
+            </div>
+
+            <!-- Stressor 1: Pitch -->
+            <div class="stressor-card">
+                <div class="stressor-header">
+                    <span class="stressor-name">Pitch Elevation (Centroid)</span>
+                    <span class="stressor-val" style="color: {c_pitch};">{features['spectral_centroid']['mean']:.0f} Hz &bull; {sub_pitch:.0f}%</span>
+                </div>
+                <div class="stressor-bar-track">
+                    <div class="stressor-bar-fill" style="width: {min(100.0, max(4.0, sub_pitch))}%; background-color: {c_pitch};"></div>
+                </div>
+                <div class="stressor-context">Avian Syrinx Baseline: 1,500 – 2,800 Hz (Stress shriek onset &gt; 3,500 Hz)</div>
+            </div>
+
+            <!-- Stressor 2: Call Burst Rate -->
+            <div class="stressor-card">
+                <div class="stressor-header">
+                    <span class="stressor-name">Temporal Burst Cadence</span>
+                    <span class="stressor-val" style="color: {c_rate};">{features['call_rate']:.2f} calls/s &bull; {sub_rate:.0f}%</span>
+                </div>
+                <div class="stressor-bar-track">
+                    <div class="stressor-bar-fill" style="width: {min(100.0, max(4.0, sub_rate))}%; background-color: {c_rate};"></div>
+                </div>
+                <div class="stressor-context">Equilibrium pacing: 0.3 – 1.2 calls/s (Agitated burst rate &gt; 2.5 calls/s)</div>
+            </div>
+
+            <!-- Stressor 3: Noise Harshness / Chaos -->
+            <div class="stressor-card">
+                <div class="stressor-header">
+                    <span class="stressor-name">Spectral Flatness & Harsh Chaos</span>
+                    <span class="stressor-val" style="color: {c_flat};">{features['spectral_flatness']['mean']:.4f} &bull; {sub_flat:.0f}%</span>
+                </div>
+                <div class="stressor-bar-track">
+                    <div class="stressor-bar-fill" style="width: {min(100.0, max(4.0, sub_flat))}%; background-color: {c_flat};"></div>
+                </div>
+                <div class="stressor-context">Melodic purity: &lt; 0.010 (Screech noise turbulence &gt; 0.045)</div>
+            </div>
+
+            <!-- Stressor 4: Dual Syrinx Verification -->
+            <div class="stressor-card">
+                <div class="stressor-header">
+                    <span class="stressor-name">Biometric Vocal Tract Organ</span>
+                    <span class="stressor-val" style="color: #4749fe;">{'Avian Syrinx' if spoof_info['is_authentic'] else 'Human Whistle'}</span>
+                </div>
+                <div class="stressor-bar-track">
+                    <div class="stressor-bar-fill" style="width: {100.0 if spoof_info['is_authentic'] else 20.0}%; background-color: {'#10b981' if spoof_info['is_authentic'] else '#e63946'};"></div>
+                </div>
+                <div class="stressor-context">Sub-600Hz breath turbulence: {spoof_info['breath_ratio']}% (Human threshold &gt; 28%)</div>
+            </div>
+            """, unsafe_allow_html=True)
 
     # 5. Scientific Telemetry Tabs
     tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_table = st.tabs([
