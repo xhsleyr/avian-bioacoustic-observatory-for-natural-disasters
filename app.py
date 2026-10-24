@@ -857,6 +857,477 @@ st.markdown("""
         width: 100%;
         margin-top: 8px;
     }
+
+    /* ========================================================
+       CROSS-DEVICE RESPONSIVE ARCHITECTURE & FLUID ENGINE
+       (Smartphones, Foldables, Tablets, Desktops & 4K UHD TVs)
+       ======================================================== */
+
+    /* Universal fluid sizing, anti-overflow and box boundary control */
+    *, *::before, *::after {
+        box-sizing: border-box !important;
+    }
+
+    html, body, .stApp {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+    }
+
+    img, video, canvas, svg {
+        max-width: 100% !important;
+        height: auto;
+    }
+
+    /* Keyboard & 10-Foot TV Remote Navigation Focus Indicators (WCAG 2.2 AA) */
+    :focus-visible {
+        outline: 3px solid var(--intera-accent) !important;
+        outline-offset: 2.5px !important;
+    }
+
+    /* Plotly Chart Viewport Safety */
+    [data-testid="stPlotlyChart"],
+    .js-plotly-plot,
+    .plot-container {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Touchscreen Targets: Ergonomic Tap Compliance (iOS / Android 44-48px) */
+    @media (pointer: coarse) {
+        button,
+        [role="radio"],
+        [role="tab"],
+        div[data-baseweb="select"] > div,
+        .stButton > button,
+        [data-testid="stFileUploaderDropzone"] button {
+            min-height: 48px !important;
+        }
+
+        div[data-testid="stRadio"] div[role="radiogroup"] > label,
+        div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] {
+            padding: 13px 22px !important;
+        }
+
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:active,
+        .stButton > button:active {
+            transform: scale(0.98) !important;
+        }
+    }
+
+    /* --------------------------------------------------------
+       DEVICE TIER 1: Ultra-Wide Screens & 4K UHD Smart TVs (>= 1800px)
+       Command Center / 10-Foot Living Room Viewing Distance
+       -------------------------------------------------------- */
+    @media screen and (min-width: 1800px) {
+        .block-container {
+            max-width: 1680px !important;
+            padding: 3.5rem 3.5rem 7.5rem 3.5rem !important;
+        }
+
+        .intera-hero-understand {
+            font-size: clamp(5.2rem, 6.2vw, 7.8rem) !important;
+        }
+
+        .intera-hero-saying {
+            font-size: clamp(4.0rem, 5vw, 6.0rem) !important;
+        }
+
+        .intera-hero-subtitle {
+            font-size: 1.42rem !important;
+            max-width: 1020px !important;
+            line-height: 1.75 !important;
+        }
+
+        div[data-testid="stRadio"] > label,
+        div[data-testid="stRadio"] [data-testid="stWidgetLabel"],
+        div[data-testid="stSelectbox"] label,
+        div[data-testid="stSelectbox"] [data-testid="stWidgetLabel"] {
+            font-size: 1.35rem !important;
+        }
+
+        div[data-testid="stRadio"] div[role="radiogroup"] > label,
+        div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] {
+            font-size: 18px !important;
+            padding: 14px 34px !important;
+        }
+
+        div[data-testid="stRadio"] div[role="radiogroup"] > label *,
+        div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] * {
+            font-size: 18px !important;
+        }
+
+        div[data-testid="stSelectbox"] {
+            max-width: 880px !important;
+        }
+
+        div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+            min-height: 56px !important;
+            font-size: 18px !important;
+            padding: 12px 22px !important;
+        }
+
+        div[data-testid="stSelectbox"] div[data-baseweb="select"] * {
+            font-size: 18px !important;
+        }
+
+        .intera-card,
+        [data-testid="stVerticalBlockBorderWrapper"] {
+            padding: 42px 48px !important;
+            border-radius: 12px !important;
+        }
+
+        [data-testid="stMetricValue"] {
+            font-size: 2.85rem !important;
+        }
+
+        [data-testid="stMetricLabel"] {
+            font-size: 15px !important;
+        }
+
+        .species-hero-title {
+            font-size: 3.6rem !important;
+        }
+
+        .species-hero-sci {
+            font-size: 1.55rem !important;
+        }
+
+        .species-hero-desc {
+            font-size: 1.35rem !important;
+        }
+
+        p, .species-hero-desc, .intera-card p {
+            font-size: 1.25rem !important;
+        }
+
+        .stressor-name, .stressor-val {
+            font-size: 1.25rem !important;
+        }
+
+        .stressor-context {
+            font-size: 1.05rem !important;
+        }
+
+        table {
+            font-size: 16px !important;
+        }
+
+        thead tr th {
+            font-size: 15px !important;
+            padding: 16px 20px !important;
+        }
+
+        tbody tr td {
+            font-size: 16px !important;
+            padding: 16px 20px !important;
+        }
+    }
+
+    /* --------------------------------------------------------
+       DEVICE TIER 2: Tablets & Small Laptops (768px - 1023px)
+       iPads, Tablets, Foldables (Unfolded)
+       -------------------------------------------------------- */
+    @media screen and (min-width: 768px) and (max-width: 1023px) {
+        .block-container {
+            max-width: 95% !important;
+            padding: 1.8rem 1.4rem 4.5rem 1.4rem !important;
+        }
+
+        .intera-card,
+        [data-testid="stVerticalBlockBorderWrapper"] {
+            padding: 26px 28px !important;
+        }
+
+        .intera-hero-understand {
+            font-size: 4.6rem !important;
+        }
+
+        .intera-hero-saying {
+            font-size: 3.6rem !important;
+        }
+
+        .intera-hero-subtitle {
+            font-size: 1.15rem !important;
+            padding: 0 16px !important;
+        }
+
+        div[data-testid="stSelectbox"] {
+            max-width: 88% !important;
+        }
+
+        div[data-testid="stRadio"] div[role="radiogroup"] > label {
+            padding: 10px 20px !important;
+            font-size: 15px !important;
+        }
+
+        div[data-testid="stRadio"] div[role="radiogroup"] > label * {
+            font-size: 15px !important;
+        }
+    }
+
+    /* --------------------------------------------------------
+       DEVICE TIER 3: Smartphones & Phablets (< 768px)
+       iPhones, Pixels, Galaxy S, Mobile Landscape/Portrait
+       -------------------------------------------------------- */
+    @media screen and (max-width: 767px) {
+        .block-container {
+            max-width: 100% !important;
+            padding: 1.1rem 0.85rem 3.5rem 0.85rem !important;
+        }
+
+        /* Streamlit Column Stacking: Natural Mobile Vertical Flow */
+        div[data-testid="stHorizontalBlock"] {
+            flex-direction: column !important;
+            gap: 16px !important;
+        }
+
+        div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+            width: 100% !important;
+            min-width: 100% !important;
+            max-width: 100% !important;
+            flex: 1 1 100% !important;
+            margin-bottom: 0px !important;
+        }
+
+        /* Masthead Re-centering */
+        .intera-masthead {
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+            gap: 12px !important;
+            padding: 10px 0 16px 0 !important;
+            margin-bottom: 24px !important;
+        }
+
+        .intera-brand {
+            flex-direction: column !important;
+            gap: 4px !important;
+            align-items: center !important;
+        }
+
+        .intera-nav {
+            justify-content: center !important;
+            gap: 14px !important;
+            font-size: 12px !important;
+            overflow-x: auto !important;
+            max-width: 100% !important;
+            white-space: nowrap !important;
+        }
+
+        /* Fluid Mobile Hero Typography */
+        .intera-hero {
+            margin-bottom: 26px !important;
+        }
+
+        .intera-hero-eyebrow {
+            font-size: 11.5px !important;
+            letter-spacing: 0.14em !important;
+            margin-bottom: 6px !important;
+        }
+
+        .intera-hero-understand {
+            font-size: clamp(2.4rem, 11.5vw, 3.8rem) !important;
+            line-height: 1.05 !important;
+        }
+
+        .intera-hero-saying {
+            font-size: clamp(1.95rem, 9.2vw, 3.1rem) !important;
+            line-height: 1.08 !important;
+            margin-top: -3px !important;
+            margin-bottom: 16px !important;
+        }
+
+        .intera-hero-subtitle {
+            font-size: 1.05rem !important;
+            line-height: 1.55 !important;
+            padding: 0 4px !important;
+        }
+
+        /* Segmented Channel Radio Controls: Full Width Touch Stacking */
+        div[data-testid="stRadio"] > label,
+        div[data-testid="stRadio"] [data-testid="stWidgetLabel"] {
+            font-size: 1.05rem !important;
+            margin-bottom: 10px !important;
+        }
+
+        div[data-testid="stRadio"] div[role="radiogroup"] {
+            flex-direction: column !important;
+            width: 100% !important;
+            gap: 8px !important;
+        }
+
+        div[data-testid="stRadio"] div[role="radiogroup"] > label,
+        div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] {
+            width: 100% !important;
+            justify-content: center !important;
+            text-align: center !important;
+            padding: 12px 16px !important;
+            font-size: 15px !important;
+            box-sizing: border-box !important;
+            white-space: normal !important;
+        }
+
+        /* Dropdown Full Width */
+        div[data-testid="stSelectbox"] {
+            max-width: 100% !important;
+            width: 100% !important;
+            margin-bottom: 20px !important;
+        }
+
+        div[data-testid="stSelectbox"] label,
+        div[data-testid="stSelectbox"] [data-testid="stWidgetLabel"] {
+            font-size: 1.05rem !important;
+            margin-bottom: 8px !important;
+        }
+
+        div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+            min-height: 48px !important;
+            padding: 8px 14px !important;
+            font-size: 15px !important;
+        }
+
+        div[data-testid="stSelectbox"] div[data-baseweb="select"] * {
+            font-size: 15px !important;
+        }
+
+        /* Cards and Visual Banners */
+        .intera-card,
+        [data-testid="stVerticalBlockBorderWrapper"] {
+            padding: 22px 18px !important;
+            border-radius: 10px !important;
+            margin-bottom: 18px !important;
+        }
+
+        .intera-gradient-banner {
+            padding: 24px 20px !important;
+            border-radius: 8px !important;
+        }
+
+        .intera-gradient-banner h2 {
+            font-size: 1.75rem !important;
+        }
+
+        .intera-gradient-banner p {
+            font-size: 1.02rem !important;
+        }
+
+        /* Tabs: Smooth Horizontal Swipe */
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 10px !important;
+            overflow-x: auto !important;
+            flex-wrap: nowrap !important;
+            justify-content: flex-start !important;
+            padding-bottom: 8px !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: thin !important;
+        }
+
+        .stTabs [data-baseweb="tab"] {
+            font-size: 12px !important;
+            padding: 10px 14px !important;
+            flex-shrink: 0 !important;
+        }
+
+        /* Metrics & Species Cards */
+        [data-testid="stMetricValue"] {
+            font-size: 1.85rem !important;
+        }
+
+        [data-testid="stMetricLabel"] {
+            font-size: 12px !important;
+        }
+
+        .species-hero-title {
+            font-size: 2.1rem !important;
+            line-height: 1.15 !important;
+        }
+
+        .species-hero-sci {
+            font-size: 1.15rem !important;
+            margin-bottom: 12px !important;
+        }
+
+        .species-hero-desc {
+            font-size: 1.05rem !important;
+            line-height: 1.6 !important;
+        }
+
+        /* File Uploader Dropzone on Mobile */
+        [data-testid="stFileUploaderDropzone"] {
+            padding: 18px 14px !important;
+        }
+
+        [data-testid="stFileUploaderDropzone"] button {
+            width: 100% !important;
+            padding: 12px 16px !important;
+        }
+
+        /* Table Smooth Scrollable Container */
+        div[data-testid="stTable"],
+        div:has(> table) {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            display: block !important;
+            width: 100% !important;
+        }
+
+        table {
+            min-width: 480px !important;
+            font-size: 13px !important;
+        }
+
+        thead tr th {
+            font-size: 12px !important;
+            padding: 10px 12px !important;
+        }
+
+        tbody tr td {
+            font-size: 13px !important;
+            padding: 10px 12px !important;
+        }
+    }
+
+    /* --------------------------------------------------------
+       DEVICE TIER 4: Compact / Foldable Screens (<= 480px)
+       iPhone SE, Galaxy Z Flip cover screen, Mini phones
+       -------------------------------------------------------- */
+    @media screen and (max-width: 480px) {
+        .block-container {
+            padding: 0.85rem 0.65rem 2.8rem 0.65rem !important;
+        }
+
+        .intera-card,
+        [data-testid="stVerticalBlockBorderWrapper"] {
+            padding: 18px 14px !important;
+        }
+
+        .intera-hero-understand {
+            font-size: 2.35rem !important;
+        }
+
+        .intera-hero-saying {
+            font-size: 1.95rem !important;
+        }
+
+        div[data-testid="stRadio"] div[role="radiogroup"] > label {
+            font-size: 14.5px !important;
+            padding: 11px 12px !important;
+        }
+
+        div[data-testid="stRadio"] div[role="radiogroup"] > label * {
+            font-size: 14.5px !important;
+        }
+
+        div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+            font-size: 14.5px !important;
+            padding: 7px 12px !important;
+        }
+
+        div[data-testid="stSelectbox"] div[data-baseweb="select"] * {
+            font-size: 14.5px !important;
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
 
