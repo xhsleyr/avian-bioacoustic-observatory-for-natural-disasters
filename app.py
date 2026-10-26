@@ -139,6 +139,10 @@ def get_app_css() -> str:
     """Art-directed Studio Design System strictly in Times New Roman typography."""
     return """
     <style>
+        html {
+            scroll-behavior: smooth !important;
+        }
+
         :root {
             --cedric-bg: #111111;
             --cedric-card: #181818;
@@ -253,8 +257,9 @@ def get_app_css() -> str:
             border-color: var(--cedric-border-light) !important;
         }
 
-        /* Solid White Pill Buttons */
+        /* Solid White Pill Buttons (Buttons & Download Buttons) */
         .stButton > button,
+        .stDownloadButton > button,
         .cedric-btn-white {
             background: #ffffff !important;
             color: #111111 !important;
@@ -271,18 +276,20 @@ def get_app_css() -> str:
         }
 
         .stButton > button:hover,
+        .stDownloadButton > button:hover,
         .cedric-btn-white:hover {
-            background: #f0f0f0 !important;
+            background: #e8e8e8 !important;
             transform: translateY(-1px) !important;
         }
 
-        .stButton > button * {
+        .stButton > button *,
+        .stDownloadButton > button * {
             color: #111111 !important;
             font-weight: 600 !important;
             font-family: 'Times New Roman', Times, Georgia, serif !important;
         }
 
-        /* SEGMENTED MODE SELECTOR (FIGMA HUMAN-GRADE PILL SWITCH) */
+        /* SEGMENTED MODE SELECTOR */
         [data-testid="stElementContainer"]:has([data-testid="stRadio"]) {
             display: flex !important;
             justify-content: stretch !important;
@@ -395,6 +402,101 @@ def get_app_css() -> str:
             font-family: 'Times New Roman', Times, Georgia, serif !important;
         }
 
+        /* PITCH-BLACK POPUP MENUS & DROPDOWNS (SELECTBOX POPOVER FIX) */
+        div[data-baseweb="popover"],
+        div[data-baseweb="popover"] > div,
+        div[data-baseweb="popover"] ul,
+        ul[role="listbox"],
+        ul[data-baseweb="menu"] {
+            background: #141414 !important;
+            background-color: #141414 !important;
+            border: 1px solid rgba(255, 255, 255, 0.16) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9) !important;
+            color: #f2f2f2 !important;
+        }
+
+        li[role="option"],
+        li[data-baseweb="menu-item"],
+        div[data-baseweb="popover"] li {
+            background: #141414 !important;
+            background-color: #141414 !important;
+            color: #d1d5db !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
+            font-size: 14.5px !important;
+            padding: 10px 16px !important;
+            border-radius: 6px !important;
+            transition: background 0.15s ease, color 0.15s ease !important;
+        }
+
+        li[role="option"]:hover,
+        li[role="option"][aria-selected="true"],
+        li[data-baseweb="menu-item"]:hover,
+        li[data-baseweb="menu-item"][aria-selected="true"],
+        div[data-baseweb="popover"] li:hover,
+        div[data-baseweb="popover"] li[aria-selected="true"] {
+            background: #242424 !important;
+            background-color: #242424 !important;
+            color: #ffffff !important;
+        }
+
+        li[role="option"] *,
+        li[data-baseweb="menu-item"] * {
+            color: inherit !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
+        }
+
+        /* BaseWeb Select Input Box */
+        div[data-baseweb="select"] {
+            background: transparent !important;
+        }
+
+        div[data-baseweb="select"] > div {
+            background: #141414 !important;
+            background-color: #141414 !important;
+            border: 1px solid rgba(255, 255, 255, 0.16) !important;
+            border-radius: 10px !important;
+            color: #f2f2f2 !important;
+            box-shadow: none !important;
+        }
+
+        div[data-baseweb="select"] > div:hover,
+        div[data-baseweb="select"] > div:focus-within {
+            border-color: rgba(255, 255, 255, 0.35) !important;
+        }
+
+        div[data-baseweb="select"] * {
+            color: #f2f2f2 !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
+        }
+
+        div[data-baseweb="select"] svg {
+            fill: #a0a0a0 !important;
+            color: #a0a0a0 !important;
+        }
+
+        /* PITCH BLACK TEXTAREA (FORENSIC REPORT FIX) */
+        div[data-baseweb="textarea"],
+        div[data-baseweb="textarea"] > div,
+        div[data-baseweb="textarea"] textarea,
+        .stTextArea textarea {
+            background: #141414 !important;
+            background-color: #141414 !important;
+            color: #f2f2f2 !important;
+            border: 1px solid rgba(255, 255, 255, 0.14) !important;
+            border-radius: 10px !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
+            font-size: 14px !important;
+            line-height: 1.6 !important;
+            box-shadow: none !important;
+        }
+
+        .stTextArea textarea:focus,
+        div[data-baseweb="textarea"]:focus-within {
+            border-color: rgba(255, 255, 255, 0.35) !important;
+            background-color: #141414 !important;
+        }
+
         /* Tabs (Observatory Telemetry Navigation) */
         .stTabs [data-baseweb="tab-list"] {
             background: #181818 !important;
@@ -438,6 +540,22 @@ def get_app_css() -> str:
         .stTabs [data-baseweb="tab-highlight"],
         .stTabs [data-baseweb="tab-border"] {
             display: none !important;
+        }
+
+        /* SMOOTH SCROLLING & TELEMETRY STATIONS FADE-IN */
+        @keyframes fadeInStation {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stTabs [data-baseweb="tab-panel"] {
+            animation: fadeInStation 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
         }
 
         /* PLOTLY CHARTS COMPLETE VISIBILITY SHIELD */
@@ -827,7 +945,7 @@ def plot_temporal_distress_curve(timeline_info: dict, is_dark: bool = True) -> g
 
     fig.update_layout(
         title={
-            "text": f"TEMPORAL THREAT ESCALATION &bull; {trend_label.upper()} (Velocity d(ADI)/dt: {escalation_rate:.1f}%/s)",
+            "text": f"TEMPORAL THREAT ESCALATION • {trend_label.upper()} (Velocity d(ADI)/dt: {escalation_rate:.1f}%/s)",
             "font": {"size": 14, "color": text_color, "family": "'Times New Roman', Times, Georgia, serif"}
         },
         xaxis={
@@ -856,18 +974,18 @@ def plot_temporal_distress_curve(timeline_info: dict, is_dark: bool = True) -> g
 
 
 
-# --- CÉDRIC STUDIO COMPACT TOP NAVIGATION (cedric.design Screenshot 1) ---
+# --- STUDIO TOP NAVIGATION (INTERA Brand & Sleek Black Home Button) ---
 st.markdown("""
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0 28px 0; max-width: 820px; margin: 0 auto;">
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645bdf9d4bac53320316d064_CETI-Favicon.png" alt="INTERA" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255, 255, 255, 0.15);" />
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0 26px 0; max-width: 860px; margin: 0 auto;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645bdf9d4bac53320316d064_CETI-Favicon.png" alt="INTERA" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255, 255, 255, 0.18);" />
+        <span style="font-size: 18px; font-weight: 600; color: #f2f2f2; letter-spacing: -0.01em; font-family: 'Times New Roman', Times, Georgia, serif;">INTERA</span>
     </div>
-    <div style="display: flex; gap: 20px; font-size: 13.5px; font-weight: 400; color: #888888;">
-        <span style="color: #f2f2f2; cursor: pointer;">About</span>
-        <span style="cursor: pointer;">Store</span>
-        <span style="cursor: pointer;">Blog</span>
-        <span style="cursor: pointer;">Stack</span>
-        <span style="cursor: pointer; color: #f2f2f2;">Agency <span style="font-size: 11px;">↗</span></span>
+    <div>
+        <a href="/" style="text-decoration: none; background: #181818; color: #f2f2f2; border: 1px solid rgba(255, 255, 255, 0.18); padding: 7px 20px; border-radius: 20px; font-size: 14.5px; font-weight: 600; font-family: 'Times New Roman', Times, Georgia, serif; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 7px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+        </a>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -876,7 +994,7 @@ st.markdown("""
 st.markdown("""
 <div class="cedric-hero">
     <h1 class="cedric-hero-title">
-        Ayo! I'm INTERA —<br>
+        Ayo! I'm INTERA<br>
         <em>Bioacoustics, early warning, and avian AI.</em>
     </h1>
     <p class="cedric-hero-bio">
@@ -1279,7 +1397,7 @@ if processed_payload is not None:
                 is_dark=True
             ), unsafe_allow_html=True)
 
-    st.markdown('<div class="section-heading">Observatory Telemetry Stations</div>', unsafe_allow_html=True)
+    st.markdown('<div id="observatory-telemetry" class="section-heading" style="scroll-margin-top: 24px;">Observatory Telemetry Stations</div>', unsafe_allow_html=True)
     # --- CÉDRIC STUDIO SEGMENTED TABS: 7 TELEMETRY STATIONS ---
     st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
     tab_timeline, tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_table, tab_report = st.tabs([
@@ -1312,12 +1430,12 @@ if processed_payload is not None:
         </div>
         """, unsafe_allow_html=True)
 
-        col_t1, col_t2, col_t3, col_t4 = st.columns(4)
         esc_rate = timeline_info.get('escalation_rate', 0.0)
         peak_time = timeline_info.get('peak_time', 0.0)
         peak_adi = timeline_info.get('peak_adi', 0.0)
         shock_detected = timeline_info.get('shockwave_detected', False)
 
+        col_t1, col_t2 = st.columns(2)
         with col_t1:
             st.markdown(render_apple_stat_card(
                 title="Escalation Velocity",
@@ -1327,6 +1445,16 @@ if processed_payload is not None:
                 color="#ff4d00" if esc_rate > 5 else "#78e0ff",
                 is_dark=True
             ), unsafe_allow_html=True)
+
+            st.markdown(render_apple_stat_card(
+                title="Peak Threat Level",
+                value=f"{peak_adi:.1f}%",
+                subtext="Maximum Distress Index",
+                percentage=peak_adi,
+                color="#ff4d00" if peak_adi >= 70 else ("#78e0ff" if peak_adi >= 38 else "#34d399"),
+                is_dark=True
+            ), unsafe_allow_html=True)
+
         with col_t2:
             st.markdown(render_apple_stat_card(
                 title="Acoustic Apex Time",
@@ -1336,16 +1464,7 @@ if processed_payload is not None:
                 color="#78e0ff",
                 is_dark=True
             ), unsafe_allow_html=True)
-        with col_t3:
-            st.markdown(render_apple_stat_card(
-                title="Peak Threat Level",
-                value=f"{peak_adi:.1f}%",
-                subtext="Maximum Distress Index",
-                percentage=peak_adi,
-                color="#ff4d00" if peak_adi >= 70 else ("#78e0ff" if peak_adi >= 38 else "#34d399"),
-                is_dark=True
-            ), unsafe_allow_html=True)
-        with col_t4:
+
             st.markdown(render_apple_stat_card(
                 title="Pre-Seismic Shock",
                 value="DETECTED" if shock_detected else "NOMINAL",
@@ -1636,36 +1755,31 @@ if processed_payload is not None:
         ]
 
         th_bg = "#111111"
-        td_border = "rgba(255, 255, 255, 0.06)"
+        td_border = "rgba(255, 255, 255, 0.08)"
 
-        rows_html = []
-        for name, val, desc, cat in diag_params:
-            rows_html.append(f"""
-            <tr style="border-bottom: 1px solid {td_border};">
-                <td style="padding: 12px 16px; font-weight: 500; color: #f2f2f2; font-size: 13.5px;">{name}</td>
-                <td style="padding: 12px 16px; font-weight: 600; color: #78e0ff; font-size: 13.5px;">{val}</td>
-                <td style="padding: 12px 16px; color: #878787; font-size: 13px;">{desc}</td>
-                <td style="padding: 12px 16px;"><span style="background: rgba(255, 255, 255, 0.06); color: #878787; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px;">{cat}</span></td>
-            </tr>
-            """)
+        rows_html = "".join([
+            f'<tr style="border-bottom: 1px solid {td_border};">'
+            f'<td style="padding: 13px 18px; font-weight: 600; color: #f2f2f2; font-size: 14.5px;">{name}</td>'
+            f'<td style="padding: 13px 18px; font-weight: 600; color: #78e0ff; font-size: 14.5px;">{val}</td>'
+            f'<td style="padding: 13px 18px; color: #a0a0a0; font-size: 14px;">{desc}</td>'
+            f'<td style="padding: 13px 18px;"><span style="background: rgba(255, 255, 255, 0.08); color: #d1d5db; font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 4px;">{cat}</span></td>'
+            f'</tr>'
+            for name, val, desc, cat in diag_params
+        ])
 
-        st.markdown(f"""
-        <div style="overflow-x: auto; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08); background: #141414;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                <thead>
-                    <tr style="background: {th_bg}; border-bottom: 1px solid {td_border}; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: #878787;">
-                        <th style="padding: 12px 16px;">Diagnostic Parameter</th>
-                        <th style="padding: 12px 16px;">Measured Telemetry</th>
-                        <th style="padding: 12px 16px;">Biological Significance</th>
-                        <th style="padding: 12px 16px;">Sub-System</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {"".join(rows_html)}
-                </tbody>
-            </table>
-        </div>
-        """, unsafe_allow_html=True)
+        table_html = (
+            f"<div style=\"overflow-x: auto; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); background: #141414; margin-top: 14px;\">"
+            f"<table style=\"width: 100%; border-collapse: collapse; text-align: left;\">"
+            f"<thead><tr style=\"background: {th_bg}; border-bottom: 1px solid {td_border}; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: #a0a0a0;\">"
+            f"<th style=\"padding: 14px 18px;\">Diagnostic Parameter</th>"
+            f"<th style=\"padding: 14px 18px;\">Measured Telemetry</th>"
+            f"<th style=\"padding: 14px 18px;\">Biological Significance</th>"
+            f"<th style=\"padding: 14px 18px;\">Sub-System</th>"
+            f"</tr></thead>"
+            f"<tbody>{rows_html}</tbody>"
+            f"</table></div>"
+        )
+        st.markdown(table_html, unsafe_allow_html=True)
 
     # ========================================================
     # TAB 7: FORENSIC TELEMETRY REPORT
