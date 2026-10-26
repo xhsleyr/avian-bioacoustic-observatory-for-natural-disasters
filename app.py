@@ -135,107 +135,99 @@ st.set_page_config(
 st.session_state.setdefault("dark_mode_toggle", False)
 is_dark = bool(st.session_state["dark_mode_toggle"])
 
-def get_app_css(dark: bool = True) -> str:
-    """Generate Cédric Studio Design System CSS (https://www.cedric.design / DESIGN.md).
-    Pure dark restrained palette: Surface #141414, Panels #1a1a1a, Primary #ff4d00, Secondary #78e0ff.
-    """
+def get_app_css() -> str:
+    """Exact Cédric Studio Design System matching https://www.cedric.design/ screenshots."""
     return """
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
 
         :root {
-            --studio-surface: #141414;
-            --studio-panel: #1a1a1a;
-            --studio-panel-elevated: #222222;
-            --studio-border: rgba(255, 255, 255, 0.08);
-            --studio-border-hover: rgba(255, 255, 255, 0.16);
-            --studio-primary: #ff4d00;
-            --studio-primary-hover: #e04400;
-            --studio-secondary: #78e0ff;
-            --studio-text: #f2f2f2;
-            --studio-muted: #878787;
-            --studio-error: #ff5252;
-            --studio-success: #34d399;
+            --cedric-bg: #111111;
+            --cedric-card: #181818;
+            --cedric-card-hover: #1f1f1f;
+            --cedric-inset: #141414;
+            --cedric-border: rgba(255, 255, 255, 0.08);
+            --cedric-border-light: rgba(255, 255, 255, 0.14);
+            --cedric-text-primary: #f2f2f2;
+            --cedric-text-muted: #888888;
+            --cedric-orange: #ff4d00;
+            --cedric-cyan: #78e0ff;
+            --cedric-emerald: #34d399;
+            --cedric-red: #ff5252;
         }
 
-        /* Universal Typography: Inter, sans-serif */
-        *, html, body, .stApp, 
-        h1, h2, h3, h4, h5, h6, 
-        p, span, div, a, label, input, select, textarea, button, 
-        .stTabs [data-baseweb="tab"], 
-        div[data-testid="stRadio"] *, 
-        div[data-testid="stMetricValue"], 
-        div[data-testid="stMetricLabel"],
-        table, th, td, pre, code {
+        /* Centered 780px Editorial Column matching cedric.design screenshots */
+        .stApp [data-testid="stMainBlockContainer"] {
+            max-width: 820px !important;
+            margin: 0 auto !important;
+            padding-top: 2rem !important;
+            padding-bottom: 5rem !important;
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+        }
+
+        /* Universal Typography: Inter for UI/Body, Newsreader for Headlines */
+        *, html, body, .stApp {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            background-color: var(--cedric-bg) !important;
+            color: var(--cedric-text-primary) !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
-            text-rendering: optimizeLegibility !important;
             box-sizing: border-box !important;
         }
 
-        html, body, .stApp {
-            background-color: #141414 !important;
-            color: #f2f2f2 !important;
-            min-height: 100vh !important;
-            overflow-x: hidden !important;
-        }
-
-        /* Typography Hierarchy (DESIGN.md) */
-        h1 {
-            font-size: 46px !important;
-            font-weight: 500 !important;
-            line-height: 1.15 !important;
-            color: #f2f2f2 !important;
-            letter-spacing: -0.03em !important;
-        }
-
-        h2, h3, h4 {
-            font-weight: 500 !important;
-            color: #f2f2f2 !important;
+        /* Editorial Serif Headings (SuisseWorks / Newsreader in cedric.design) */
+        h1, h2, h3, .cedric-serif, .section-heading {
+            font-family: 'Newsreader', 'Charter', 'Iowan Old Style', Georgia, serif !important;
+            font-weight: 400 !important;
             letter-spacing: -0.02em !important;
+            color: var(--cedric-text-primary) !important;
         }
 
-        p, .intera-hero-subtitle {
-            font-size: 16px !important;
-            line-height: 1.6 !important;
-            color: #878787 !important;
+        .section-heading {
+            font-size: 24px !important;
+            font-weight: 400 !important;
+            margin: 36px 0 16px 0 !important;
+            display: block !important;
+        }
+
+        p, .cedric-hero-bio {
+            font-family: 'Inter', sans-serif !important;
+            font-size: 15px !important;
+            line-height: 1.65 !important;
+            color: var(--cedric-text-muted) !important;
             font-weight: 400 !important;
         }
 
         /* Cédric Studio Hero Section */
-        .intera-hero {
+        .cedric-hero {
+            margin: 28px 0 34px 0;
             text-align: left;
-            max-width: 860px;
-            margin: 24px 0 42px 0;
-            padding: 0 4px;
         }
 
-        .intera-hero-eyebrow {
-            font-size: 13px !important;
-            font-weight: 500 !important;
-            letter-spacing: 0.04em !important;
-            text-transform: uppercase !important;
-            color: #78e0ff !important;
-            margin-bottom: 12px !important;
-        }
-
-        .intera-hero-understand {
-            font-size: clamp(2.4rem, 5.2vw, 3.6rem) !important;
-            font-weight: 500 !important;
+        .cedric-hero-title {
+            font-family: 'Newsreader', 'Charter', Georgia, serif !important;
+            font-size: clamp(32px, 5vw, 44px) !important;
+            font-weight: 400 !important;
             line-height: 1.15 !important;
             color: #f2f2f2 !important;
-            letter-spacing: -0.03em !important;
             margin-bottom: 16px !important;
         }
 
-        .intera-hero-subtitle {
-            font-size: 16px !important;
-            line-height: 1.6 !important;
-            color: #878787 !important;
-            max-width: 720px !important;
-            font-weight: 400 !important;
-            margin-top: 14px !important;
+        .cedric-hero-title em {
+            font-style: italic !important;
+            color: #d1d5db !important;
+        }
+
+        .cedric-hero-bio {
+            max-width: 660px;
+            margin: 0;
+        }
+
+        .cedric-hero-bio a {
+            color: #f2f2f2 !important;
+            text-decoration: underline !important;
+            text-underline-offset: 3px !important;
         }
 
         /* Completely collapse sidebar */
@@ -248,71 +240,69 @@ def get_app_css(dark: bool = True) -> str:
             visibility: hidden !important;
             width: 0 !important;
             height: 0 !important;
-            pointer-events: none !important;
         }
 
-        /* Charcoal Panels (DESIGN.md #1a1a1a & #262626) */
+        /* Charcoal Cards (Matching cedric.design cards) */
         [data-testid="stVerticalBlockBorderWrapper"] > div,
-        .intera-card {
-            background: #1a1a1a !important;
-            border-radius: 12px !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        .cedric-card {
+            background: var(--cedric-card) !important;
+            border-radius: 16px !important;
+            border: 1px solid var(--cedric-border) !important;
             box-shadow: none !important;
-            padding: 24px 26px !important;
-            transition: border-color 0.2s ease !important;
+            padding: 22px 24px !important;
+            transition: border-color 0.2s ease, background 0.2s ease !important;
         }
         [data-testid="stVerticalBlockBorderWrapper"] > div:hover,
-        .intera-card:hover {
-            border-color: rgba(255, 255, 255, 0.14) !important;
+        .cedric-card:hover {
+            border-color: var(--cedric-border-light) !important;
         }
 
-        .apple-upload-card {
-            background: #1a1a1a !important;
-            border-radius: 12px !important;
-            padding: 28px 24px !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            text-align: center !important;
-            margin-bottom: 20px !important;
+        /* Solid White Pill Buttons (Matching 'Join 4k+ Readers', 'Buy now', 'View Packages') */
+        .stButton > button,
+        .cedric-btn-white {
+            background: #ffffff !important;
+            color: #111111 !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 9px 20px !important;
+            font-size: 13.5px !important;
+            font-weight: 500 !important;
+            font-family: 'Inter', sans-serif !important;
+            letter-spacing: -0.01em !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer !important;
         }
 
-        /* ========================================================
-           Cédric Studio Segmented Acquisition Control (Pill Options)
-           ======================================================== */
+        .stButton > button:hover,
+        .cedric-btn-white:hover {
+            background: #f0f0f0 !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .stButton > button * {
+            color: #111111 !important;
+            font-weight: 500 !important;
+        }
+
+        /* Segmented Mode Selector (Pill switch) */
         [data-testid="stElementContainer"]:has([data-testid="stRadio"]) {
             display: flex !important;
             justify-content: flex-start !important;
-            align-items: center !important;
-            width: 100% !important;
-            margin: 0 0 28px 0 !important;
-        }
-
-        div[data-testid="stRadio"] {
-            display: flex !important;
-            flex-direction: column !important;
-            width: 100% !important;
-        }
-
-        div[data-testid="stRadio"] > label,
-        div[data-testid="stRadio"] [data-testid="stWidgetLabel"] {
-            display: none !important;
+            margin: 0 0 24px 0 !important;
         }
 
         div[data-testid="stRadio"] div[role="radiogroup"] {
             display: inline-flex !important;
             flex-direction: row !important;
             flex-wrap: wrap !important;
-            justify-content: flex-start !important;
-            align-items: center !important;
-            background: #1a1a1a !important;
+            background: var(--cedric-card) !important;
             padding: 4px !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid var(--cedric-border) !important;
             border-radius: 12px !important;
             gap: 4px !important;
-            width: auto !important;
-            max-width: 100% !important;
         }
 
-        /* Hide radio circle dots completely */
         div[data-testid="stRadio"] [data-baseweb="radio"] input[type="radio"],
         div[data-testid="stRadio"] [data-baseweb="radio"] input[type="radio"] + div,
         div[data-testid="stRadio"] [data-baseweb="radio"] > div:first-of-type,
@@ -321,220 +311,127 @@ def get_app_css(dark: bool = True) -> str:
             visibility: hidden !important;
             width: 0 !important;
             height: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            opacity: 0 !important;
         }
 
-        /* Maker Studio Pill Options */
         div[data-testid="stRadio"] div[role="radiogroup"] > label,
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] {
             background: transparent !important;
             border: none !important;
             border-radius: 8px !important;
-            padding: 10px 20px !important;
+            padding: 8px 18px !important;
             cursor: pointer !important;
             transition: all 0.2s ease !important;
-            white-space: normal !important;
-            text-align: center !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            margin: 0 !important;
-            box-shadow: none !important;
         }
 
         div[data-testid="stRadio"] div[role="radiogroup"] > label *,
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] * {
-            font-size: 14px !important;
+            font-size: 13.5px !important;
             font-weight: 500 !important;
-            color: #878787 !important;
-            transition: color 0.2s ease !important;
+            color: var(--cedric-text-muted) !important;
         }
 
-        div[data-testid="stRadio"] div[role="radiogroup"] > label:hover *,
-        div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:hover * {
-            color: #f2f2f2 !important;
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:hover * {
+            color: #ffffff !important;
         }
 
-        /* Active State: Punchy Safety Orange #ff4d00 (DESIGN.md) */
+        /* Selected Mode: Solid White (Matching Cédric's action style) */
         div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked),
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:has(input:checked) {
-            background: #ff4d00 !important;
+            background: #ffffff !important;
             border-radius: 8px !important;
-            box-shadow: 0 2px 10px rgba(255, 77, 0, 0.35) !important;
         }
 
         div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) *,
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:has(input:checked) * {
-            color: #ffffff !important;
+            color: #111111 !important;
             font-weight: 600 !important;
         }
 
-        /* SVG Icons inside Pill Options */
+        /* Vector SVG Icons in pills */
         div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(1) [data-testid="stMarkdownContainer"] p::before {
             content: '';
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            margin-right: 8px;
+            width: 15px;
+            height: 15px;
+            margin-right: 7px;
             vertical-align: -2px;
             background-repeat: no-repeat;
             background-size: contain;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23878787' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 10v3'/%3E%3Cpath d='M6 6v11'/%3E%3Cpath d='M10 3v18'/%3E%3Cpath d='M14 8v7'/%3E%3Cpath d='M18 5v13'/%3E%3Cpath d='M22 10v3'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 10v3'/%3E%3Cpath d='M6 6v11'/%3E%3Cpath d='M10 3v18'/%3E%3Cpath d='M14 8v7'/%3E%3Cpath d='M18 5v13'/%3E%3Cpath d='M22 10v3'/%3E%3C/svg%3E");
         }
         div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(1):has(input:checked) [data-testid="stMarkdownContainer"] p::before {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 10v3'/%3E%3Cpath d='M6 6v11'/%3E%3Cpath d='M10 3v18'/%3E%3Cpath d='M14 8v7'/%3E%3Cpath d='M18 5v13'/%3E%3Cpath d='M22 10v3'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 10v3'/%3E%3Cpath d='M6 6v11'/%3E%3Cpath d='M10 3v18'/%3E%3Cpath d='M14 8v7'/%3E%3Cpath d='M18 5v13'/%3E%3Cpath d='M22 10v3'/%3E%3C/svg%3E");
         }
 
         div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(2) [data-testid="stMarkdownContainer"] p::before {
             content: '';
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            margin-right: 8px;
+            width: 15px;
+            height: 15px;
+            margin-right: 7px;
             vertical-align: -2px;
             background-repeat: no-repeat;
             background-size: contain;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23878787' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E");
         }
         div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(2):has(input:checked) [data-testid="stMarkdownContainer"] p::before {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E");
         }
 
         div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(3) [data-testid="stMarkdownContainer"] p::before {
             content: '';
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            margin-right: 8px;
+            width: 15px;
+            height: 15px;
+            margin-right: 7px;
             vertical-align: -2px;
             background-repeat: no-repeat;
             background-size: contain;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23878787' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='22'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='22'/%3E%3C/svg%3E");
         }
         div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(3):has(input:checked) [data-testid="stMarkdownContainer"] p::before {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='22'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='22'/%3E%3C/svg%3E");
         }
 
-        /* Buttons & Actions: Safety Orange #ff4d00 (DESIGN.md) */
-        .stButton > button {
-            background: #ff4d00 !important;
-            color: #ffffff !important;
-            border: none !important;
-            border-radius: 8px !important;
-            padding: 10px 24px !important;
-            font-size: 14px !important;
-            font-weight: 500 !important;
-            letter-spacing: -0.01em !important;
-            box-shadow: 0 2px 8px rgba(255, 77, 0, 0.3) !important;
-            transition: all 0.2s ease !important;
-            cursor: pointer !important;
-        }
-
-        .stButton > button:hover {
-            background: #e04400 !important;
-            transform: translateY(-1px) !important;
-            box-shadow: 0 4px 14px rgba(255, 77, 0, 0.45) !important;
-        }
-
-        .stButton > button * {
-            color: #ffffff !important;
-            font-weight: 500 !important;
-        }
-
-        /* Dropzone: Charcoal Panel #1a1a1a with subtle 1px dashed border */
+        /* Dropzone */
         [data-testid="stFileUploaderDropzone"] {
-            background: #1a1a1a !important;
-            border: 1px dashed rgba(255, 255, 255, 0.14) !important;
-            border-radius: 12px !important;
-            padding: 28px 24px !important;
-            text-align: center !important;
-            transition: all 0.2s ease !important;
-        }
-        [data-testid="stFileUploaderDropzone"]:hover {
-            border-color: rgba(255, 255, 255, 0.25) !important;
+            background: var(--cedric-card) !important;
+            border: 1px dashed var(--cedric-border-light) !important;
+            border-radius: 14px !important;
+            padding: 24px 20px !important;
         }
 
         [data-testid="stFileUploaderDropzone"] button {
-            background: #262626 !important;
-            color: #f2f2f2 !important;
+            background: #ffffff !important;
+            color: #111111 !important;
             border-radius: 8px !important;
-            padding: 9px 22px !important;
+            padding: 8px 18px !important;
             font-size: 13.5px !important;
             font-weight: 500 !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            box-shadow: none !important;
-            transition: all 0.2s ease !important;
-        }
-        [data-testid="stFileUploaderDropzone"] button:hover {
-            background: #ff4d00 !important;
-            color: #ffffff !important;
-            border-color: #ff4d00 !important;
         }
 
-        /* File item delete button */
-        [data-testid="stFileUploader"] button[aria-label*="Delete"],
-        [data-testid="stFileUploader"] button[aria-label*="Remove"],
-        [data-testid="stFileUploaderFile"] button {
-            background: transparent !important;
-            box-shadow: none !important;
-            border: none !important;
-            padding: 4px !important;
-            border-radius: 4px !important;
-            color: #878787 !important;
-        }
-        [data-testid="stFileUploader"] button[aria-label*="Delete"]:hover,
-        [data-testid="stFileUploader"] button[aria-label*="Remove"]:hover,
-        [data-testid="stFileUploaderFile"] button:hover {
-            background: rgba(255, 82, 82, 0.15) !important;
-            color: #ff5252 !important;
-        }
-
-        /* Selectbox */
-        div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
-            background: #1a1a1a !important;
-            border-radius: 8px !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            padding: 6px 14px !important;
-            font-size: 14px !important;
-            font-weight: 400 !important;
-            color: #f2f2f2 !important;
-        }
-
-        /* Tabs (DESIGN.md: Charcoal Navigation) */
+        /* Tabs (Cédric Navigation) */
         .stTabs [data-baseweb="tab-list"] {
-            background: #1a1a1a !important;
+            background: var(--cedric-card) !important;
             padding: 4px !important;
             border-radius: 10px !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            display: flex !important;
-            justify-content: flex-start !important;
+            border: 1px solid var(--cedric-border) !important;
             gap: 4px !important;
-            margin-bottom: 24px !important;
-            flex-wrap: wrap !important;
-            max-width: 100% !important;
+            margin-bottom: 20px !important;
         }
 
         .stTabs [data-baseweb="tab"] {
             border-radius: 6px !important;
-            padding: 8px 18px !important;
-            color: #878787 !important;
+            padding: 8px 16px !important;
+            color: var(--cedric-text-muted) !important;
+            font-size: 13px !important;
             font-weight: 500 !important;
-            font-size: 13.5px !important;
-            border: none !important;
             background: transparent !important;
-            transition: all 0.2s ease !important;
-            white-space: normal !important;
-            text-align: center !important;
-            line-height: 1.3 !important;
         }
 
         .stTabs [aria-selected="true"] {
-            background: #262626 !important;
-            color: #f2f2f2 !important;
-            font-weight: 600 !important;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.4) !important;
+            background: #222222 !important;
+            color: #ffffff !important;
         }
 
         .stTabs [data-baseweb="tab-highlight"],
@@ -542,52 +439,25 @@ def get_app_css(dark: bool = True) -> str:
             display: none !important;
         }
 
-        /* Species Card Avatar */
-        .apple-pet-card {
-            background: #1a1a1a;
-            border-radius: 12px;
-            padding: 22px 24px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .apple-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(255, 255, 255, 0.12);
-        }
-
-        /* Audio Console */
+        /* Minimal Audio Console */
         .apple-audio-console {
-            background: #1a1a1a;
+            background: var(--cedric-card);
             border-radius: 12px;
-            padding: 14px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px 18px;
+            border: 1px solid var(--cedric-border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 14px;
             margin-bottom: 14px;
             flex-wrap: wrap;
         }
 
-        .audio-console-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 200px;
-        }
-
         .audio-play-badge {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 8px;
-            background: #ff4d00;
+            background: var(--cedric-orange);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -599,99 +469,41 @@ def get_app_css(dark: bool = True) -> str:
             font-size: 14px;
             font-weight: 600;
             color: #f2f2f2;
-            letter-spacing: -0.01em;
         }
 
         .audio-subtext {
             font-size: 12px;
-            color: #878787;
-            font-weight: 400;
+            color: var(--cedric-text-muted);
             margin-top: 2px;
-        }
-
-        .audio-console-center {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 180px;
         }
 
         .waveform-container {
             display: flex;
             align-items: center;
             gap: 3px;
-            height: 34px;
+            height: 30px;
             width: 100%;
-            max-width: 400px;
+            max-width: 360px;
             justify-content: center;
         }
 
         .waveform-bar {
             width: 3px;
-            background: #78e0ff;
-            border-radius: 2px;
+            background: var(--cedric-cyan);
+            border-radius: 1px;
             opacity: 0.85;
-            transition: height 0.3s ease, opacity 0.2s ease;
-        }
-
-        .audio-console-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .live-equalizer {
-            display: flex;
-            align-items: flex-end;
-            gap: 2.5px;
-            height: 16px;
-        }
-
-        @keyframes eqWave {
-            0%, 100% { height: 3px; }
-            50% { height: 16px; }
         }
 
         .eq-bar {
             width: 2.5px;
-            background: #ff4d00;
-            border-radius: 2px;
-            animation: eqWave 1.2s ease-in-out infinite alternate;
-        }
-        .eq-bar:nth-child(1) { animation-delay: 0.1s; height: 5px; }
-        .eq-bar:nth-child(2) { animation-delay: 0.3s; height: 12px; }
-        .eq-bar:nth-child(3) { animation-delay: 0.05s; height: 16px; }
-        .eq-bar:nth-child(4) { animation-delay: 0.4s; height: 9px; }
-        .eq-bar:nth-child(5) { animation-delay: 0.25s; height: 13px; }
-        .eq-bar:nth-child(6) { animation-delay: 0.15s; height: 7px; }
-
-        .audio-live-tag {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            color: #78e0ff;
-            background: rgba(120, 224, 255, 0.1);
-            border: 1px solid rgba(120, 224, 255, 0.2);
-            padding: 4px 10px;
-            border-radius: 4px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .pulse-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: #78e0ff;
-            display: inline-block;
+            background: var(--cedric-orange);
+            border-radius: 1px;
         }
 
         audio {
             width: 100% !important;
             border-radius: 8px !important;
-            height: 36px !important;
+            height: 34px !important;
         }
     </style>
     """
@@ -1021,31 +833,32 @@ def plot_temporal_distress_curve(timeline_info: dict, is_dark: bool = True) -> g
     return fig
 
 
-# --- CÉDRIC STUDIO COMPACT NAVIGATION (DESIGN.md) ---
+# --- CÉDRIC STUDIO COMPACT TOP NAVIGATION (cedric.design Screenshot 1) ---
 st.markdown("""
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 18px 0 24px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 32px;">
-    <div style="display: flex; align-items: center; gap: 12px;">
-        <span style="width: 8px; height: 8px; border-radius: 2px; background-color: #ff4d00; display: inline-block;"></span>
-        <span style="font-size: 16px; font-weight: 600; color: #f2f2f2; letter-spacing: -0.01em;">Project INTERA</span>
-        <span style="font-size: 12px; font-weight: 500; color: #78e0ff; background: rgba(120, 224, 255, 0.1); border: 1px solid rgba(120, 224, 255, 0.2); padding: 2px 8px; border-radius: 4px;">Bioacoustic Studio / v2.4</span>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0 28px 0; max-width: 820px; margin: 0 auto;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645bdf9d4bac53320316d064_CETI-Favicon.png" alt="INTERA" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255, 255, 255, 0.15);" />
     </div>
-    <div style="display: flex; gap: 24px; font-size: 14px; font-weight: 400; color: #878787;">
-        <span style="color: #f2f2f2;">Observatory</span>
-        <span>Species Atlas (6,522)</span>
-        <span>Anti-Spoofing</span>
-        <span>Early Warning</span>
+    <div style="display: flex; gap: 20px; font-size: 13.5px; font-weight: 400; color: #888888;">
+        <span style="color: #f2f2f2; cursor: pointer;">About</span>
+        <span style="cursor: pointer;">Store</span>
+        <span style="cursor: pointer;">Blog</span>
+        <span style="cursor: pointer;">Stack</span>
+        <span style="cursor: pointer; color: #f2f2f2;">Agency <span style="font-size: 11px;">↗</span></span>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-# --- CÉDRIC STUDIO INTRODUCTORY HERO (DESIGN.md) ---
+# --- CÉDRIC STUDIO HERO (Exact SuisseWorks Serif Headline from Screenshot 1) ---
 st.markdown("""
-<div class="intera-hero">
-    <div class="intera-hero-eyebrow">A SIGNAL IN THE NOISE &bull; BIOACOUSTIC EARLY WARNING</div>
-    <h1 class="intera-hero-understand">Understand What the Birds Are Saying</h1>
-    <div class="intera-hero-subtitle">
-        Birds sense approaching storms and earthquakes hours before instruments pick them up. When danger nears, their calls change. Project INTERA decodes these acoustic distress patterns to warn communities before disaster strikes.
-    </div>
+<div class="cedric-hero">
+    <h1 class="cedric-hero-title">
+        Ayo! I'm INTERA —<br>
+        <em>Bioacoustics, early warning, and avian AI.</em>
+    </h1>
+    <p class="cedric-hero-bio">
+        I listen, I decode (agentic), but my real craft is predicting natural hazards before instruments catch them. Birds sense earthquakes and severe weather hours in advance. Today it's our bioacoustic observatory, Cornell BirdNET taxonomy, and dual-syrinx verification.
+    </p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1068,15 +881,17 @@ if input_mode == "Upload Field Recording":
     col_u_l, col_u_m, col_u_r = st.columns([1, 3.2, 1])
     with col_u_m:
         st.markdown(f"""
-        <div class="apple-upload-card">
-            <div style="width: 62px; height: 62px; border-radius: 50%; background: #EBF4FF; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(0, 122, 255, 0.15); margin-bottom: 12px; color: #007AFF;">
-                {ICON_UPLOAD_APPLE}
+        <div class="cedric-card" style="display: flex; gap: 20px; align-items: center; margin-bottom: 18px; flex-wrap: wrap;">
+            <div style="width: 120px; height: 100px; background: #141414; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.05);">
+                <div style="color: #78e0ff;">{ICON_UPLOAD_APPLE}</div>
             </div>
-            <div style="font-size: 20px; font-weight: 800; color: #111827; letter-spacing: -0.02em;">
-                Upload Bioacoustic Recording
-            </div>
-            <div style="font-size: 14px; color: #8E8E93; font-weight: 500; margin-top: 4px; max-width: 440px; margin-left: auto; margin-right: auto; line-height: 1.5;">
-                Drop high-fidelity avian audio files (.wav, .mp3, .ogg, .flac up to 25 MB) for automated BirdNET classification and dual-syrinx verification.
+            <div style="flex: 1; min-width: 220px;">
+                <div style="font-size: 17px; font-weight: 600; color: #f2f2f2;">
+                    Bioacoustic Audio Upload <span style="font-size: 14px; font-weight: 400; color: #888888;">Telemetry</span>
+                </div>
+                <div style="font-size: 13.5px; color: #888888; margin-top: 4px; line-height: 1.5;">
+                    Drop high-fidelity field audio (.wav, .mp3, .flac up to 25 MB) for automated BirdNET taxonomy and syringeal verification.
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1127,15 +942,17 @@ else:
     col_sel_l, col_sel_m, col_sel_r = st.columns([1, 3.2, 1])
     with col_sel_m:
         st.markdown(f"""
-        <div class="apple-upload-card">
-            <div style="width: 62px; height: 62px; border-radius: 50%; background: #EBF9F1; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(52, 199, 89, 0.15); margin-bottom: 12px; color: #34C759;">
-                {ICON_LIBRARY_APPLE}
+        <div class="cedric-card" style="display: flex; gap: 20px; align-items: center; margin-bottom: 18px; flex-wrap: wrap;">
+            <div style="width: 120px; height: 100px; background: #141414; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.05);">
+                <div style="color: #ff4d00;">{ICON_LIBRARY_APPLE}</div>
             </div>
-            <div style="font-size: 20px; font-weight: 800; color: #111827; letter-spacing: -0.02em;">
-                Calibrated Laboratory Benchmarks
-            </div>
-            <div style="font-size: 14px; color: #8E8E93; font-weight: 500; margin-top: 4px; max-width: 440px; margin-left: auto; margin-right: auto; line-height: 1.5;">
-                Select documented seismic alarm calls, tornado infrasound warblers, or domestic non-avian animal test fixtures.
+            <div style="flex: 1; min-width: 220px;">
+                <div style="font-size: 17px; font-weight: 600; color: #f2f2f2;">
+                    Calibrated Benchmarks <span style="font-size: 14px; font-weight: 400; color: #888888;">Reference Library</span>
+                </div>
+                <div style="font-size: 13.5px; color: #888888; margin-top: 4px; line-height: 1.5;">
+                    Select documented seismic alarm calls, tornado infrasound warblers, or mammalian anti-spoofing test fixtures.
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1263,6 +1080,7 @@ if processed_payload is not None:
         </div>
         """, unsafe_allow_html=True)
 
+    st.markdown('<div class="section-heading">Bioacoustic Classification & Threat</div>', unsafe_allow_html=True)
     # --- CÉDRIC STUDIO SPECIES CARD (PRODUCT / VENTURE SHOWCASE) ---
     is_bird = spoof_info.get("is_authentic", True)
     prim_sp = species_info.get("primary_species", {})
@@ -1430,6 +1248,7 @@ if processed_payload is not None:
                 is_dark=True
             ), unsafe_allow_html=True)
 
+    st.markdown('<div class="section-heading">Observatory Telemetry Stations</div>', unsafe_allow_html=True)
     # --- CÉDRIC STUDIO SEGMENTED TABS: 7 TELEMETRY STATIONS ---
     st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
     tab_timeline, tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_table, tab_report = st.tabs([
