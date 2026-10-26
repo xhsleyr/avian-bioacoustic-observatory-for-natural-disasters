@@ -71,7 +71,7 @@ def render_apple_stat_card(
     color: str = "#ff4d00",
     is_dark: bool = True
 ) -> str:
-    """Generate a Cédric Studio charcoal stat panel with an SVG progress ring and Inter typography."""
+    """Generate a Cédric Studio charcoal stat panel with an SVG progress ring and Times New Roman typography."""
     radius = 21
     circumference = 2 * 3.14159 * radius
     pct_clamped = min(100.0, max(0.0, float(percentage)))
@@ -85,9 +85,9 @@ def render_apple_stat_card(
     return f"""
     <div class="cedric-stat-card" style="background: {card_bg}; border: 1px solid {card_border}; border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
         <div style="flex: 1; min-width: 0; padding-right: 8px;">
-            <div style="color: {sub_color}; font-size: 13px; font-weight: 500; font-family: 'Inter', sans-serif; letter-spacing: 0.02em;">{html.escape(title)}</div>
-            <div style="color: {text_color}; font-size: 22px; font-weight: 600; font-family: 'Inter', sans-serif; margin-top: 4px; letter-spacing: -0.02em;">{html.escape(value)}</div>
-            <div style="color: {sub_color}; font-size: 13px; font-weight: 400; font-family: 'Inter', sans-serif; margin-top: 3px;">{html.escape(subtext)}</div>
+            <div style="color: {sub_color}; font-size: 13px; font-weight: 500; font-family: 'Times New Roman', Times, Georgia, serif; letter-spacing: 0.02em;">{html.escape(title)}</div>
+            <div style="color: {text_color}; font-size: 22px; font-weight: 600; font-family: 'Times New Roman', Times, Georgia, serif; margin-top: 4px; letter-spacing: -0.02em;">{html.escape(value)}</div>
+            <div style="color: {sub_color}; font-size: 13px; font-weight: 400; font-family: 'Times New Roman', Times, Georgia, serif; margin-top: 3px;">{html.escape(subtext)}</div>
         </div>
         <div style="position: relative; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
             <svg width="56" height="56" viewBox="0 0 56 56" style="transform: rotate(-90deg);">
@@ -98,7 +98,7 @@ def render_apple_stat_card(
                     stroke-linecap="round"
                     style="transition: stroke-dashoffset 0.6s cubic-bezier(0.16, 1, 0.3, 1);" />
             </svg>
-            <div style="position: absolute; font-size: 11.5px; font-weight: 600; color: #f2f2f2; font-family: 'Inter', sans-serif;">
+            <div style="position: absolute; font-size: 11.5px; font-weight: 600; color: #f2f2f2; font-family: 'Times New Roman', Times, Georgia, serif;">
                 {int(pct_clamped)}%
             </div>
         </div>
@@ -136,79 +136,80 @@ st.session_state.setdefault("dark_mode_toggle", False)
 is_dark = bool(st.session_state["dark_mode_toggle"])
 
 def get_app_css() -> str:
-    """Exact Cédric Studio Design System matching https://www.cedric.design/ screenshots."""
+    """Art-directed Studio Design System strictly in Times New Roman typography."""
     return """
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
-
         :root {
             --cedric-bg: #111111;
             --cedric-card: #181818;
-            --cedric-card-hover: #1f1f1f;
+            --cedric-card-hover: #222222;
             --cedric-inset: #141414;
             --cedric-border: rgba(255, 255, 255, 0.08);
-            --cedric-border-light: rgba(255, 255, 255, 0.14);
+            --cedric-border-light: rgba(255, 255, 255, 0.16);
             --cedric-text-primary: #f2f2f2;
-            --cedric-text-muted: #888888;
+            --cedric-text-muted: #a0a0a0;
             --cedric-orange: #ff4d00;
             --cedric-cyan: #78e0ff;
             --cedric-emerald: #34d399;
             --cedric-red: #ff5252;
         }
 
-        /* Centered 780px Editorial Column matching cedric.design screenshots */
+        /* Centered 860px Editorial Column with generous breathing room */
         .stApp [data-testid="stMainBlockContainer"] {
-            max-width: 820px !important;
+            max-width: 860px !important;
             margin: 0 auto !important;
-            padding-top: 2rem !important;
-            padding-bottom: 5rem !important;
-            padding-left: 20px !important;
-            padding-right: 20px !important;
+            padding-top: 2.2rem !important;
+            padding-bottom: 5.5rem !important;
+            padding-left: 24px !important;
+            padding-right: 24px !important;
         }
 
-        /* Universal Typography: Inter for UI/Body, Newsreader for Headlines */
-        *, html, body, .stApp {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-            background-color: var(--cedric-bg) !important;
-            color: var(--cedric-text-primary) !important;
+        /* STRICT UNIVERSAL TIMES NEW ROMAN TYPOGRAPHY */
+        *, html, body, .stApp, h1, h2, h3, h4, h5, h6, p, div, span, label, input, button, table, td, th, select, textarea, .cedric-serif, .section-heading, .cedric-hero-title, .cedric-hero-bio {
+            font-family: 'Times New Roman', Times, Baskerville, Georgia, serif !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
             box-sizing: border-box !important;
         }
 
-        /* Editorial Serif Headings (SuisseWorks / Newsreader in cedric.design) */
-        h1, h2, h3, .cedric-serif, .section-heading {
-            font-family: 'Newsreader', 'Charter', 'Iowan Old Style', Georgia, serif !important;
-            font-weight: 400 !important;
-            letter-spacing: -0.02em !important;
+        html, body, .stApp {
+            background-color: var(--cedric-bg) !important;
+            color: var(--cedric-text-primary) !important;
+        }
+
+        /* Editorial Serif Headings */
+        h1, h2, h3, .section-heading {
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
+            font-weight: 500 !important;
+            letter-spacing: -0.01em !important;
             color: var(--cedric-text-primary) !important;
         }
 
         .section-heading {
-            font-size: 24px !important;
-            font-weight: 400 !important;
-            margin: 36px 0 16px 0 !important;
+            font-size: 26px !important;
+            font-weight: 600 !important;
+            margin: 38px 0 18px 0 !important;
             display: block !important;
         }
 
         p, .cedric-hero-bio {
-            font-family: 'Inter', sans-serif !important;
-            font-size: 15px !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
+            font-size: 16px !important;
             line-height: 1.65 !important;
             color: var(--cedric-text-muted) !important;
             font-weight: 400 !important;
         }
 
-        /* Cédric Studio Hero Section */
+        /* Hero Section */
         .cedric-hero {
-            margin: 28px 0 34px 0;
+            margin: 24px 0 32px 0;
             text-align: left;
         }
 
         .cedric-hero-title {
-            font-family: 'Newsreader', 'Charter', Georgia, serif !important;
-            font-size: clamp(32px, 5vw, 44px) !important;
-            font-weight: 400 !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
+            font-size: clamp(34px, 5.2vw, 46px) !important;
+            font-weight: 500 !important;
             line-height: 1.15 !important;
             color: #f2f2f2 !important;
             margin-bottom: 16px !important;
@@ -220,14 +221,9 @@ def get_app_css() -> str:
         }
 
         .cedric-hero-bio {
-            max-width: 660px;
+            max-width: 720px;
             margin: 0;
-        }
-
-        .cedric-hero-bio a {
-            color: #f2f2f2 !important;
-            text-decoration: underline !important;
-            text-underline-offset: 3px !important;
+            font-size: 16.5px !important;
         }
 
         /* Completely collapse sidebar */
@@ -242,14 +238,14 @@ def get_app_css() -> str:
             height: 0 !important;
         }
 
-        /* Charcoal Cards (Matching cedric.design cards) */
+        /* Charcoal Cards */
         [data-testid="stVerticalBlockBorderWrapper"] > div,
         .cedric-card {
             background: var(--cedric-card) !important;
             border-radius: 16px !important;
             border: 1px solid var(--cedric-border) !important;
             box-shadow: none !important;
-            padding: 22px 24px !important;
+            padding: 24px 26px !important;
             transition: border-color 0.2s ease, background 0.2s ease !important;
         }
         [data-testid="stVerticalBlockBorderWrapper"] > div:hover,
@@ -257,19 +253,19 @@ def get_app_css() -> str:
             border-color: var(--cedric-border-light) !important;
         }
 
-        /* Solid White Pill Buttons (Matching 'Join 4k+ Readers', 'Buy now', 'View Packages') */
+        /* Solid White Pill Buttons */
         .stButton > button,
         .cedric-btn-white {
             background: #ffffff !important;
             color: #111111 !important;
             border: none !important;
             border-radius: 8px !important;
-            padding: 9px 20px !important;
-            font-size: 13.5px !important;
-            font-weight: 500 !important;
-            font-family: 'Inter', sans-serif !important;
-            letter-spacing: -0.01em !important;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+            padding: 10px 22px !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
+            letter-spacing: 0.01em !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
             transition: all 0.2s ease !important;
             cursor: pointer !important;
         }
@@ -282,115 +278,103 @@ def get_app_css() -> str:
 
         .stButton > button * {
             color: #111111 !important;
-            font-weight: 500 !important;
+            font-weight: 600 !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
         }
 
-        /* Segmented Mode Selector (Pill switch) */
+        /* SEGMENTED MODE SELECTOR (FIGMA HUMAN-GRADE PILL SWITCH) */
         [data-testid="stElementContainer"]:has([data-testid="stRadio"]) {
             display: flex !important;
-            justify-content: flex-start !important;
+            justify-content: stretch !important;
             margin: 0 0 24px 0 !important;
+            width: 100% !important;
         }
 
-        div[data-testid="stRadio"] div[role="radiogroup"] {
-            display: inline-flex !important;
-            flex-direction: row !important;
-            flex-wrap: wrap !important;
-            background: var(--cedric-card) !important;
-            padding: 4px !important;
-            border: 1px solid var(--cedric-border) !important;
-            border-radius: 12px !important;
-            gap: 4px !important;
+        div[data-testid="stRadio"] {
+            width: 100% !important;
         }
 
+        /* Obliterate native/BaseWeb radio circles, dots, marks */
+        div[data-testid="stRadio"] [data-baseweb="radio"] > *:first-child,
         div[data-testid="stRadio"] [data-baseweb="radio"] input[type="radio"],
         div[data-testid="stRadio"] [data-baseweb="radio"] input[type="radio"] + div,
-        div[data-testid="stRadio"] [data-baseweb="radio"] > div:first-of-type,
-        div[data-testid="stRadio"] [data-baseweb="radio"] svg {
+        div[data-testid="stRadio"] [data-baseweb="radio"] span:first-child,
+        div[data-testid="stRadio"] [data-baseweb="radio"] svg,
+        div[data-testid="stRadio"] label > div:first-child,
+        div[data-testid="stRadio"] label > span:first-child {
             display: none !important;
             visibility: hidden !important;
             width: 0 !important;
             height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            opacity: 0 !important;
+            position: absolute !important;
+            pointer-events: none !important;
+        }
+
+        div[data-testid="stRadio"] div[role="radiogroup"] {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            background: #181818 !important;
+            padding: 6px !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            border-radius: 12px !important;
+            gap: 8px !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
         }
 
         div[data-testid="stRadio"] div[role="radiogroup"] > label,
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] {
+            flex: 1 1 0px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
             background: transparent !important;
-            border: none !important;
+            border: 1px solid transparent !important;
             border-radius: 8px !important;
-            padding: 8px 18px !important;
+            padding: 10px 18px !important;
+            margin: 0 !important;
             cursor: pointer !important;
-            transition: all 0.2s ease !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            text-align: center !important;
         }
 
         div[data-testid="stRadio"] div[role="radiogroup"] > label *,
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] * {
-            font-size: 13.5px !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
+            font-size: 15px !important;
             font-weight: 500 !important;
-            color: var(--cedric-text-muted) !important;
+            color: #b8b8b8 !important;
+            text-align: center !important;
+            margin: 0 !important;
+        }
+
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
+            background: rgba(255, 255, 255, 0.06) !important;
         }
 
         div[data-testid="stRadio"] div[role="radiogroup"] > label:hover * {
             color: #ffffff !important;
         }
 
-        /* Selected Mode: Solid White (Matching Cédric's action style) */
+        /* Selected Mode: Crisp Solid White Button */
         div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked),
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:has(input:checked) {
             background: #ffffff !important;
+            border: 1px solid #ffffff !important;
             border-radius: 8px !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.45) !important;
         }
 
         div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) *,
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:has(input:checked) * {
             color: #111111 !important;
-            font-weight: 600 !important;
-        }
-
-        /* Vector SVG Icons in pills */
-        div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(1) [data-testid="stMarkdownContainer"] p::before {
-            content: '';
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            margin-right: 7px;
-            vertical-align: -2px;
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 10v3'/%3E%3Cpath d='M6 6v11'/%3E%3Cpath d='M10 3v18'/%3E%3Cpath d='M14 8v7'/%3E%3Cpath d='M18 5v13'/%3E%3Cpath d='M22 10v3'/%3E%3C/svg%3E");
-        }
-        div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(1):has(input:checked) [data-testid="stMarkdownContainer"] p::before {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 10v3'/%3E%3Cpath d='M6 6v11'/%3E%3Cpath d='M10 3v18'/%3E%3Cpath d='M14 8v7'/%3E%3Cpath d='M18 5v13'/%3E%3Cpath d='M22 10v3'/%3E%3C/svg%3E");
-        }
-
-        div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(2) [data-testid="stMarkdownContainer"] p::before {
-            content: '';
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            margin-right: 7px;
-            vertical-align: -2px;
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E");
-        }
-        div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(2):has(input:checked) [data-testid="stMarkdownContainer"] p::before {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E");
-        }
-
-        div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(3) [data-testid="stMarkdownContainer"] p::before {
-            content: '';
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            margin-right: 7px;
-            vertical-align: -2px;
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='22'/%3E%3C/svg%3E");
-        }
-        div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(3):has(input:checked) [data-testid="stMarkdownContainer"] p::before {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='22'/%3E%3C/svg%3E");
+            font-weight: 700 !important;
         }
 
         /* Dropzone */
@@ -406,37 +390,73 @@ def get_app_css() -> str:
             color: #111111 !important;
             border-radius: 8px !important;
             padding: 8px 18px !important;
-            font-size: 13.5px !important;
-            font-weight: 500 !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
         }
 
-        /* Tabs (Cédric Navigation) */
+        /* Tabs (Observatory Telemetry Navigation) */
         .stTabs [data-baseweb="tab-list"] {
-            background: var(--cedric-card) !important;
-            padding: 4px !important;
-            border-radius: 10px !important;
-            border: 1px solid var(--cedric-border) !important;
-            gap: 4px !important;
-            margin-bottom: 20px !important;
+            background: #181818 !important;
+            padding: 6px !important;
+            border-radius: 12px !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            gap: 6px !important;
+            margin-bottom: 22px !important;
+            display: flex !important;
+            flex-wrap: wrap !important;
         }
 
         .stTabs [data-baseweb="tab"] {
-            border-radius: 6px !important;
-            padding: 8px 16px !important;
-            color: var(--cedric-text-muted) !important;
-            font-size: 13px !important;
+            border-radius: 8px !important;
+            padding: 9px 18px !important;
+            color: #a0a0a0 !important;
+            font-size: 14px !important;
             font-weight: 500 !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
             background: transparent !important;
+            border: none !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .stTabs [data-baseweb="tab"]:hover {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.05) !important;
         }
 
         .stTabs [aria-selected="true"] {
-            background: #222222 !important;
-            color: #ffffff !important;
+            background: #ffffff !important;
+            color: #111111 !important;
+            font-weight: 700 !important;
+        }
+
+        .stTabs [aria-selected="true"] * {
+            color: #111111 !important;
+            font-weight: 700 !important;
         }
 
         .stTabs [data-baseweb="tab-highlight"],
         .stTabs [data-baseweb="tab-border"] {
             display: none !important;
+        }
+
+        /* PLOTLY CHARTS COMPLETE VISIBILITY SHIELD */
+        div[data-testid="stPlotlyChart"],
+        div[data-testid="stPlotlyChart"] > div,
+        div[data-testid="stPlotlyChart"] .js-plotly-plot,
+        div[data-testid="stPlotlyChart"] .plot-container,
+        div[data-testid="stPlotlyChart"] .svg-container {
+            background: transparent !important;
+            background-color: transparent !important;
+        }
+
+        div[data-testid="stPlotlyChart"] svg {
+            background-color: transparent !important;
+        }
+
+        div[data-testid="stPlotlyChart"] svg rect.bg,
+        div[data-testid="stPlotlyChart"] svg rect.plotbg {
+            fill-opacity: 1 !important;
         }
 
         /* Minimal Audio Console */
@@ -466,13 +486,13 @@ def get_app_css() -> str:
         }
 
         .audio-filename {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             color: #f2f2f2;
         }
 
         .audio-subtext {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--cedric-text-muted);
             margin-top: 2px;
         }
@@ -507,7 +527,6 @@ def get_app_css() -> str:
         }
     </style>
     """
-
 # Inject Cédric Studio Design System CSS
 st.markdown(get_app_css(), unsafe_allow_html=True)
 
@@ -537,10 +556,10 @@ def cached_fetch_visuals(common_name: str, scientific_name: str):
 
 # --- PLOTLY VISUALIZATIONS (APPLE STUDIO PRECISION) ---
 def create_gauge_chart(adi_score: float, threat_color: str, is_dark: bool = True) -> go.Figure:
-    """Create a Cédric Studio bioacoustic distress gauge with Inter typography and #ff4d00 / #78e0ff accents."""
+    """Create a bioacoustic distress gauge with strictly Times New Roman typography and #ff4d00 / #78e0ff accents."""
     bar_color = "#34d399" if adi_score < 38.0 else ("#78e0ff" if adi_score < 70.0 else "#ff4d00")
     text_color = "#f2f2f2"
-    axis_color = "#878787"
+    axis_color = "#a0a0a0"
     bg_arc = "#222222"
 
     fig = go.Figure(go.Indicator(
@@ -549,27 +568,27 @@ def create_gauge_chart(adi_score: float, threat_color: str, is_dark: bool = True
         domain={'x': [0, 1], 'y': [0, 1]},
         title={
             'text': "ACOUSTIC DISTRESS INDEX (ADI)",
-            'font': {'size': 13, 'color': text_color, 'family': "Inter, sans-serif"}
+            'font': {'size': 14, 'color': text_color, 'family': "'Times New Roman', Times, Georgia, serif"}
         },
         number={
             'suffix': "%",
-            'font': {'size': 54, 'color': text_color, 'family': "Inter, sans-serif"}
+            'font': {'size': 56, 'color': text_color, 'family': "'Times New Roman', Times, Georgia, serif"}
         },
         gauge={
             'axis': {
                 'range': [0, 100],
                 'tickwidth': 1.0,
                 'tickcolor': axis_color,
-                'tickfont': {'family': "Inter, sans-serif", 'size': 11, 'color': axis_color},
+                'tickfont': {'family': "'Times New Roman', Times, Georgia, serif", 'size': 12, 'color': axis_color},
                 'tickvals': [0, 25, 50, 75, 100]
             },
             'bar': {'color': bar_color, 'thickness': 0.32},
             'bgcolor': bg_arc,
             'borderwidth': 0,
             'steps': [
-                {'range': [0, 38], 'color': 'rgba(52, 211, 153, 0.12)'},
-                {'range': [38, 70], 'color': 'rgba(120, 224, 255, 0.12)'},
-                {'range': [70, 100], 'color': 'rgba(255, 77, 0, 0.16)'}
+                {'range': [0, 38], 'color': 'rgba(52, 211, 153, 0.16)'},
+                {'range': [38, 70], 'color': 'rgba(120, 224, 255, 0.16)'},
+                {'range': [70, 100], 'color': 'rgba(255, 77, 0, 0.20)'}
             ],
             'threshold': {
                 'line': {'color': "#ff4d00", 'width': 3.0},
@@ -579,16 +598,17 @@ def create_gauge_chart(adi_score: float, threat_color: str, is_dark: bool = True
         }
     ))
     fig.update_layout(
-        height=280,
-        margin={"l": 20, "r": 20, "t": 60, "b": 10},
-        paper_bgcolor='rgba(0,0,0,0)',
-        font={"family": "Inter, sans-serif", "color": text_color}
+        height=290,
+        margin={"l": 25, "r": 25, "t": 60, "b": 15},
+        paper_bgcolor='#181818',
+        plot_bgcolor='#181818',
+        font={"family": "'Times New Roman', Times, Georgia, serif", "color": text_color}
     )
     return fig
 
 
 def plot_mel_spectrogram(features: dict, is_dark: bool = True) -> go.Figure:
-    """Create a Cédric Studio Mel-Spectrogram with Inter typography and #78e0ff / #ff4d00 annotations."""
+    """Create a high-definition Mel-Spectrogram strictly with Times New Roman typography and #78e0ff / #ff4d00 accents."""
     mel_db = features["mel_db"]
     times = features["times"]
     freq_bins = np.linspace(200, 10000, mel_db.shape[0])
@@ -619,11 +639,11 @@ def plot_mel_spectrogram(features: dict, is_dark: bool = True) -> go.Figure:
         colorbar={
             "title": {
                 "text": "Power (dB)",
-                "font": {"family": "Inter, sans-serif", "size": 11, "color": "#f2f2f2"}
+                "font": {"family": "'Times New Roman', Times, Georgia, serif", "size": 12, "color": "#f2f2f2"}
             },
-            "tickfont": {"family": "Inter, sans-serif", "color": "#878787", "size": 10},
+            "tickfont": {"family": "'Times New Roman', Times, Georgia, serif", "color": "#a0a0a0", "size": 11},
             "len": 0.88,
-            "thickness": 10,
+            "thickness": 12,
             "outlinewidth": 0,
             "bgcolor": "rgba(0,0,0,0)"
         },
@@ -637,45 +657,45 @@ def plot_mel_spectrogram(features: dict, is_dark: bool = True) -> go.Figure:
             y=centroid_traj,
             mode='lines',
             name='Pitch Centroid',
-            line={"color": '#78e0ff', "width": 1.8},
+            line={"color": '#78e0ff', "width": 2.0},
             hovertemplate="<b>Pitch Centroid:</b> %{y:.0f} Hz<br><b>Time:</b> %{x:.2f} s<extra></extra>"
         ))
 
     fig.add_hline(
-        y=1500, line_dash='dash', line_color='rgba(120, 224, 255, 0.60)', line_width=1.2,
+        y=1500, line_dash='dash', line_color='rgba(120, 224, 255, 0.70)', line_width=1.4,
         annotation_text="Avian Syrinx Band (1.5 kHz)",
         annotation_position="top left",
-        annotation_font={"family": "Inter, sans-serif", "size": 11, "color": "#78e0ff"}
+        annotation_font={"family": "'Times New Roman', Times, Georgia, serif", "size": 12, "color": "#78e0ff"}
     )
     fig.add_hline(
-        y=4500, line_dash='dash', line_color='rgba(255, 77, 0, 0.70)', line_width=1.2,
+        y=4500, line_dash='dash', line_color='rgba(255, 77, 0, 0.80)', line_width=1.4,
         annotation_text="Alarm Screech Threshold (4.5 kHz)",
         annotation_position="top left",
-        annotation_font={"family": "Inter, sans-serif", "size": 11, "color": "#ff4d00"}
+        annotation_font={"family": "'Times New Roman', Times, Georgia, serif", "size": 12, "color": "#ff4d00"}
     )
 
     fig.update_layout(
         title={
             "text": "HIGH-RESOLUTION MEL BIOACOUSTIC SONOGRAM",
-            "font": {"family": "Inter, sans-serif", "size": 13, "color": "#f2f2f2"}
+            "font": {"family": "'Times New Roman', Times, Georgia, serif", "size": 14, "color": "#f2f2f2"}
         },
         xaxis={
-            "title": {"text": "Time Elapsed (seconds)", "font": {"family": "Inter, sans-serif", "size": 12, "color": "#878787"}},
+            "title": {"text": "Time Elapsed (seconds)", "font": {"family": "'Times New Roman', Times, Georgia, serif", "size": 13, "color": "#a0a0a0"}},
             "showgrid": True,
-            "gridcolor": "rgba(255, 255, 255, 0.05)",
-            "tickfont": {"family": "Inter, sans-serif", "color": "#878787"}
+            "gridcolor": "rgba(255, 255, 255, 0.08)",
+            "tickfont": {"family": "'Times New Roman', Times, Georgia, serif", "color": "#a0a0a0", "size": 12}
         },
         yaxis={
-            "title": {"text": "Frequency (Hz)", "font": {"family": "Inter, sans-serif", "size": 12, "color": "#878787"}},
+            "title": {"text": "Frequency (Hz)", "font": {"family": "'Times New Roman', Times, Georgia, serif", "size": 13, "color": "#a0a0a0"}},
             "showgrid": True,
-            "gridcolor": "rgba(255, 255, 255, 0.05)",
-            "tickfont": {"family": "Inter, sans-serif", "color": "#878787"},
+            "gridcolor": "rgba(255, 255, 255, 0.08)",
+            "tickfont": {"family": "'Times New Roman', Times, Georgia, serif", "color": "#a0a0a0", "size": 12},
             "range": [200, 10000]
         },
-        height=360,
-        margin={"l": 20, "r": 20, "t": 44, "b": 25},
-        paper_bgcolor='#141414',
-        plot_bgcolor='#141414',
+        height=380,
+        margin={"l": 45, "r": 25, "t": 48, "b": 35},
+        paper_bgcolor="#181818",
+        plot_bgcolor="#181818",
         showlegend=True,
         legend={
             "orientation": "h",
@@ -683,7 +703,7 @@ def plot_mel_spectrogram(features: dict, is_dark: bool = True) -> go.Figure:
             "y": 1.02,
             "xanchor": "right",
             "x": 1,
-            "font": {"family": "Inter, sans-serif", "size": 11, "color": "#878787"},
+            "font": {"family": "'Times New Roman', Times, Georgia, serif", "size": 12, "color": "#a0a0a0"},
             "bgcolor": "rgba(0,0,0,0)"
         }
     )
@@ -691,26 +711,27 @@ def plot_mel_spectrogram(features: dict, is_dark: bool = True) -> go.Figure:
 
 
 def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict, is_dark: bool = True) -> go.Figure:
-    """Plot synchronized waveform and pitch dynamics with Cédric Studio Inter styling."""
+    """Plot synchronized waveform and pitch dynamics strictly with Times New Roman typography."""
     time_wave = np.linspace(0, len(y) / sr, len(y))
     times_feats = features["times"]
     centroid = features["spectral_centroid"]["trajectory"]
 
     text_color = "#f2f2f2"
-    axis_color = "#878787"
-    plot_bg = "#1a1a1a"
-    grid_col = "rgba(255, 255, 255, 0.05)"
+    axis_color = "#a0a0a0"
+    plot_bg = "#181818"
+    paper_bg = "#181818"
+    grid_col = "rgba(255, 255, 255, 0.08)"
 
     fig = make_subplots(
         rows=2, cols=1,
         shared_xaxes=True,
-        vertical_spacing=0.12,
+        vertical_spacing=0.14,
         subplot_titles=("Acoustic Signal Waveform & Onset Bursts", "Pitch / Spectral Centroid Trajectory (Hz)")
     )
 
     step = max(1, len(y) // 3000)
     fig.add_trace(
-        go.Scatter(x=time_wave[::step], y=y[::step], mode='lines', name='Waveform', line={"color": "#78e0ff", "width": 1.4}),
+        go.Scatter(x=time_wave[::step], y=y[::step], mode='lines', name='Waveform', line={"color": "#78e0ff", "width": 1.6}),
         row=1, col=1
     )
 
@@ -722,34 +743,34 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict, is_dark: 
                 y=[0.85] * len(onset_times),
                 mode='markers',
                 name='Call Burst Onset',
-                marker={"symbol": "triangle-down", "size": 7, "color": "#ff4d00"}
+                marker={"symbol": "triangle-down", "size": 8, "color": "#ff4d00"}
             ),
             row=1, col=1
         )
 
     fig.add_trace(
-        go.Scatter(x=times_feats, y=centroid, mode='lines', name='Centroid (Hz)', line={"color": "#ff4d00", "width": 1.8}),
+        go.Scatter(x=times_feats, y=centroid, mode='lines', name='Centroid (Hz)', line={"color": "#ff4d00", "width": 2.0}),
         row=2, col=1
     )
 
     fig.update_layout(
-        height=350,
-        margin={"l": 40, "r": 20, "t": 35, "b": 25},
-        paper_bgcolor='rgba(0,0,0,0)',
+        height=380,
+        margin={"l": 50, "r": 25, "t": 45, "b": 35},
+        paper_bgcolor=paper_bg,
         plot_bgcolor=plot_bg,
         showlegend=True,
-        font={"family": "Inter, sans-serif", "color": text_color}
+        font={"family": "'Times New Roman', Times, Georgia, serif", "color": text_color}
     )
-    fig.update_xaxes(title_text="Time (seconds)", title_font={"color": axis_color, "size": 12, "family": "Inter, sans-serif"}, tickfont={"color": axis_color, "size": 11, "family": "Inter, sans-serif"}, row=2, col=1, gridcolor=grid_col)
-    fig.update_yaxes(title_text="Amplitude", title_font={"color": axis_color, "size": 12, "family": "Inter, sans-serif"}, tickfont={"color": axis_color, "size": 11, "family": "Inter, sans-serif"}, row=1, col=1, gridcolor=grid_col)
-    fig.update_yaxes(title_text="Centroid (Hz)", title_font={"color": axis_color, "size": 12, "family": "Inter, sans-serif"}, tickfont={"color": axis_color, "size": 11, "family": "Inter, sans-serif"}, row=2, col=1, gridcolor=grid_col)
-    fig.update_annotations(font={"family": "Inter, sans-serif", "size": 12, "color": text_color})
+    fig.update_xaxes(title_text="Time (seconds)", title_font={"color": axis_color, "size": 13, "family": "'Times New Roman', Times, Georgia, serif"}, tickfont={"color": axis_color, "size": 12, "family": "'Times New Roman', Times, Georgia, serif"}, row=2, col=1, gridcolor=grid_col, showgrid=True)
+    fig.update_yaxes(title_text="Amplitude", title_font={"color": axis_color, "size": 13, "family": "'Times New Roman', Times, Georgia, serif"}, tickfont={"color": axis_color, "size": 12, "family": "'Times New Roman', Times, Georgia, serif"}, row=1, col=1, gridcolor=grid_col, showgrid=True)
+    fig.update_yaxes(title_text="Centroid (Hz)", title_font={"color": axis_color, "size": 13, "family": "'Times New Roman', Times, Georgia, serif"}, tickfont={"color": axis_color, "size": 12, "family": "'Times New Roman', Times, Georgia, serif"}, row=2, col=1, gridcolor=grid_col, showgrid=True)
+    fig.update_annotations(font={"family": "'Times New Roman', Times, Georgia, serif", "size": 13, "color": text_color})
 
     return fig
 
 
 def plot_temporal_distress_curve(timeline_info: dict, is_dark: bool = True) -> go.Figure:
-    """Plot high-precision temporal threat escalation curve with Cédric Studio Inter styling."""
+    """Plot high-precision temporal threat escalation curve strictly with Times New Roman typography."""
     times = timeline_info.get("times", [0.0])
     adi_series = timeline_info.get("adi_series", [50.0])
     shockwave = timeline_info.get("shockwave_detected", False)
@@ -759,21 +780,21 @@ def plot_temporal_distress_curve(timeline_info: dict, is_dark: bool = True) -> g
     escalation_rate = timeline_info.get("escalation_rate", 0.0)
 
     text_color = "#f2f2f2"
-    axis_color = "#878787"
-    plot_bg = "#1a1a1a"
-    grid_col = "rgba(255, 255, 255, 0.05)"
+    axis_color = "#a0a0a0"
+    plot_bg = "#181818"
+    grid_col = "rgba(255, 255, 255, 0.08)"
 
     fig = go.Figure()
 
     line_color = "#ff4d00" if shockwave or peak_adi >= 70.0 else ("#78e0ff" if peak_adi >= 38.0 else "#34d399")
-    fill_color = "rgba(255, 77, 0, 0.12)" if line_color == "#ff4d00" else ("rgba(120, 224, 255, 0.10)" if line_color == "#78e0ff" else "rgba(52, 211, 153, 0.08)")
+    fill_color = "rgba(255, 77, 0, 0.14)" if line_color == "#ff4d00" else ("rgba(120, 224, 255, 0.12)" if line_color == "#78e0ff" else "rgba(52, 211, 153, 0.10)")
 
     fig.add_trace(go.Scatter(
         x=times,
         y=adi_series,
         mode='lines',
         name='Distress Trajectory',
-        line={"color": line_color, "width": 2.2, "shape": "spline"},
+        line={"color": line_color, "width": 2.4, "shape": "spline"},
         fill='tozeroy',
         fillcolor=fill_color,
         hovertemplate="<b>Distress Index:</b> %{y:.1f}%<br><b>Time:</b> %{x:.2f}s<extra></extra>"
@@ -787,50 +808,52 @@ def plot_temporal_distress_curve(timeline_info: dict, is_dark: bool = True) -> g
             name='Shockwave Burst',
             text=["INFRASONIC SURGE"],
             textposition="top center",
-            textfont={"color": "#ff4d00", "size": 11, "family": "Inter, sans-serif"},
-            marker={"size": 10, "color": "#ff4d00", "symbol": "circle"}
+            textfont={"color": "#ff4d00", "size": 12, "family": "'Times New Roman', Times, Georgia, serif"},
+            marker={"size": 11, "color": "#ff4d00", "symbol": "circle"}
         ))
 
     fig.add_hline(
-        y=70, line_dash="dash", line_color="#ff5252", line_width=1.2,
+        y=70, line_dash="dash", line_color="#ff5252", line_width=1.4,
         annotation_text="Critical Threat (70%)",
         annotation_position="bottom right",
-        annotation_font={"size": 11, "color": "#ff5252", "family": "Inter, sans-serif"}
+        annotation_font={"size": 12, "color": "#ff5252", "family": "'Times New Roman', Times, Georgia, serif"}
     )
     fig.add_hline(
-        y=38, line_dash="dot", line_color="#78e0ff", line_width=1.2,
+        y=38, line_dash="dot", line_color="#78e0ff", line_width=1.4,
         annotation_text="Elevated Vigilance (38%)",
         annotation_position="bottom right",
-        annotation_font={"size": 11, "color": "#78e0ff", "family": "Inter, sans-serif"}
+        annotation_font={"size": 12, "color": "#78e0ff", "family": "'Times New Roman', Times, Georgia, serif"}
     )
 
     fig.update_layout(
         title={
             "text": f"TEMPORAL THREAT ESCALATION &bull; {trend_label.upper()} (Velocity d(ADI)/dt: {escalation_rate:.1f}%/s)",
-            "font": {"size": 13, "color": text_color, "family": "Inter, sans-serif"}
+            "font": {"size": 14, "color": text_color, "family": "'Times New Roman', Times, Georgia, serif"}
         },
         xaxis={
             "title": "Elapsed Time (Seconds)",
             "showgrid": True,
             "gridcolor": grid_col,
-            "tickfont": {"color": axis_color, "size": 11, "family": "Inter, sans-serif"},
-            "title_font": {"family": "Inter, sans-serif", "size": 12, "color": axis_color}
+            "tickfont": {"color": axis_color, "size": 12, "family": "'Times New Roman', Times, Georgia, serif"},
+            "title_font": {"family": "'Times New Roman', Times, Georgia, serif", "size": 13, "color": axis_color}
         },
         yaxis={
             "title": "Acoustic Distress Index (%)",
             "range": [0, 105],
             "showgrid": True,
             "gridcolor": grid_col,
-            "tickfont": {"color": axis_color, "size": 11, "family": "Inter, sans-serif"},
-            "title_font": {"family": "Inter, sans-serif", "size": 12, "color": axis_color}
+            "tickfont": {"color": axis_color, "size": 12, "family": "'Times New Roman', Times, Georgia, serif"},
+            "title_font": {"family": "'Times New Roman', Times, Georgia, serif", "size": 13, "color": axis_color}
         },
-        height=320,
-        margin={"l": 40, "r": 30, "t": 46, "b": 36},
-        paper_bgcolor='rgba(0,0,0,0)',
+        height=380,
+        margin={"l": 45, "r": 25, "t": 48, "b": 35},
+        paper_bgcolor=plot_bg,
         plot_bgcolor=plot_bg,
-        showlegend=False
+        showlegend=True,
+        legend={"font": {"family": "'Times New Roman', Times, Georgia, serif", "color": axis_color, "size": 12}, "bgcolor": "rgba(0,0,0,0)"}
     )
     return fig
+
 
 
 # --- CÉDRIC STUDIO COMPACT TOP NAVIGATION (cedric.design Screenshot 1) ---
@@ -862,15 +885,22 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- APPLE SEGMENTED CONTROL: ACOUSTIC ACQUISITION MODE ---
+# --- SEGMENTED CONTROL: ACOUSTIC ACQUISITION MODE ---
+st.markdown("""
+<div style="font-size: 13px; font-weight: 600; color: #888888; margin-bottom: 8px; letter-spacing: 0.05em; text-transform: uppercase;">
+    Acoustic Acquisition Mode
+</div>
+""", unsafe_allow_html=True)
+
 input_mode = st.radio(
-    "Acoustic Acquisition Mode:",
+    "Acoustic Acquisition Mode",
     options=[
         "Calibrated Laboratory Benchmarks",
         "Upload Field Recording",
         "Live Canopy Microphone"
     ],
-    horizontal=True
+    horizontal=True,
+    label_visibility="collapsed"
 )
 
 audio_data = None
@@ -878,18 +908,17 @@ audio_label = ""
 MAX_UPLOAD_SIZE_BYTES = 25 * 1024 * 1024  # 25 MB
 
 if input_mode == "Upload Field Recording":
-    col_u_l, col_u_m, col_u_r = st.columns([1, 3.2, 1])
-    with col_u_m:
+    with st.container():
         st.markdown(f"""
         <div class="cedric-card" style="display: flex; gap: 20px; align-items: center; margin-bottom: 18px; flex-wrap: wrap;">
-            <div style="width: 120px; height: 100px; background: #141414; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.05);">
+            <div style="width: 100px; height: 90px; background: #141414; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.05);">
                 <div style="color: #78e0ff;">{ICON_UPLOAD_APPLE}</div>
             </div>
             <div style="flex: 1; min-width: 220px;">
-                <div style="font-size: 17px; font-weight: 600; color: #f2f2f2;">
+                <div style="font-size: 18px; font-weight: 600; color: #f2f2f2;">
                     Bioacoustic Audio Upload <span style="font-size: 14px; font-weight: 400; color: #888888;">Telemetry</span>
                 </div>
-                <div style="font-size: 13.5px; color: #888888; margin-top: 4px; line-height: 1.5;">
+                <div style="font-size: 14px; color: #888888; margin-top: 4px; line-height: 1.5;">
                     Drop high-fidelity field audio (.wav, .mp3, .flac up to 25 MB) for automated BirdNET taxonomy and syringeal verification.
                 </div>
             </div>
@@ -910,18 +939,19 @@ if input_mode == "Upload Field Recording":
                 audio_label = uploaded_file.name
 
 elif input_mode == "Live Canopy Microphone":
-    col_m_l, col_m_m, col_m_r = st.columns([1, 2.8, 1])
-    with col_m_m:
+    with st.container():
         st.markdown(f"""
-        <div class="apple-upload-card">
-            <div style="width: 62px; height: 62px; border-radius: 50%; background: #FEECEB; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(255, 59, 48, 0.15); margin-bottom: 12px; color: #FF3B30;">
-                {ICON_MIC}
+        <div class="cedric-card" style="display: flex; gap: 20px; align-items: center; margin-bottom: 18px; flex-wrap: wrap;">
+            <div style="width: 100px; height: 90px; background: #141414; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.05);">
+                <div style="color: #ff4d00;">{ICON_MIC}</div>
             </div>
-            <div style="font-size: 20px; font-weight: 800; color: #111827; letter-spacing: -0.02em;">
-                Live Environmental Microphone
-            </div>
-            <div style="font-size: 14px; color: #8E8E93; font-weight: 500; margin-top: 4px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.5;">
-                Point your directional microphone toward the canopy. Click Record to capture real-time 44.1 kHz ambient avian signals.
+            <div style="flex: 1; min-width: 220px;">
+                <div style="font-size: 18px; font-weight: 600; color: #f2f2f2;">
+                    Live Canopy Microphone <span style="font-size: 14px; font-weight: 400; color: #888888;">Real-Time Capture</span>
+                </div>
+                <div style="font-size: 14px; color: #888888; margin-top: 4px; line-height: 1.5;">
+                    Point your directional microphone toward the canopy. Click Record to capture real-time 44.1 kHz ambient avian signals.
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -939,18 +969,17 @@ else:
         os.path.basename(p): p for p in sample_files
     }
     
-    col_sel_l, col_sel_m, col_sel_r = st.columns([1, 3.2, 1])
-    with col_sel_m:
+    with st.container():
         st.markdown(f"""
         <div class="cedric-card" style="display: flex; gap: 20px; align-items: center; margin-bottom: 18px; flex-wrap: wrap;">
-            <div style="width: 120px; height: 100px; background: #141414; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.05);">
+            <div style="width: 100px; height: 90px; background: #141414; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.05);">
                 <div style="color: #ff4d00;">{ICON_LIBRARY_APPLE}</div>
             </div>
             <div style="flex: 1; min-width: 220px;">
-                <div style="font-size: 17px; font-weight: 600; color: #f2f2f2;">
+                <div style="font-size: 18px; font-weight: 600; color: #f2f2f2;">
                     Calibrated Benchmarks <span style="font-size: 14px; font-weight: 400; color: #888888;">Reference Library</span>
                 </div>
-                <div style="font-size: 13.5px; color: #888888; margin-top: 4px; line-height: 1.5;">
+                <div style="font-size: 14px; color: #888888; margin-top: 4px; line-height: 1.5;">
                     Select documented seismic alarm calls, tornado infrasound warblers, or mammalian anti-spoofing test fixtures.
                 </div>
             </div>
@@ -982,6 +1011,8 @@ else:
                     audio_label = selected_sample_name
             except OSError as e:
                 st.error(f"Error loading benchmark sample: {e}")
+
+
 
 # --- BIOACOUSTIC INGESTION & PROCESSING ---
 processed_payload = None
@@ -1182,7 +1213,7 @@ if processed_payload is not None:
 
     with col_gauge, st.container(border=True):
         gauge_fig = create_gauge_chart(results["adi"], results["threat_color"], is_dark=True)
-        st.plotly_chart(gauge_fig, width="stretch")
+        st.plotly_chart(gauge_fig, use_container_width=True, theme=None)
         st.markdown(f"""
         <div style="text-align: center; margin-top: -6px; padding-bottom: 8px;">
             <div style="font-size: 14px; font-weight: 600; color: {adi_tier_color}; letter-spacing: 0.01em;">
@@ -1324,7 +1355,7 @@ if processed_payload is not None:
                 is_dark=True
             ), unsafe_allow_html=True)
 
-        st.plotly_chart(plot_temporal_distress_curve(timeline_info, is_dark=True), width="stretch")
+        st.plotly_chart(plot_temporal_distress_curve(timeline_info, is_dark=True), use_container_width=True, theme=None)
 
         trend_name = timeline_info.get("trend_label", "Stationary Chorus")
         st.markdown(f"""
@@ -1357,7 +1388,7 @@ if processed_payload is not None:
         </div>
         """, unsafe_allow_html=True)
 
-        st.plotly_chart(plot_mel_spectrogram(features, is_dark=True), width="stretch")
+        st.plotly_chart(plot_mel_spectrogram(features, is_dark=True), use_container_width=True, theme=None)
 
         col_b1, col_b2, col_b3 = st.columns(3)
         with col_b1:
@@ -1400,7 +1431,7 @@ if processed_payload is not None:
         </div>
         """, unsafe_allow_html=True)
 
-        st.plotly_chart(plot_waveform_and_dynamics(y, sr, features, is_dark=True), width="stretch")
+        st.plotly_chart(plot_waveform_and_dynamics(y, sr, features, is_dark=True), use_container_width=True, theme=None)
 
         col_w1, col_w2, col_w3 = st.columns(3)
         peak_amp = float(np.max(np.abs(y))) if len(y) > 0 else 0.0
