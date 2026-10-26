@@ -20,7 +20,13 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from src.audio_processor import load_audio, extract_acoustic_features
-from src.distress_engine import compute_distress_index
+from src.distress_engine import (
+    compute_distress_index,
+    compute_distress_timeline,
+    evaluate_flock_consensus,
+    generate_forensic_report
+)
+import re
 from src.species_classifier import identify_species
 from src.spoof_detector import evaluate_avian_authenticity
 from src.image_fetcher import fetch_bird_visuals
@@ -1407,14 +1413,19 @@ st.markdown("""
 
 # --- PERFORMANCE CACHING PIPELINE ---
 @st.cache_data(show_spinner=False)
-def cached_process_audio(audio_bytes: bytes):
+def cached_process_audio(audio_bytes: bytes, audio_label: str = "Acoustic Specimen Stream"):
     """Zero-lag cached bioacoustic extraction and neural inference pipeline."""
-    y, sr, duration = load_audio(audio_bytes)
+    y, sr, duration = load_audio(audio_bytes, apply_denoising=True)
     features = extract_acoustic_features(y, sr)
-    results = compute_distress_index(features)
     species_info = identify_species(audio_bytes, features, top_k=5)
+    results = compute_distress_index(features, species_info=species_info)
     spoof_info = evaluate_avian_authenticity(y, sr, species_info, features)
-    return y, sr, duration, features, results, species_info, spoof_info
+    timeline_info = compute_distress_timeline(y, sr, species_info=species_info)
+    consensus_info = evaluate_flock_consensus(species_info, features, results["adi"])
+    forensic_report = generate_forensic_report(
+        audio_label, duration, sr, features, species_info, spoof_info, results, timeline_info, consensus_info
+    )
+    return y, sr, duration, features, results, species_info, spoof_info, timeline_info, consensus_info, forensic_report
 
 
 @st.cache_data(show_spinner=False)
@@ -1635,6 +1646,83 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict) -> go.Fig
     return fig
 
 
+def plot_temporal_distress_curve(timeline_info: dict) -> go.Figure:
+    """Plot high-precision temporal threat escalation timeline and d(ADI)/dt dynamics."""
+    times = timeline_info.get("times", [0.0])
+    adi_series = timeline_info.get("adi_series", [50.0])
+    shockwave = timeline_info.get("shockwave_detected", False)
+    peak_time = timeline_info.get("peak_time", 0.0)
+    peak_adi = timeline_info.get("peak_adi", 0.0)
+    trend_label = timeline_info.get("trend_label", "Stationary")
+    escalation_rate = timeline_info.get("escalation_rate", 0.0)
+
+    fig = go.Figure()
+
+    line_color = "#e63946" if shockwave or peak_adi >= 70.0 else ("#d97706" if peak_adi >= 38.0 else "#4749fe")
+    fill_color = "rgba(230, 57, 70, 0.16)" if line_color == "#e63946" else ("rgba(217, 119, 6, 0.14)" if line_color == "#d97706" else "rgba(71, 73, 254, 0.12)")
+
+    fig.add_trace(go.Scatter(
+        x=times,
+        y=adi_series,
+        mode='lines',
+        name='Acoustic Distress Index',
+        line=dict(color=line_color, width=2.8),
+        fill='tozeroy',
+        fillcolor=fill_color,
+        hovertemplate="<b>Elapsed Time:</b> %{x:.2f}s<br><b>Acoustic Distress Index:</b> %{y:.1f}%<extra></extra>"
+    ))
+
+    fig.add_trace(go.Scatter(
+        x=[peak_time],
+        y=[peak_adi],
+        mode='markers+text',
+        name='Peak Threat',
+        text=[f"Peak: {peak_adi:.1f}%"],
+        textposition="top center",
+        marker=dict(size=10, color=line_color, symbol='diamond'),
+        hoverinfo='skip'
+    ))
+
+    fig.add_hline(
+        y=70, line_dash="dash", line_color="#e63946", line_width=1.5,
+        annotation_text="Critical Threat (70%)",
+        annotation_position="bottom right",
+        annotation_font=dict(size=11, color="#e63946")
+    )
+    fig.add_hline(
+        y=38, line_dash="dot", line_color="#d97706", line_width=1.5,
+        annotation_text="Elevated Vigilance (38%)",
+        annotation_position="bottom right",
+        annotation_font=dict(size=11, color="#d97706")
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=f"TEMPORAL THREAT ESCALATION TIMELINE &bull; {trend_label.upper()} (Max Velocity d(ADI)/dt: {escalation_rate:.1f}%/s)",
+            font=dict(size=13.5, color="#000000", family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif")
+        ),
+        xaxis=dict(
+            title="Elapsed Time (Seconds)",
+            showgrid=True,
+            gridcolor="#e2e8f0",
+            tickfont=dict(color="#000000", size=11)
+        ),
+        yaxis=dict(
+            title="Acoustic Distress Index (%)",
+            range=[0, 105],
+            showgrid=True,
+            gridcolor="#e2e8f0",
+            tickfont=dict(color="#000000", size=11)
+        ),
+        height=320,
+        margin=dict(l=40, r=30, t=46, b=36),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='#ffffff',
+        showlegend=False
+    )
+    return fig
+
+
 # --- EDITORIAL MASTHEAD ---
 st.markdown("""
 <div class="intera-masthead">
@@ -1757,7 +1845,7 @@ if audio_data is not None:
     # 0ms Instant Response via Cached Pipeline
     try:
         with st.spinner("Decoding bioacoustic signals with Cornell BirdNET & verifying biometrics..."):
-            y, sr, duration, features, results, species_info, spoof_info = cached_process_audio(audio_data)
+            y, sr, duration, features, results, species_info, spoof_info, timeline_info, consensus_info, forensic_report = cached_process_audio(audio_data, str(audio_label))
     except Exception as exc:
         st.error(f"Bioacoustic Ingestion Error: Unable to decode audio stream ({type(exc).__name__}). Please provide a valid, uncorrupted audio recording.")
         audio_data = None
@@ -1904,6 +1992,23 @@ if audio_data is not None:
         </div>
         """, unsafe_allow_html=True)
 
+    # 2.5 Multi-Species Sentinel Consensus Card
+    st.markdown(f"""
+    <div class="intera-card" style="border-left: 4px solid {consensus_info['color']}; padding: 18px 26px; margin-top: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span style="font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800; color: {consensus_info['color']};">
+                ● {consensus_info['status']}
+            </span>
+            <span style="font-size: 13px; color: #000000; font-weight: 600;">
+                Synchronized Species in Biosphere: <strong>{consensus_info['species_count']}</strong>
+            </span>
+        </div>
+        <p style="margin: 8px 0 0 0; font-size: 1.05rem; color: #000000; font-weight: 500; line-height: 1.55;">
+            {html.escape(consensus_info['summary'])}
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
     # 3. Early Warning Threat Assessment Banner
     if spoof_info["suppress_alarm"]:
         st.markdown(f"""
@@ -1987,7 +2092,7 @@ if audio_data is not None:
                 <div class="stressor-bar-track">
                     <div class="stressor-bar-fill" style="width: {min(100.0, max(4.0, sub_pitch))}%; background-color: {c_pitch};"></div>
                 </div>
-                <div class="stressor-context">Avian Syrinx Baseline: 1,500 – 2,800 Hz (Stress shriek onset &gt; 3,500 Hz)</div>
+                <div class="stressor-context">Calibrated Baseline: {results.get('baseline_profile', {}).get('family_label', 'Standard Avian')} (Normal: {results.get('baseline_profile', {}).get('normal_pitch_range', '1,500 – 2,800 Hz')})</div>
             </div>
 
             <!-- Stressor 2: Call Burst Rate -->
@@ -2028,13 +2133,45 @@ if audio_data is not None:
             """, unsafe_allow_html=True)
 
     # 5. Scientific Telemetry Tabs
-    tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_table = st.tabs([
+    tab_timeline, tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_table, tab_report = st.tabs([
+        "Threat Timeline & Escalation",
         "Mel-Spectrogram Heatmap",
-        "Waveform & Onset Dynamics",
+        "Waveform Dynamics",
         "Species Taxonomy (6,522)",
-        "Biometric Syrinx Verification",
-        "Diagnostic Parameters"
+        "Biometric Syrinx Shield",
+        "Diagnostic Parameters",
+        "Forensic Telemetry Report"
     ])
+
+    with tab_timeline:
+        with st.container(border=True):
+            col_t1, col_t2, col_t3, col_t4 = st.columns(4)
+            with col_t1:
+                st.metric(
+                    label="Max Escalation Velocity d(ADI)/dt",
+                    value=f"{timeline_info.get('escalation_rate', 0.0):.1f}%/s",
+                    delta="Sudden Shockwave" if timeline_info.get('shockwave_detected') else "Gradual Rhythm",
+                    delta_color="inverse" if timeline_info.get('shockwave_detected') else "normal"
+                )
+            with col_t2:
+                st.metric(
+                    label="Peak Threat Moment",
+                    value=f"{timeline_info.get('peak_time', 0.0):.2f}s",
+                    delta=f"{timeline_info.get('peak_adi', 0.0):.1f}% Max ADI"
+                )
+            with col_t3:
+                st.metric(
+                    label="Temporal Progression",
+                    value=timeline_info.get('trend_label', 'Stationary')[:22]
+                )
+            with col_t4:
+                st.metric(
+                    label="Pre-Seismic Infrasound Status",
+                    value="⚡ POSITIVE BURST" if timeline_info.get('shockwave_detected') else "● NOMINAL GRADIENT",
+                    delta="Immediate Warning" if timeline_info.get('shockwave_detected') else "No Shockwave",
+                    delta_color="inverse" if timeline_info.get('shockwave_detected') else "normal"
+                )
+            st.plotly_chart(plot_temporal_distress_curve(timeline_info), width="stretch")
 
     with tab_spec:
         with st.container(border=True):
@@ -2087,6 +2224,21 @@ if audio_data is not None:
                     "Status": d["status"]
                 })
             st.table(diag_rows)
+
+    with tab_report:
+        with st.container(border=True):
+            st.markdown("""<h4 style="font-size: 1.55rem; margin-bottom: 8px;">Official Bioacoustic Forensic Telemetry Report</h4>""", unsafe_allow_html=True)
+            st.caption("Standardized civil catastrophe incident telemetry formatted for national disaster management and seismological research authorities.")
+            
+            clean_species = re.sub(r'[^a-zA-Z0-9_]', '_', prim_sp['common_name'].lower())
+            st.download_button(
+                label="📥 Download Official Bioacoustic Forensic Report (.md)",
+                data=forensic_report,
+                file_name=f"intera_forensic_telemetry_{clean_species}.md",
+                mime="text/markdown",
+                use_container_width=True
+            )
+            st.markdown(f"```markdown\n{forensic_report}\n```")
 
 else:
     st.markdown(f"""

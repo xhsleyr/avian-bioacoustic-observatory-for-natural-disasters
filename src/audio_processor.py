@@ -2,7 +2,7 @@
 
 Standardizes input signals and extracts acoustic descriptors used by the
 distress analysis engine and biometric anti-spoofing shield, using voice
-activity masking to ignore ambient silence.
+activity masking to ignore ambient silence and adaptive environmental denoising.
 """
 
 from typing import Dict, Any, Tuple
@@ -10,15 +10,35 @@ import io
 import numpy as np
 import librosa
 import soundfile as sf
+import scipy.signal
 
 
 TARGET_SR = 22050
 
 
+def filter_environmental_noise(y: np.ndarray, sr: int, cutoff_hz: float = 90.0) -> np.ndarray:
+    """Filter out sub-audible wind rumble, microphone handling noise, and AC line hum (50/60 Hz).
+    
+    Uses a gentle 2nd-order Butterworth high-pass filter at 90 Hz.
+    This preserves the full mammalian larynx (energy from 200 Hz upwards)
+    and avian syrinx (800 Hz to 10 kHz), while eliminating DC offset and low-frequency rumble.
+    """
+    if len(y) == 0:
+        return y
+    sos = scipy.signal.butter(2, cutoff_hz, btype='highpass', fs=sr, output='sos')
+    y_filtered = scipy.signal.sosfilt(sos, y)
+    orig_peak = np.max(np.abs(y))
+    new_peak = np.max(np.abs(y_filtered))
+    if new_peak > 0 and orig_peak > 0:
+        y_filtered = y_filtered * (orig_peak / new_peak)
+    return y_filtered
+
+
 def load_audio(
     file_source: Any,
     target_sr: int = TARGET_SR,
-    max_duration_sec: float = 60.0
+    max_duration_sec: float = 60.0,
+    apply_denoising: bool = True
 ) -> Tuple[np.ndarray, int, float]:
     """Load an audio file or bytes buffer into a standardized mono numpy array.
     
@@ -26,6 +46,7 @@ def load_audio(
         file_source: File path (str) or file-like bytes buffer.
         target_sr: Target sample rate for analysis (default 22050 Hz).
         max_duration_sec: Max audio duration to analyze to prevent memory spikes.
+        apply_denoising: Whether to apply environmental 90 Hz high-pass rumble removal.
         
     Returns:
         Tuple of (y_mono, sr, duration_seconds)
@@ -35,6 +56,10 @@ def load_audio(
 
     y, sr = librosa.load(file_source, sr=target_sr, mono=True, duration=max_duration_sec)
     
+    # Adaptive environmental wind/handling rumble filter
+    if apply_denoising:
+        y = filter_environmental_noise(y, sr, cutoff_hz=90.0)
+
     # Peak normalization to prevent volume bias
     peak = np.max(np.abs(y))
     if peak > 0:
