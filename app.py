@@ -13,6 +13,7 @@ Principles:
 import base64
 import glob
 import html
+import importlib
 import logging
 import os
 
@@ -20,6 +21,12 @@ import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
 from plotly.subplots import make_subplots
+
+import src.audio_processor
+import src.distress_engine
+
+importlib.reload(src.audio_processor)
+importlib.reload(src.distress_engine)
 
 from src.audio_processor import extract_acoustic_features, load_audio
 from src.distress_engine import (
