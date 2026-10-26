@@ -136,8 +136,9 @@ st.session_state.setdefault("dark_mode_toggle", False)
 is_dark = bool(st.session_state["dark_mode_toggle"])
 
 def get_app_css() -> str:
-    """Art-directed Studio Design System strictly in Times New Roman typography."""
+    """Art-directed Studio Design System strictly in Times New Roman typography with dark mode and Material Symbols support."""
     return """
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         html {
             scroll-behavior: smooth !important;
@@ -168,12 +169,43 @@ def get_app_css() -> str:
             padding-right: 24px !important;
         }
 
-        /* STRICT UNIVERSAL TIMES NEW ROMAN TYPOGRAPHY */
-        *, html, body, .stApp, h1, h2, h3, h4, h5, h6, p, div, span, label, input, button, table, td, th, select, textarea, .cedric-serif, .section-heading, .cedric-hero-title, .cedric-hero-bio {
+        /* STRICT UNIVERSAL TIMES NEW ROMAN TYPOGRAPHY (EXCEPT MATERIAL ICONS) */
+        *:not([data-testid="stIconMaterial"]):not([class*="material-symbols"]):not(i):not(svg),
+        html, body, .stApp, h1, h2, h3, h4, h5, h6, p, label, table, td, th, select, textarea, .cedric-serif, .section-heading, .cedric-hero-title, .cedric-hero-bio {
             font-family: 'Times New Roman', Times, Baskerville, Georgia, serif !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
             box-sizing: border-box !important;
+        }
+
+        div:not([data-testid="stIconMaterial"]):not([class*="material-symbols"]),
+        span:not([data-testid="stIconMaterial"]):not([class*="material-symbols"]),
+        button:not([data-testid="stIconMaterial"]):not([class*="material-symbols"]),
+        input:not([data-testid="stIconMaterial"]):not([class*="material-symbols"]) {
+            font-family: 'Times New Roman', Times, Baskerville, Georgia, serif !important;
+        }
+
+        /* RESTORE NATIVE MATERIAL SYMBOLS LIGATURE ICON RENDERING */
+        [data-testid="stIconMaterial"],
+        span[data-testid="stIconMaterial"],
+        i[data-testid="stIconMaterial"],
+        .material-symbols-rounded,
+        .material-symbols-outlined,
+        [class*="material-symbols"] {
+            font-family: 'Material Symbols Rounded', 'Material Symbols Outlined' !important;
+            font-weight: normal !important;
+            font-style: normal !important;
+            font-size: 20px !important;
+            line-height: 1 !important;
+            letter-spacing: normal !important;
+            text-transform: none !important;
+            display: inline-block !important;
+            white-space: nowrap !important;
+            word-wrap: normal !important;
+            direction: ltr !important;
+            -webkit-font-feature-settings: 'liga' !important;
+            -webkit-font-smoothing: antialiased !important;
+            vertical-align: middle !important;
         }
 
         html, body, .stApp {
@@ -268,7 +300,6 @@ def get_app_css() -> str:
             padding: 10px 22px !important;
             font-size: 15px !important;
             font-weight: 600 !important;
-            font-family: 'Times New Roman', Times, Georgia, serif !important;
             letter-spacing: 0.01em !important;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
             transition: all 0.2s ease !important;
@@ -286,7 +317,35 @@ def get_app_css() -> str:
         .stDownloadButton > button * {
             color: #111111 !important;
             font-weight: 600 !important;
-            font-family: 'Times New Roman', Times, Georgia, serif !important;
+        }
+
+        /* TOP NAV HOME RELOAD BUTTON */
+        [data-testid="stElementContainer"]:has(button[key="top_home_btn"]) button,
+        button[key="top_home_btn"] {
+            background: #181818 !important;
+            background-color: #181818 !important;
+            color: #f2f2f2 !important;
+            border: 1px solid rgba(255, 255, 255, 0.16) !important;
+            border-radius: 20px !important;
+            padding: 6px 18px !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+            box-shadow: none !important;
+        }
+
+        [data-testid="stElementContainer"]:has(button[key="top_home_btn"]) button:hover,
+        button[key="top_home_btn"]:hover {
+            background: #242424 !important;
+            background-color: #242424 !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+            transform: none !important;
+        }
+
+        [data-testid="stElementContainer"]:has(button[key="top_home_btn"]) button * {
+            color: #f2f2f2 !important;
+            font-weight: 500 !important;
         }
 
         /* SEGMENTED MODE SELECTOR */
@@ -301,7 +360,6 @@ def get_app_css() -> str:
             width: 100% !important;
         }
 
-        /* Obliterate native/BaseWeb radio circles, dots, marks */
         div[data-testid="stRadio"] [data-baseweb="radio"] > *:first-child,
         div[data-testid="stRadio"] [data-baseweb="radio"] input[type="radio"],
         div[data-testid="stRadio"] [data-baseweb="radio"] input[type="radio"] + div,
@@ -353,7 +411,6 @@ def get_app_css() -> str:
 
         div[data-testid="stRadio"] div[role="radiogroup"] > label *,
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] * {
-            font-family: 'Times New Roman', Times, Georgia, serif !important;
             font-size: 15px !important;
             font-weight: 500 !important;
             color: #b8b8b8 !important;
@@ -384,55 +441,147 @@ def get_app_css() -> str:
             font-weight: 700 !important;
         }
 
-        /* Dropzone */
+        /* DROPZONE & UPLOAD BUTTON (NO COLLIDING TEXT) */
         [data-testid="stFileUploaderDropzone"] {
             background: var(--cedric-card) !important;
-            border: 1px dashed var(--cedric-border-light) !important;
+            border: 1px dashed rgba(255, 255, 255, 0.18) !important;
             border-radius: 14px !important;
             padding: 24px 20px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
 
         [data-testid="stFileUploaderDropzone"] button {
             background: #ffffff !important;
             color: #111111 !important;
+            border: none !important;
             border-radius: 8px !important;
-            padding: 8px 18px !important;
+            padding: 9px 20px !important;
             font-size: 14px !important;
             font-weight: 600 !important;
-            font-family: 'Times New Roman', Times, Georgia, serif !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            cursor: pointer !important;
+            white-space: nowrap !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
         }
 
-        /* PITCH-BLACK POPUP MENUS & DROPDOWNS (SELECTBOX POPOVER FIX) */
-        div[data-baseweb="popover"],
-        div[data-baseweb="popover"] > div,
-        div[data-baseweb="popover"] ul,
-        ul[role="listbox"],
-        ul[data-baseweb="menu"] {
+        [data-testid="stFileUploaderDropzone"] button:hover {
+            background: #e8e8e8 !important;
+        }
+
+        [data-testid="stFileUploaderDropzone"] button [data-testid="stIconMaterial"] {
+            font-family: 'Material Symbols Rounded', 'Material Symbols Outlined' !important;
+            color: #111111 !important;
+            margin-right: 4px !important;
+        }
+
+        [data-testid="stFileUploaderDropzoneInstructions"] {
+            color: #a0a0a0 !important;
+            margin-top: 8px !important;
+            font-size: 13px !important;
+        }
+
+        [data-testid="stFileUploaderDropzoneInstructions"] * {
+            color: #a0a0a0 !important;
+        }
+
+        /* PITCH-BLACK LIVE AUDIO RECORDING BAR (SCREENSHOT 2 FIX) */
+        div[data-testid="stAudioInput"],
+        div[data-testid="stAudioInput"] > div,
+        div[data-testid="stAudioInput"] section,
+        div[data-testid="stAudioInput"] [data-baseweb="card"],
+        div[data-testid="stAudioInput"] [data-baseweb="block"] {
             background: #141414 !important;
             background-color: #141414 !important;
             border: 1px solid rgba(255, 255, 255, 0.16) !important;
             border-radius: 12px !important;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9) !important;
+            color: #f2f2f2 !important;
+            box-shadow: none !important;
+            padding: 10px 16px !important;
+        }
+
+        div[data-testid="stAudioInput"] * {
+            background-color: transparent !important;
             color: #f2f2f2 !important;
         }
 
-        li[role="option"],
-        li[data-baseweb="menu-item"],
-        div[data-baseweb="popover"] li {
+        div[data-testid="stAudioInput"] button {
+            background: #ff4d00 !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 50% !important;
+            box-shadow: 0 2px 8px rgba(255, 77, 0, 0.4) !important;
+        }
+
+        div[data-testid="stAudioInput"] button [data-testid="stIconMaterial"] {
+            font-family: 'Material Symbols Rounded', 'Material Symbols Outlined' !important;
+            color: #ffffff !important;
+        }
+
+        div[data-testid="stAudioInput"] canvas {
+            filter: invert(1) hue-rotate(180deg) brightness(1.2) !important;
+        }
+
+        /* PITCH-BLACK POPUP MENUS & DROPDOWNS (SCREENSHOT 3 FIX) */
+        body div[data-baseweb="popover"],
+        body div[data-baseweb="popover"] > div,
+        body div[data-baseweb="popover"] div,
+        body div[data-baseweb="popover"] ul,
+        body ul[role="listbox"],
+        body ul[data-baseweb="menu"],
+        div[data-baseweb="popover"],
+        div[data-baseweb="popover"] > div,
+        div[data-baseweb="popover"] ul,
+        div[data-baseweb="popover"] ul[role="listbox"] {
+            background: #141414 !important;
+            background-color: #141414 !important;
+            border-color: rgba(255, 255, 255, 0.16) !important;
+            color: #f2f2f2 !important;
+        }
+
+        body div[data-baseweb="popover"] > div,
+        div[data-baseweb="popover"] > div {
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.95) !important;
+            overflow: hidden !important;
+        }
+
+        body div[data-baseweb="popover"] ul[role="listbox"],
+        ul[role="listbox"] {
+            background: #141414 !important;
+            background-color: #141414 !important;
+            padding: 6px !important;
+        }
+
+        body div[data-baseweb="popover"] li,
+        body li[role="option"],
+        body li[data-baseweb="menu-item"],
+        div[data-baseweb="popover"] li,
+        div[data-baseweb="popover"] [role="option"] {
             background: #141414 !important;
             background-color: #141414 !important;
             color: #d1d5db !important;
             font-family: 'Times New Roman', Times, Georgia, serif !important;
             font-size: 14.5px !important;
             padding: 10px 16px !important;
+            cursor: pointer !important;
             border-radius: 6px !important;
+            margin: 2px 0 !important;
             transition: background 0.15s ease, color 0.15s ease !important;
         }
 
-        li[role="option"]:hover,
-        li[role="option"][aria-selected="true"],
-        li[data-baseweb="menu-item"]:hover,
-        li[data-baseweb="menu-item"][aria-selected="true"],
+        body div[data-baseweb="popover"] li:hover,
+        body div[data-baseweb="popover"] li[aria-selected="true"],
+        body li[role="option"]:hover,
+        body li[role="option"][aria-selected="true"],
+        body li[data-baseweb="menu-item"]:hover,
+        body li[data-baseweb="menu-item"][aria-selected="true"],
         div[data-baseweb="popover"] li:hover,
         div[data-baseweb="popover"] li[aria-selected="true"] {
             background: #242424 !important;
@@ -440,8 +589,11 @@ def get_app_css() -> str:
             color: #ffffff !important;
         }
 
-        li[role="option"] *,
-        li[data-baseweb="menu-item"] * {
+        body div[data-baseweb="popover"] li *,
+        body li[role="option"] *,
+        body li[data-baseweb="menu-item"] * {
+            background: transparent !important;
+            background-color: transparent !important;
             color: inherit !important;
             font-family: 'Times New Roman', Times, Georgia, serif !important;
         }
@@ -558,22 +710,24 @@ def get_app_css() -> str:
             animation: fadeInStation 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
         }
 
-        /* PLOTLY CHARTS COMPLETE VISIBILITY SHIELD */
+        /* PLOTLY CHARTS COMPLETE VISIBILITY & DARK THEME SHIELD */
         div[data-testid="stPlotlyChart"],
         div[data-testid="stPlotlyChart"] > div,
         div[data-testid="stPlotlyChart"] .js-plotly-plot,
         div[data-testid="stPlotlyChart"] .plot-container,
         div[data-testid="stPlotlyChart"] .svg-container {
-            background: transparent !important;
-            background-color: transparent !important;
+            background: #181818 !important;
+            background-color: #181818 !important;
+            border-radius: 12px !important;
         }
 
         div[data-testid="stPlotlyChart"] svg {
-            background-color: transparent !important;
+            background-color: #181818 !important;
         }
 
         div[data-testid="stPlotlyChart"] svg rect.bg,
         div[data-testid="stPlotlyChart"] svg rect.plotbg {
+            fill: #181818 !important;
             fill-opacity: 1 !important;
         }
 
@@ -974,21 +1128,19 @@ def plot_temporal_distress_curve(timeline_info: dict, is_dark: bool = True) -> g
 
 
 
-# --- STUDIO TOP NAVIGATION (INTERA Brand & Sleek Black Home Button) ---
-st.markdown("""
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0 26px 0; max-width: 860px; margin: 0 auto;">
-    <div style="display: flex; align-items: center; gap: 12px;">
+# --- STUDIO TOP NAVIGATION (INTERA Brand & Instant In-Place Reload Home Button) ---
+col_nav_brand, col_nav_btn = st.columns([4, 1.2])
+with col_nav_brand:
+    st.markdown("""
+    <div style="display: flex; align-items: center; gap: 12px; padding: 4px 0;">
         <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645bdf9d4bac53320316d064_CETI-Favicon.png" alt="INTERA" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255, 255, 255, 0.18);" />
-        <span style="font-size: 18px; font-weight: 600; color: #f2f2f2; letter-spacing: -0.01em; font-family: 'Times New Roman', Times, Georgia, serif;">INTERA</span>
+        <span style="font-size: 19px; font-weight: 600; color: #f2f2f2; letter-spacing: -0.01em; font-family: 'Times New Roman', Times, Georgia, serif;">INTERA</span>
     </div>
-    <div>
-        <a href="/" style="text-decoration: none; background: #181818; color: #f2f2f2; border: 1px solid rgba(255, 255, 255, 0.18); padding: 7px 20px; border-radius: 20px; font-size: 14.5px; font-weight: 600; font-family: 'Times New Roman', Times, Georgia, serif; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 7px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            Home
-        </a>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+with col_nav_btn:
+    if st.button("⌂ Home", key="top_home_btn", use_container_width=True):
+        st.session_state.clear()
+        st.rerun()
 
 # --- CÉDRIC STUDIO HERO (Exact SuisseWorks Serif Headline from Screenshot 1) ---
 st.markdown("""
