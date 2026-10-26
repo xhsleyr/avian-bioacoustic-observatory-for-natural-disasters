@@ -101,6 +101,23 @@ def render_apple_stat_card(
     """
 
 
+def generate_waveform_svg_bars(y: np.ndarray, num_bars: int = 42) -> str:
+    """Generate dynamic Apple Voice Memos style waveform bars from the actual audio signal."""
+    if len(y) == 0:
+        return ""
+    step = max(1, len(y) // num_bars)
+    bars_html = []
+    for i in range(num_bars):
+        chunk = y[i * step : (i + 1) * step]
+        if len(chunk) > 0:
+            amp = float(np.mean(np.abs(chunk)))
+        else:
+            amp = 0.05
+        height_px = max(4, min(34, int(amp * 115)))
+        bars_html.append(f'<span class="waveform-bar" style="height:{height_px}px;"></span>')
+    return "".join(bars_html)
+
+
 # Page configuration — full-width, clean layout without sidebar
 st.set_page_config(
     page_title="Project INTERA — Bioacoustic Intelligence",
@@ -652,6 +669,171 @@ st.markdown("""
         font-weight: 500;
         margin-top: 3px;
     }
+
+    /* ========================================================
+       Apple Voice Memos Audio Console & Waveform Scrubber
+       ======================================================== */
+    .apple-audio-console {
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(24px) saturate(190%);
+        -webkit-backdrop-filter: blur(24px) saturate(190%);
+        border-radius: 24px;
+        padding: 16px 24px;
+        box-shadow: 0 12px 32px rgba(30, 27, 75, 0.07), 0 2px 6px rgba(30, 27, 75, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .apple-audio-console:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 16px 36px rgba(30, 27, 75, 0.10);
+    }
+
+    .audio-console-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 220px;
+    }
+
+    .audio-play-badge {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #007AFF 0%, #0056D2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #FFFFFF;
+        box-shadow: 0 4px 14px rgba(0, 122, 255, 0.35);
+        flex-shrink: 0;
+    }
+
+    .audio-meta {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .audio-filename {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+        letter-spacing: -0.01em;
+    }
+
+    .audio-subtext {
+        font-size: 12px;
+        color: #64748B;
+        font-weight: 500;
+        margin-top: 2px;
+    }
+
+    .audio-console-center {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 200px;
+    }
+
+    .waveform-container {
+        display: flex;
+        align-items: center;
+        gap: 3.5px;
+        height: 38px;
+        width: 100%;
+        max-width: 440px;
+        justify-content: center;
+    }
+
+    .waveform-bar {
+        width: 3.5px;
+        background: #007AFF;
+        border-radius: 9999px;
+        opacity: 0.85;
+        transition: height 0.3s ease, opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .waveform-bar:hover {
+        opacity: 1;
+        background: #0056D2;
+        transform: scaleY(1.2);
+    }
+
+    .audio-console-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .live-equalizer {
+        display: flex;
+        align-items: flex-end;
+        gap: 2.5px;
+        height: 18px;
+    }
+
+    @keyframes eqWave {
+        0%, 100% { height: 4px; }
+        50% { height: 18px; }
+    }
+
+    .eq-bar {
+        width: 3px;
+        background: #34C759;
+        border-radius: 2px;
+        animation: eqWave 1.2s ease-in-out infinite alternate;
+    }
+    .eq-bar:nth-child(1) { animation-delay: 0.1s; height: 6px; }
+    .eq-bar:nth-child(2) { animation-delay: 0.3s; height: 14px; }
+    .eq-bar:nth-child(3) { animation-delay: 0.05s; height: 18px; }
+    .eq-bar:nth-child(4) { animation-delay: 0.4s; height: 10px; }
+    .eq-bar:nth-child(5) { animation-delay: 0.25s; height: 15px; }
+    .eq-bar:nth-child(6) { animation-delay: 0.15s; height: 8px; }
+
+    .audio-live-tag {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #34C759;
+        background: #EBF9F1;
+        padding: 5px 12px;
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    @keyframes pulseGlow {
+        0% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.5); }
+        70% { box-shadow: 0 0 0 7px rgba(52, 199, 89, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); }
+    }
+
+    .pulse-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: #34C759;
+        display: inline-block;
+        animation: pulseGlow 1.8s infinite;
+        vertical-align: middle;
+    }
+
+    audio {
+        width: 100% !important;
+        border-radius: 9999px !important;
+        height: 38px !important;
+        background: #FFFFFF !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+    }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -1123,7 +1305,41 @@ if audio_data is not None:
 
 if processed_payload is not None:
     y, sr, duration, features, results, species_info, spoof_info, timeline_info, consensus_info, forensic_report = processed_payload
-    st.markdown("<div style='height: 18px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
+    waveform_bars = generate_waveform_svg_bars(y, num_bars=42)
+    st.markdown(f"""
+    <div class="apple-audio-console">
+        <div class="audio-console-left">
+            <div class="audio-play-badge">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+            </div>
+            <div class="audio-meta">
+                <div class="audio-filename">{html.escape(audio_label)}</div>
+                <div class="audio-subtext">{duration:.2f}s &bull; {sr} Hz &bull; Pitch Centroid: {features['spectral_centroid']['mean']:.0f} Hz</div>
+            </div>
+        </div>
+        <div class="audio-console-center">
+            <div class="waveform-container">
+                {waveform_bars}
+            </div>
+        </div>
+        <div class="audio-console-right">
+            <div class="live-equalizer">
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+            </div>
+            <span class="audio-live-tag">
+                <span class="pulse-dot"></span> LIVE TELEMETRY
+            </span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     st.audio(audio_data)
 
     # --- APPLE MULTI-SPECIES SENTINEL CONSENSUS BANNER ---
@@ -1202,7 +1418,7 @@ if processed_payload is not None:
                         </span>
                     </div>
                     <span style="background: #EBF9F1; color: #34C759; font-size: 12.5px; font-weight: 700; padding: 4px 12px; border-radius: 9999px;">
-                        &bull;&bull;&bull; Verified Authentic Syrinx
+                        <span class="pulse-dot" style="margin-right: 4px;"></span> Verified Authentic Syrinx
                     </span>
                 </div>
                 <div style="font-size: 14.5px; font-style: italic; color: #64748B; margin-top: 2px;">
