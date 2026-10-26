@@ -319,33 +319,72 @@ def get_app_css() -> str:
             font-weight: 600 !important;
         }
 
-        /* TOP NAV HOME RELOAD BUTTON */
+        /* TOP NAV HOME RELOAD BUTTON (PREVIOUS SLEEK PILL DESIGN) */
+        [data-testid="stElementContainer"]:has(button[key="top_home_btn"]) {
+            display: flex !important;
+            justify-content: flex-end !important;
+            align-items: center !important;
+            margin: 0 !important;
+        }
+
+        [data-testid="stElementContainer"]:has(button[key="top_home_btn"]) div.stButton {
+            display: inline-flex !important;
+            width: auto !important;
+        }
+
         [data-testid="stElementContainer"]:has(button[key="top_home_btn"]) button,
         button[key="top_home_btn"] {
             background: #181818 !important;
             background-color: #181818 !important;
             color: #f2f2f2 !important;
-            border: 1px solid rgba(255, 255, 255, 0.16) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            padding: 7px 20px !important;
             border-radius: 20px !important;
-            padding: 6px 18px !important;
-            font-size: 14px !important;
-            font-weight: 500 !important;
+            font-size: 14.5px !important;
+            font-weight: 600 !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
             transition: all 0.2s ease !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 7px !important;
             box-shadow: none !important;
+            width: auto !important;
+            min-height: auto !important;
+            height: auto !important;
+            cursor: pointer !important;
+            margin: 0 !important;
+        }
+
+        [data-testid="stElementContainer"]:has(button[key="top_home_btn"]) button::before {
+            content: "" !important;
+            display: inline-block !important;
+            width: 14px !important;
+            height: 14px !important;
+            margin-right: 2px !important;
+            background-color: #f2f2f2 !important;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E") no-repeat center / contain !important;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E") no-repeat center / contain !important;
         }
 
         [data-testid="stElementContainer"]:has(button[key="top_home_btn"]) button:hover,
         button[key="top_home_btn"]:hover {
             background: #242424 !important;
             background-color: #242424 !important;
-            border-color: rgba(255, 255, 255, 0.3) !important;
+            border-color: rgba(255, 255, 255, 0.35) !important;
             color: #ffffff !important;
             transform: none !important;
         }
 
+        [data-testid="stElementContainer"]:has(button[key="top_home_btn"]) button:hover::before {
+            background-color: #ffffff !important;
+        }
+
         [data-testid="stElementContainer"]:has(button[key="top_home_btn"]) button * {
             color: #f2f2f2 !important;
-            font-weight: 500 !important;
+            font-size: 14.5px !important;
+            font-weight: 600 !important;
+            font-family: 'Times New Roman', Times, Georgia, serif !important;
         }
 
         /* SEGMENTED MODE SELECTOR */
@@ -711,24 +750,23 @@ def get_app_css() -> str:
         }
 
         /* PLOTLY CHARTS COMPLETE VISIBILITY & DARK THEME SHIELD */
-        div[data-testid="stPlotlyChart"],
-        div[data-testid="stPlotlyChart"] > div,
-        div[data-testid="stPlotlyChart"] .js-plotly-plot,
-        div[data-testid="stPlotlyChart"] .plot-container,
-        div[data-testid="stPlotlyChart"] .svg-container {
+        div[data-testid="stPlotlyChart"] {
             background: #181818 !important;
             background-color: #181818 !important;
             border-radius: 12px !important;
+            overflow: visible !important;
+        }
+
+        div[data-testid="stPlotlyChart"] .plot-container,
+        div[data-testid="stPlotlyChart"] .svg-container,
+        div[data-testid="stPlotlyChart"] .js-plotly-plot {
+            background: transparent !important;
+            background-color: transparent !important;
         }
 
         div[data-testid="stPlotlyChart"] svg {
-            background-color: #181818 !important;
-        }
-
-        div[data-testid="stPlotlyChart"] svg rect.bg,
-        div[data-testid="stPlotlyChart"] svg rect.plotbg {
-            fill: #181818 !important;
-            fill-opacity: 1 !important;
+            background: transparent !important;
+            background-color: transparent !important;
         }
 
         /* Minimal Audio Console */
@@ -1138,7 +1176,7 @@ with col_nav_brand:
     </div>
     """, unsafe_allow_html=True)
 with col_nav_btn:
-    if st.button("⌂ Home", key="top_home_btn", use_container_width=True):
+    if st.button("Home", key="top_home_btn"):
         st.session_state.clear()
         st.rerun()
 
@@ -1483,7 +1521,7 @@ if processed_payload is not None:
 
     with col_gauge, st.container(border=True):
         gauge_fig = create_gauge_chart(results["adi"], results["threat_color"], is_dark=True)
-        st.plotly_chart(gauge_fig, use_container_width=True, theme=None)
+        st.plotly_chart(gauge_fig, width="stretch")
         st.markdown(f"""
         <div style="text-align: center; margin-top: -6px; padding-bottom: 8px;">
             <div style="font-size: 14px; font-weight: 600; color: {adi_tier_color}; letter-spacing: 0.01em;">
@@ -1626,7 +1664,7 @@ if processed_payload is not None:
                 is_dark=True
             ), unsafe_allow_html=True)
 
-        st.plotly_chart(plot_temporal_distress_curve(timeline_info, is_dark=True), use_container_width=True, theme=None)
+        st.plotly_chart(plot_temporal_distress_curve(timeline_info, is_dark=True), width="stretch")
 
         trend_name = timeline_info.get("trend_label", "Stationary Chorus")
         st.markdown(f"""
@@ -1659,7 +1697,7 @@ if processed_payload is not None:
         </div>
         """, unsafe_allow_html=True)
 
-        st.plotly_chart(plot_mel_spectrogram(features, is_dark=True), use_container_width=True, theme=None)
+        st.plotly_chart(plot_mel_spectrogram(features, is_dark=True), width="stretch")
 
         col_b1, col_b2, col_b3 = st.columns(3)
         with col_b1:
@@ -1702,7 +1740,7 @@ if processed_payload is not None:
         </div>
         """, unsafe_allow_html=True)
 
-        st.plotly_chart(plot_waveform_and_dynamics(y, sr, features, is_dark=True), use_container_width=True, theme=None)
+        st.plotly_chart(plot_waveform_and_dynamics(y, sr, features, is_dark=True), width="stretch")
 
         col_w1, col_w2, col_w3 = st.columns(3)
         peak_amp = float(np.max(np.abs(y))) if len(y) > 0 else 0.0
