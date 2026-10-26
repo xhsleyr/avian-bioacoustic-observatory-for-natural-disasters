@@ -149,14 +149,16 @@ def identify_species(
                            any(k in sci_lower for k in ["canis", "felis", "homo"])
 
     # Biometric Peafowl vs Domestic Cat Meow Check:
-    # Cat meows share pitch glide with Peafowl, but peafowl syrinx has sub800 < 3.0% and centroid > 2000 Hz.
-    # Cat meow has sub800 > 30% and centroid < 1850 Hz.
+    # Cat meows share pitch glide with Peafowl, but authentic peafowl syrinx has sub800 < 5.0% and centroid > 1850 Hz.
+    # Cat meow has sub800 > 30% and centroid < 1500 Hz.
     is_cat_meow = False
-    if any(p in com_lower for p in ["peafowl", "pavo"]) and (sub800 > 0.045 or centroid_mean < 1850.0):
+    if any(p in com_lower for p in ["peafowl", "pavo"]) and (sub800 > 0.20 or centroid_mean < 1700.0):
         is_cat_meow = True
 
-    # General mammalian larynx check (>7.5% sub800 or >3.5% sub600)
-    is_mammal = (sub800 > 0.075 or sub600 > 0.035)
+    # General mammalian larynx check:
+    # Domestic dogs and cats have heavy laryngeal resonance (> 25% energy below 800 Hz).
+    # Normal wild birds with background air noise have < 8% sub800 energy.
+    is_mammal = (sub800 > 0.25) or (sub800 > 0.18 and primary["confidence"] < 35.0)
 
     is_valid_bird = (not is_explicit_non_bird) and (not is_cat_meow) and (not is_mammal) and (primary["confidence"] >= 25.0)
 
@@ -178,7 +180,7 @@ def identify_species(
         primary["common_name"] = "Domestic Mammal (Canine / Feline)"
         primary["scientific_name"] = "Mammalia (Domestic)"
         primary["disaster_sensitivity"] = (
-            f"Mammalian laryngeal resonance detected ({sub800*100:.1f}% sub-800 Hz energy vs < 3.0% avian baseline). "
+            f"Mammalian laryngeal resonance detected ({sub800*100:.1f}% sub-800 Hz energy vs < 8.0% avian baseline). "
             "Excluded from avian early-warning triggers."
         )
     elif primary["confidence"] < 25.0:

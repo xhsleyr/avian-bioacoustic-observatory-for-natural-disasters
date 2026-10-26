@@ -45,7 +45,7 @@ def evaluate_avian_authenticity(
     
     Multi-Layer Biometric Criteria:
     1. Explicit Non-Bird Neural Identification (Dog_Dog, Human, Siren, Noise)
-    2. Linear Sub-800 Hz & Sub-600 Hz Energy Dominance (Syrinx vs Larynx)
+    2. Linear Sub-800 Hz Energy Dominance (Syrinx vs Larynx)
     3. Indian Peafowl vs Feline Meow Acoustic Discrimination
     4. Neural Confidence Gating (Rejects Out-of-Distribution sounds < 25% confidence)
     5. Smartphone Loudspeaker Replay Frequency Ceiling & Compression
@@ -122,22 +122,22 @@ def evaluate_avian_authenticity(
     else:
         # --- LAYER 2: Special Peafowl / Feline Meow Discrimination ---
         # Domestic cat meows share a rising-falling contour with Indian Peafowl calls,
-        # but genuine peafowl honks have < 3% energy below 800 Hz and centroid > 2,000 Hz.
+        # but genuine peafowl honks have < 5% energy below 800 Hz and centroid > 1,850 Hz.
         # Cat meows have 30% - 60% energy below 800 Hz and centroid around 800 - 1,400 Hz.
         is_peafowl = ("peafowl" in common_name) or ("pavo" in scientific_name)
-        if is_peafowl and (sub800_ratio > 0.045 or centroid_mean < 1850.0):
+        if is_peafowl and (sub800_ratio > 0.20 or centroid_mean < 1700.0):
             spoof_score = 100.0
             detected_category = "feline_cat"
             spoof_factors.append(
                 f"Peafowl Bio-Verification Failed: Identified as a domestic cat meow. Audio exhibits "
-                f"{sub800_ratio*100:.1f}% energy below 800 Hz (authentic Indian Peafowl has < 3.0%) and "
-                f"a low spectral centroid ({centroid_mean:.0f} Hz vs > 2,000 Hz required for peafowl)."
+                f"{sub800_ratio*100:.1f}% energy below 800 Hz (authentic Indian Peafowl has < 5.0%) and "
+                f"a low spectral centroid ({centroid_mean:.0f} Hz vs > 1,850 Hz required for peafowl)."
             )
 
-        # --- LAYER 3: Strict Mammalian Larynx Sub-800 Hz & Sub-600 Hz Energy Dominance ---
-        # Avian syrinx physically cannot produce significant sub-800 Hz energy (baseline < 2.7%).
-        # Dogs, cats, and humans vocalize with a larynx and vocal folds, creating heavy sub-800 Hz energy.
-        elif sub800_ratio > 0.075 or sub600_ratio > 0.035:
+        # --- LAYER 3: Strict Mammalian Larynx Sub-800 Hz Energy Dominance ---
+        # Domestic dogs, cats, and humans vocalize with laryngeal vocal folds, creating heavy sub-800 Hz energy (> 25%).
+        # Wild birds recorded in real outdoor environments typically have < 8% sub-800 Hz energy.
+        elif sub800_ratio > 0.25 or (sub800_ratio > 0.18 and birdnet_conf < 35.0):
             spoof_score = 100.0
             if rolloff_95 < 10500 and centroid_mean < 3600 and birdnet_conf < 45.0:
                 detected_category = "phone_speaker_replay"
@@ -158,14 +158,14 @@ def evaluate_avian_authenticity(
             else:
                 detected_category = "mammalian_domestic"
                 spoof_factors.append(
-                    f"Mammalian Laryngeal Resonance: {sub800_ratio*100:.1f}% energy below 800 Hz (avian syrinx baseline < 3.0%)."
+                    f"Mammalian Laryngeal Resonance: {sub800_ratio*100:.1f}% energy below 800 Hz (avian baseline < 8.0%)."
                 )
-        elif sub1k_ratio > 0.18:
+        elif sub1k_ratio > 0.35 and birdnet_conf < 30.0:
             spoof_score += 65.0
             if detected_category == "authentic_avian":
                 detected_category = "mammalian_domestic"
             spoof_factors.append(
-                f"Elevated sub-1,000 Hz low-frequency energy detected ({sub1k_ratio*100:.1f}% vs < 6% avian baseline)."
+                f"Elevated sub-1,000 Hz low-frequency energy detected ({sub1k_ratio*100:.1f}% vs < 10% avian baseline)."
             )
 
         # --- LAYER 4: Neural Confidence Gate (Out-of-Distribution Sounds) ---
@@ -181,7 +181,7 @@ def evaluate_avian_authenticity(
             )
 
         # --- LAYER 5: Smartphone Loudspeaker Replay Transducer Artifacts ---
-        if rolloff_95 < 10500 and centroid_mean < 3600 and birdnet_conf < 45.0 and sub1k_ratio > 0.08:
+        if rolloff_95 < 10500 and centroid_mean < 3600 and birdnet_conf < 35.0 and sub1k_ratio > 0.18:
             spoof_score += 45.0
             if detected_category in ["authentic_avian", "mammalian_domestic"]:
                 detected_category = "phone_speaker_replay"
