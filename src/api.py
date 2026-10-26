@@ -40,43 +40,69 @@ app.add_middleware(
 CANOPY_STATIONS = [
     {
         "station_id": "OBS-01-SHENANDOAH",
-        "name": "Shenandoah Ridge Primary Array",
+        "name": "Shenandoah Ridge Primary Array (N. America)",
         "latitude": 38.5312,
         "longitude": -78.4321,
         "elevation_m": 850.0,
         "status": "ACTIVE",
         "channels": 2,
-        "p_wave_lead_time_min": 65
+        "p_wave_lead_time_min": 65,
+        "region": "Appalachian Infrasound Belt"
     },
     {
-        "station_id": "OBS-02-ALLEGHENY",
-        "name": "Allegheny High Canopy Node",
-        "latitude": 38.8921,
-        "longitude": -79.2145,
-        "elevation_m": 1120.0,
-        "status": "ACTIVE",
-        "channels": 1,
-        "p_wave_lead_time_min": 80
-    },
-    {
-        "station_id": "OBS-03-BLUERIDGE",
-        "name": "Blue Ridge Infrasound Array",
-        "latitude": 37.9542,
-        "longitude": -79.0512,
-        "elevation_m": 760.0,
+        "station_id": "OBS-02-VALPARAISO",
+        "name": "Valparaíso Andes Node (S. America)",
+        "latitude": -33.0472,
+        "longitude": -71.6127,
+        "elevation_m": 420.0,
         "status": "ACTIVE",
         "channels": 2,
-        "p_wave_lead_time_min": 50
+        "p_wave_lead_time_min": 75,
+        "region": "Andes Subduction Megathrust"
     },
     {
-        "station_id": "OBS-04-PIEDMONT",
-        "name": "Piedmont Foothills Sentinel",
-        "latitude": 38.0293,
-        "longitude": -78.4767,
-        "elevation_m": 240.0,
-        "status": "STANDBY",
+        "station_id": "OBS-03-SWISSALPS",
+        "name": "Swiss Alps Array (Europe)",
+        "latitude": 46.8182,
+        "longitude": 8.2275,
+        "elevation_m": 1850.0,
+        "status": "ACTIVE",
+        "channels": 2,
+        "p_wave_lead_time_min": 45,
+        "region": "Alpine Micro-Tremor Mesh"
+    },
+    {
+        "station_id": "OBS-04-WESTERNGHATS",
+        "name": "Western Ghats Biome (India)",
+        "latitude": 11.4102,
+        "longitude": 76.7032,
+        "elevation_m": 1420.0,
+        "status": "ACTIVE",
+        "channels": 2,
+        "p_wave_lead_time_min": 90,
+        "region": "Peafowl Seismic Corridor"
+    },
+    {
+        "station_id": "OBS-05-FUJITRENCH",
+        "name": "Fuji Trench Array (Japan)",
+        "latitude": 35.3606,
+        "longitude": 138.7274,
+        "elevation_m": 920.0,
+        "status": "ACTIVE",
+        "channels": 2,
+        "p_wave_lead_time_min": 55,
+        "region": "Pacific Ring of Fire"
+    },
+    {
+        "station_id": "OBS-06-SUNDA",
+        "name": "Sunda Strait Node (Indonesia)",
+        "latitude": -6.1021,
+        "longitude": 105.4230,
+        "elevation_m": 110.0,
+        "status": "ACTIVE",
         "channels": 1,
-        "p_wave_lead_time_min": 40
+        "p_wave_lead_time_min": 40,
+        "region": "Volcanic Infrasound Array"
     }
 ]
 

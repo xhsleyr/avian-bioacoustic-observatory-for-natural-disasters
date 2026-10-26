@@ -16,6 +16,7 @@ import html
 import importlib
 import logging
 import os
+from typing import Any
 
 import numpy as np
 import plotly.graph_objects as go
@@ -24,9 +25,11 @@ from plotly.subplots import make_subplots
 
 import src.audio_processor
 import src.distress_engine
+import src.species_classifier
 
 importlib.reload(src.audio_processor)
 importlib.reload(src.distress_engine)
+importlib.reload(src.species_classifier)
 
 from src.audio_processor import extract_acoustic_features, load_audio
 from src.distress_engine import (
@@ -39,7 +42,7 @@ from src.distress_engine import (
     generate_telemetry_json,
 )
 from src.image_fetcher import fetch_bird_visuals
-from src.species_classifier import identify_species
+from src.species_classifier import get_species_geo_habitat, identify_species
 from src.spoof_detector import evaluate_avian_authenticity
 
 logger = logging.getLogger(__name__)
@@ -1192,53 +1195,161 @@ def plot_temporal_distress_curve(timeline_info: dict, is_dark: bool = True) -> g
 
 
 
-def plot_network_array_map(adi_score: float, threat_level: str) -> go.Figure:
-    """Plot distributed planetary canopy observatory network array with real-time flock panic nodes."""
+def plot_network_array_map(
+    adi_score: float,
+    threat_level: str,
+    species_info: dict[str, Any] | None = None,
+    audio_label: str = "Uploaded Field Audio"
+) -> go.Figure:
+    """Plot distributed planetary canopy observatory network array tracking user uploaded audio and surrounding species sentinels."""
+    prim_sp = (species_info or {}).get("primary_species", {})
+    com_name = prim_sp.get("common_name", "Avian Specimen")
+    sci_name = prim_sp.get("scientific_name", "Aves")
+    top_candidates = (species_info or {}).get("top_candidates", [])
+
+    # Derive user upload station coordinates from detected species native biome
+    user_geo = prim_sp.get("geo_habitat") or get_species_geo_habitat(com_name, sci_name)
+    user_lat = float(user_geo.get("latitude", 38.5312))
+    user_lon = float(user_geo.get("longitude", -78.4321))
+    user_biome = user_geo.get("biome", "Native Avian Habitat")
+
+    # Primary user specimen station
+    clean_audio_label = html.escape(audio_label[:22])
     stations = [
-        {"name": "OBS-01 Shenandoah Ridge Array", "lat": 38.5312, "lon": -78.4321, "adi": adi_score, "status": threat_level},
-        {"name": "OBS-02 Allegheny Canopy Node", "lat": 38.8921, "lon": -79.2145, "adi": round(max(15.0, min(100.0, adi_score * 0.88 + 4.2)), 1), "status": "ELEVATED" if adi_score >= 50 else "NORMAL"},
-        {"name": "OBS-03 Blue Ridge Infrasound", "lat": 37.9542, "lon": -79.0512, "adi": round(max(15.0, min(100.0, adi_score * 0.94 - 2.1)), 1), "status": threat_level if adi_score >= 70 else "ELEVATED"},
-        {"name": "OBS-04 Piedmont Sentinel Node", "lat": 38.0293, "lon": -78.4767, "adi": round(max(10.0, min(65.0, adi_score * 0.45)), 1), "status": "NORMAL"}
+        {
+            "name": f"📍 USER INGESTION: {com_name}",
+            "biome": f"{user_biome} • {clean_audio_label}",
+            "lat": user_lat,
+            "lon": user_lon,
+            "adi": adi_score,
+            "status": threat_level,
+            "is_user": True,
+            "species": f"{com_name} ({sci_name})"
+        }
     ]
+
+    # Around every species: Map detected candidate species from the uploaded recording
+    for i, cand in enumerate(top_candidates[1:5], start=2):
+        c_com = cand.get("common_name", "Regional Sentinel")
+        c_sci = cand.get("scientific_name", "Aves")
+        c_conf = cand.get("confidence", 20.0)
+        c_geo = cand.get("geo_habitat") or get_species_geo_habitat(c_com, c_sci)
+        c_lat = float(c_geo.get("latitude", user_lat + (i * 3.5 - 7.0)))
+        c_lon = float(c_geo.get("longitude", user_lon + (i * 5.2 - 10.0)))
+        if abs(c_lat - user_lat) < 1.2 and abs(c_lon - user_lon) < 1.2:
+            c_lat += (i * 2.0)
+            c_lon += (i * 2.8)
+        cand_adi = round(max(12.0, min(100.0, adi_score * (0.84 + 0.04 * (i % 3)) + (5.0 - i))), 1)
+        cand_status = threat_level if cand_adi >= 70.0 else ("ELEVATED" if cand_adi >= 50.0 else "NORMAL")
+        stations.append({
+            "name": f"OBS-{i:02d} {c_com}",
+            "biome": f"{c_geo.get('biome', 'Regional Biome')} ({c_conf:.0f}% Match)",
+            "lat": c_lat,
+            "lon": c_lon,
+            "adi": cand_adi,
+            "status": cand_status,
+            "is_user": False,
+            "species": f"{c_com} ({c_sci})"
+        })
+
+    # Supplementary global seismic fault anchors to guarantee 360-degree planetary coverage
+    global_fault_nodes = [
+        {"name": "OBS-GL1 Valparaíso", "biome": "S. America (Andes Megathrust)", "lat": -33.0472, "lon": -71.6127, "species": "Andean Sentinel Mesh"},
+        {"name": "OBS-GL2 Swiss Alps", "biome": "Europe (Alpine Fault Mesh)", "lat": 46.8182, "lon": 8.2275, "species": "Palearctic Alpine Network"},
+        {"name": "OBS-GL3 Western Ghats", "biome": "India (Peafowl Seismic Corridor)", "lat": 11.4102, "lon": 76.7032, "species": "Pavo cristatus Bio-Array"},
+        {"name": "OBS-GL4 Fuji Trench", "biome": "Japan (Pacific Ring of Fire)", "lat": 35.3606, "lon": 138.7274, "species": "Honshu Seismic Array"},
+        {"name": "OBS-GL5 Sunda Strait", "biome": "Indonesia (Volcanic Infrasound)", "lat": -6.1021, "lon": 105.4230, "species": "Sundaic Coastal Sensor"}
+    ]
+    for gl in global_fault_nodes:
+        if len(stations) >= 6:
+            break
+        if not any(abs(s["lat"] - gl["lat"]) < 8.0 and abs(s["lon"] - gl["lon"]) < 8.0 for s in stations):
+            gl_adi = round(max(10.0, min(95.0, adi_score * 0.88 + (len(stations) * 1.2))), 1)
+            gl_status = threat_level if gl_adi >= 70.0 else ("ELEVATED" if gl_adi >= 55.0 else "NORMAL")
+            stations.append({
+                "name": gl["name"],
+                "biome": gl["biome"],
+                "lat": gl["lat"],
+                "lon": gl["lon"],
+                "adi": gl_adi,
+                "status": gl_status,
+                "is_user": False,
+                "species": gl["species"]
+            })
 
     fig = go.Figure()
 
+    # Draw planetary seismic wavefront telemetry rays from user upload node to surrounding species sentinels
+    center_st = stations[0]
+    for s in stations[1:]:
+        ray_color = (
+            "rgba(255, 77, 0, 0.45)"
+            if adi_score >= 70
+            else ("rgba(120, 224, 255, 0.35)" if adi_score >= 45 else "rgba(52, 211, 153, 0.22)")
+        )
+        fig.add_trace(go.Scattergeo(
+            lon=[center_st["lon"], s["lon"]],
+            lat=[center_st["lat"], s["lat"]],
+            mode="lines",
+            line={"width": 1.2, "color": ray_color, "dash": "dot"},
+            hoverinfo="none",
+            showlegend=False
+        ))
+
+    # Add station markers
     for s in stations:
-        color = "#ff4d00" if s["status"] == "CRITICAL" else ("#78e0ff" if s["status"] == "ELEVATED" else "#34d399")
+        is_u = s.get("is_user", False)
+        if is_u:
+            color = "#ff4d00" if s["status"] == "CRITICAL" else "#78e0ff"
+            marker_size = 16
+            line_width = 2.8
+            line_color = "#ffffff"
+        else:
+            color = "#ff4d00" if s["status"] == "CRITICAL" else ("#78e0ff" if s["status"] == "ELEVATED" else "#34d399")
+            marker_size = 11
+            line_width = 1.5
+            line_color = "#ffffff"
+
         fig.add_trace(go.Scattergeo(
             lon=[s["lon"]],
             lat=[s["lat"]],
-            text=f"<b>{s['name']}</b><br>ADI: {s['adi']}% • Status: {s['status']}",
+            text=f"<b>{s['name']}</b><br>Species: {s['species']}<br>Biome: {s['biome']}<br>ADI: {s['adi']}% • Status: {s['status']}",
             mode="markers+text",
             name=s["name"],
             textposition="top center",
-            textfont={"family": "'Times New Roman', Times, Georgia, serif", "size": 12, "color": "#f2f2f2"},
-            marker={"size": 13, "color": color, "line": {"width": 1.5, "color": "#ffffff"}}
+            textfont={
+                "family": "'Times New Roman', Times, Georgia, serif",
+                "size": 12 if is_u else 10.5,
+                "color": "#ff4d00" if (is_u and s["status"] == "CRITICAL") else ("#78e0ff" if is_u else "#f2f2f2")
+            },
+            marker={"size": marker_size, "color": color, "line": {"width": line_width, "color": line_color}}
         ))
 
     fig.update_layout(
         template="plotly_dark",
         title={
-            "text": "DISTRIBUTED CANOPY SENSOR ARRAY & P-WAVE DETECTION NETWORK",
-            "font": {"size": 14, "color": "#f2f2f2", "family": "'Times New Roman', Times, Georgia, serif"}
+            "text": f"PLANETARY BIOACOUSTIC MESH &bull; ACTIVE SPECIMEN: {com_name.upper()} ({sci_name.upper()})",
+            "font": {"size": 13, "color": "#f2f2f2", "family": "'Times New Roman', Times, Georgia, serif"}
         },
         geo={
-            "scope": "usa",
-            "projection_type": "albers usa",
+            "scope": "world",
+            "projection_type": "natural earth",
             "showland": True,
             "landcolor": "#181818",
-            "subunitcolor": "rgba(255, 255, 255, 0.1)",
-            "countrycolor": "rgba(255, 255, 255, 0.15)",
+            "showocean": True,
+            "oceancolor": "#0e0e0e",
+            "showcountries": True,
+            "countrycolor": "rgba(255, 255, 255, 0.12)",
+            "showcoastlines": True,
+            "coastlinecolor": "rgba(255, 255, 255, 0.20)",
             "showlakes": True,
-            "lakecolor": "#111111",
-            "bgcolor": "#181818",
-            "center": {"lat": 38.4, "lon": -78.8},
-            "fitbounds": "locations"
+            "lakecolor": "#0e0e0e",
+            "bgcolor": "#181818"
         },
         paper_bgcolor="#181818",
         plot_bgcolor="#181818",
-        height=380,
-        margin={"l": 20, "r": 20, "t": 50, "b": 20},
+        height=430,
+        margin={"l": 15, "r": 15, "t": 48, "b": 15},
         showlegend=False
     )
     return fig
@@ -2016,41 +2127,79 @@ if processed_payload is not None:
         </div>
         """, unsafe_allow_html=True)
 
-        st.plotly_chart(plot_network_array_map(results["adi"], results["threat_level"]), width="stretch")
+        prim_sp_tab = (species_info or {}).get("primary_species", {})
+        com_tab = prim_sp_tab.get("common_name", "Avian Specimen")
+        sci_tab = prim_sp_tab.get("scientific_name", "Aves")
+        geo_tab = prim_sp_tab.get("geo_habitat") or get_species_geo_habitat(com_tab, sci_tab)
+        top_cands_tab = (species_info or {}).get("top_candidates", [])
 
-        col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-        with col_m1:
-            st.markdown(f"""
-            <div style="background: #141414; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px; text-align: center;">
-                <div style="font-size: 11px; font-weight: 600; color: {'#ff4d00' if results['adi']>=70 else '#78e0ff'}; text-transform: uppercase;">OBS-01 Shenandoah</div>
-                <div style="font-size: 17px; font-weight: 600; color: #f2f2f2; margin-top: 2px;">{results['adi']:.1f}% ADI</div>
-                <div style="font-size: 12px; color: #878787;">Primary Array (850m)</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with col_m2:
-            st.markdown(f"""
-            <div style="background: #141414; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px; text-align: center;">
-                <div style="font-size: 11px; font-weight: 600; color: #78e0ff; text-transform: uppercase;">OBS-02 Allegheny</div>
-                <div style="font-size: 17px; font-weight: 600; color: #f2f2f2; margin-top: 2px;">{min(100.0, results['adi']*0.88 + 4.2):.1f}% ADI</div>
-                <div style="font-size: 12px; color: #878787;">High Canopy (1120m)</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with col_m3:
-            st.markdown(f"""
-            <div style="background: #141414; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px; text-align: center;">
-                <div style="font-size: 11px; font-weight: 600; color: {'#ff4d00' if results['adi']>=70 else '#78e0ff'}; text-transform: uppercase;">OBS-03 Blue Ridge</div>
-                <div style="font-size: 17px; font-weight: 600; color: #f2f2f2; margin-top: 2px;">{min(100.0, max(15.0, results['adi']*0.94 - 2.1)):.1f}% ADI</div>
-                <div style="font-size: 12px; color: #878787;">Infrasound Array (760m)</div>
-            </div>
-            """, unsafe_allow_html=True)
-        with col_m4:
-            st.markdown(f"""
-            <div style="background: #141414; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px; text-align: center;">
-                <div style="font-size: 11px; font-weight: 600; color: #34d399; text-transform: uppercase;">OBS-04 Piedmont</div>
-                <div style="font-size: 17px; font-weight: 600; color: #f2f2f2; margin-top: 2px;">{min(65.0, max(10.0, results['adi']*0.45)):.1f}% ADI</div>
-                <div style="font-size: 12px; color: #878787;">Foothills Sentinel (240m)</div>
-            </div>
-            """, unsafe_allow_html=True)
+        st.plotly_chart(
+            plot_network_array_map(
+                results["adi"],
+                results["threat_level"],
+                species_info=species_info,
+                audio_label=audio_label
+            ),
+            width="stretch"
+        )
+
+        display_stations = [
+            {
+                "tag": "📍 USER INGESTION",
+                "name": com_tab[:18],
+                "sub": f"{results['adi']:.1f}% ADI",
+                "desc": f"{geo_tab.get('biome', 'Field Node')[:16]} (Active)",
+                "color": "#ff4d00" if results["adi"] >= 70 else "#78e0ff",
+                "is_user": True
+            }
+        ]
+
+        for i, c in enumerate(top_cands_tab[1:5], start=2):
+            c_name = c.get("common_name", f"Sentinel {i}")
+            c_sci = c.get("scientific_name", "Aves")
+            c_geo = c.get("geo_habitat") or get_species_geo_habitat(c_name, c_sci)
+            c_adi = round(max(12.0, min(100.0, results["adi"] * (0.84 + 0.04 * (i % 3)) + (5.0 - i))), 1)
+            display_stations.append({
+                "tag": f"OBS-{i:02d} SENTINEL",
+                "name": c_name[:18],
+                "sub": f"{c_adi:.1f}% ADI",
+                "desc": f"{c.get('confidence', 20.0):.0f}% Match • {c_geo.get('biome', 'Canopy')[:14]}",
+                "color": "#ff4d00" if c_adi >= 70 else ("#78e0ff" if c_adi >= 50 else "#34d399"),
+                "is_user": False
+            })
+
+        fallback_anchors = [
+            {"tag": "OBS-GL1 ANDES", "name": "Valparaíso", "desc": "S. America (420m)", "factor": 0.91},
+            {"tag": "OBS-GL2 ALPS", "name": "Swiss Alps", "desc": "Europe (1850m)", "factor": 0.84},
+            {"tag": "OBS-GL3 GHATS", "name": "Western Ghats", "desc": "India (1420m)", "factor": 0.96},
+            {"tag": "OBS-GL4 JAPAN", "name": "Fuji Trench", "desc": "Japan (920m)", "factor": 0.98},
+            {"tag": "OBS-GL5 SUNDA", "name": "Sunda Strait", "desc": "Indonesia (110m)", "factor": 0.72}
+        ]
+        for fa in fallback_anchors:
+            if len(display_stations) >= 6:
+                break
+            fa_adi = round(max(10.0, min(100.0, results["adi"] * fa["factor"] + 2.0)), 1)
+            display_stations.append({
+                "tag": fa["tag"],
+                "name": fa["name"],
+                "sub": f"{fa_adi:.1f}% ADI",
+                "desc": fa["desc"],
+                "color": "#ff4d00" if fa_adi >= 70 else ("#78e0ff" if fa_adi >= 50 else "#34d399"),
+                "is_user": False
+            })
+
+        col_cards = st.columns(6)
+        for idx_c, card in enumerate(display_stations[:6]):
+            border_style = "2px solid #ff4d00" if (card["is_user"] and results["adi"] >= 70) else ("1.5px solid #78e0ff" if card["is_user"] else "1px solid rgba(255, 255, 255, 0.08)")
+            with col_cards[idx_c]:
+                st.markdown(f"""
+                <div style="background: #141414; border: {border_style}; border-radius: 8px; padding: 12px 8px; text-align: center;">
+                    <div style="font-size: 10px; font-weight: 600; color: {card['color']}; text-transform: uppercase; letter-spacing: 0.04em;">{card['tag']}</div>
+                    <div style="font-size: 14px; font-weight: 600; color: #f2f2f2; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{card['name']}">{card['name']}</div>
+                    <div style="font-size: 15px; font-weight: 600; color: {card['color']}; margin-top: 1px;">{card['sub']}</div>
+                    <div style="font-size: 11px; color: #878787; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{card['desc']}</div>
+                </div>
+                """, unsafe_allow_html=True)
 
     # ========================================================
     # TAB 6: DIAGNOSTIC TABLE (CÉDRIC STUDIO MINIMALIST TABLE)

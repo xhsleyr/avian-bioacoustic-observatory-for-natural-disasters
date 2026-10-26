@@ -13,7 +13,7 @@ def test_health():
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "OPERATIONAL"
-    assert data["active_canopy_nodes"] == 4
+    assert data["active_canopy_nodes"] == 6
 
 
 def test_get_stations():
@@ -21,7 +21,7 @@ def test_get_stations():
     response = client.get("/api/v1/stations")
     assert response.status_code == 200
     stations = response.json()
-    assert len(stations) >= 4
+    assert len(stations) >= 6
     assert stations[0]["station_id"] == "OBS-01-SHENANDOAH"
 
 
