@@ -136,103 +136,96 @@ st.session_state.setdefault("dark_mode_toggle", False)
 is_dark = bool(st.session_state["dark_mode_toggle"])
 
 def get_app_css(dark: bool) -> str:
-    """Generate dynamic CSS for Midnight Canopy (Dark) or Daylight Sky (Light) themes with Universal Times New Roman."""
+    """Generate Figma-grade human UI styles: Pure OLED Pitch Black vs Soft Non-Glaring Eye-Friendly Light Mode."""
     if dark:
+        # OLED True Pitch Black Mode
         bg_rules = """
-            background-color: #070913 !important;
+            background-color: #000000 !important;
             background-image:
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E"),
-                radial-gradient(ellipse 60% 50% at 85% 15%, rgba(14, 165, 233, 0.22) 0%, transparent 60%),
-                radial-gradient(ellipse 55% 65% at 30% 40%, rgba(99, 102, 241, 0.26) 0%, transparent 65%),
-                radial-gradient(ellipse 50% 50% at 90% 70%, rgba(168, 85, 247, 0.18) 0%, transparent 60%),
-                radial-gradient(ellipse 120% 70% at 50% 115%, #030712 0%, #030712 55%, transparent 65%),
-                linear-gradient(180deg, #070913 0%, #0b0f1d 40%, #030712 100%) !important;
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse 65% 55% at 85% 15%, rgba(14, 165, 233, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 65% at 25% 45%, rgba(99, 102, 241, 0.14) 0%, transparent 65%),
+                linear-gradient(180deg, #000000 0%, #04060B 50%, #000000 100%) !important;
         """
         vars_rules = """
-            --apple-bg: #070913;
-            --apple-card: rgba(18, 24, 38, 0.92);
-            --apple-card-border: rgba(255, 255, 255, 0.09);
-            --apple-text-primary: #F8FAFC;
+            --apple-bg: #000000;
+            --apple-card: #07090F;
+            --apple-card-border: rgba(255, 255, 255, 0.10);
+            --apple-text-primary: #FFFFFF;
             --apple-text-secondary: #94A3B8;
             --apple-text-muted: #64748B;
-            --apple-blue: #0A84FF;
-            --apple-blue-hover: #0070E0;
-            --apple-green: #30D158;
-            --apple-red: #FF453A;
-            --apple-amber: #FF9F0A;
-            --apple-indigo: #5E5CE6;
-            --apple-teal: #64D2FF;
-            --apple-border: rgba(255, 255, 255, 0.08);
-            --apple-shadow-soft: 0 16px 36px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
-            --apple-shadow-elevated: 0 20px 48px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4);
+            --apple-blue: #38BDF8;
+            --apple-blue-hover: #0EA5E9;
+            --apple-green: #34D399;
+            --apple-red: #F87171;
+            --apple-amber: #FBBF24;
+            --apple-indigo: #818CF8;
+            --apple-border: rgba(255, 255, 255, 0.10);
+            --apple-shadow-soft: 0 16px 36px rgba(0, 0, 0, 0.8), 0 2px 6px rgba(0, 0, 0, 0.6);
+            --apple-shadow-elevated: 0 24px 52px rgba(0, 0, 0, 0.9);
         """
-        text_color = "#F8FAFC"
+        text_color = "#FFFFFF"
         heading_color = "#FFFFFF"
         sub_color = "#CBD5E1"
         hero_eyebrow_color = "#38BDF8"
         hero_understand_color = "#FFFFFF"
-        hero_saying_color = "#67E8F9"
-        radio_bg = "#111827"
-        radio_active_bg = "#1E293B"
-        radio_active_color = "#38BDF8"
-        radio_text = "#94A3B8"
-        tab_bg = "#111827"
-        tab_active_bg = "#1E293B"
+        hero_saying_color = "#7DD3FC"
+        radio_bg = "#07090E"
+        radio_border = "rgba(255, 255, 255, 0.12)"
+        tab_bg = "#07090E"
+        tab_active_bg = "#111827"
         tab_active_color = "#38BDF8"
         tab_inactive_color = "#94A3B8"
-        dropzone_bg = "#0F172A"
-        dropzone_border = "#334155"
-        select_bg = "#1E293B"
-        select_border = "#334155"
-        select_text = "#F8FAFC"
+        dropzone_bg = "#05070C"
+        dropzone_border = "rgba(255, 255, 255, 0.14)"
+        select_bg = "#0C0F17"
+        select_border = "rgba(255, 255, 255, 0.14)"
+        select_text = "#FFFFFF"
     else:
+        # Soft, Non-Glaring Eye-Friendly Light Mode (Soothing Mist & Pearl Slate)
         bg_rules = """
-            background-color: #9bb8f5 !important;
+            background-color: #DDE5EF !important;
             background-image:
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.052'/%3E%3C/svg%3E"),
-                radial-gradient(ellipse 55% 45% at 86% 16%, rgba(186, 247, 240, 0.92) 0%, rgba(186, 247, 240, 0.45) 45%, transparent 72%),
-                radial-gradient(ellipse 52% 64% at 36% 44%, rgba(88, 56, 248, 0.78) 0%, rgba(109, 40, 217, 0.45) 38%, transparent 68%),
-                radial-gradient(ellipse 50% 50% at 94% 68%, rgba(216, 180, 254, 0.75) 0%, transparent 62%),
-                radial-gradient(ellipse 135% 65% at 48% 115%, #ffffff 0%, #ffffff 52%, transparent 54%),
-                linear-gradient(175deg, #9bb8f5 0%, #b4cef8 30%, #d5e4fd 60%, #edf3fe 100%) !important;
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse 55% 45% at 86% 16%, rgba(165, 215, 232, 0.42) 0%, transparent 65%),
+                radial-gradient(ellipse 52% 64% at 36% 44%, rgba(185, 175, 235, 0.38) 0%, transparent 68%),
+                radial-gradient(ellipse 135% 65% at 48% 115%, #E2E8F0 0%, #D8E1ED 52%, transparent 54%),
+                linear-gradient(175deg, #DDE5EF 0%, #E3EAF2 40%, #E9EFF6 100%) !important;
         """
         vars_rules = """
-            --apple-bg: #F5F7FA;
-            --apple-card: rgba(255, 255, 255, 0.94);
-            --apple-card-border: rgba(255, 255, 255, 0.9);
-            --apple-text-primary: #111827;
-            --apple-text-secondary: #8E8E93;
-            --apple-text-muted: #64748B;
-            --apple-blue: #007AFF;
-            --apple-blue-hover: #0066D6;
-            --apple-green: #34C759;
-            --apple-red: #FF3B30;
-            --apple-amber: #FF9500;
-            --apple-indigo: #5856D6;
-            --apple-teal: #30B0C7;
-            --apple-border: rgba(0, 0, 0, 0.05);
-            --apple-shadow-soft: 0 16px 36px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
-            --apple-shadow-elevated: 0 20px 48px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.03);
+            --apple-bg: #DDE5EF;
+            --apple-card: #EFF3F8;
+            --apple-card-border: #D1DAE6;
+            --apple-text-primary: #1E2533;
+            --apple-text-secondary: #57657A;
+            --apple-text-muted: #718096;
+            --apple-blue: #4F46E5;
+            --apple-blue-hover: #4338CA;
+            --apple-green: #10B981;
+            --apple-red: #EF4444;
+            --apple-amber: #F59E0B;
+            --apple-indigo: #6366F1;
+            --apple-border: #D1DAE6;
+            --apple-shadow-soft: 0 10px 26px rgba(28, 39, 60, 0.06), 0 2px 6px rgba(28, 39, 60, 0.03);
+            --apple-shadow-elevated: 0 16px 36px rgba(28, 39, 60, 0.09);
         """
-        text_color = "#1e1b4b"
-        heading_color = "#000000"
-        sub_color = "#1E293B"
-        hero_eyebrow_color = "#1e1b4b"
-        hero_understand_color = "#ffffff"
-        hero_saying_color = "#000000"
-        radio_bg = "#E8ECEF"
-        radio_active_bg = "#FFFFFF"
-        radio_active_color = "#007AFF"
-        radio_text = "#64748B"
-        tab_bg = "#E8ECEF"
-        tab_active_bg = "#FFFFFF"
-        tab_active_color = "#007AFF"
-        tab_inactive_color = "#64748B"
-        dropzone_bg = "#F8FAFD"
-        dropzone_border = "#D0D9E6"
-        select_bg = "#FFFFFF"
-        select_border = "#E2E8F0"
-        select_text = "#1E293B"
+        text_color = "#1E2533"
+        heading_color = "#111827"
+        sub_color = "#334155"
+        hero_eyebrow_color = "#4338CA"
+        hero_understand_color = "#1E2533"
+        hero_saying_color = "#3730A3"
+        radio_bg = "#E2E8F2"
+        radio_border = "#CAD5E4"
+        tab_bg = "#E2E8F2"
+        tab_active_bg = "#EFF3F8"
+        tab_active_color = "#4F46E5"
+        tab_inactive_color = "#57657A"
+        dropzone_bg = "#E9EEF5"
+        dropzone_border = "#C5D0DF"
+        select_bg = "#EFF3F8"
+        select_border = "#CAD5E4"
+        select_text = "#1E2533"
 
     return f"""
     <style>
@@ -268,7 +261,7 @@ def get_app_css(dark: bool) -> str:
             {bg_rules}
             background-attachment: fixed !important;
             background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
-            animation: cetiAuraMovement 24s ease-in-out infinite alternate !important;
+            animation: cetiAuraMovement 26s ease-in-out infinite alternate !important;
             color: {text_color} !important;
             min-height: 100vh !important;
             overflow-x: hidden !important;
@@ -290,11 +283,11 @@ def get_app_css(dark: bool) -> str:
             font-weight: 500 !important;
         }}
 
-        /* Hero Section Spacing & Overlap Prevention */
+        /* Hero Section Spacing & Generous Breathing Room */
         .intera-hero {{
             text-align: center;
-            margin-top: 10px;
-            margin-bottom: 34px;
+            margin-top: 14px;
+            margin-bottom: 36px;
             position: relative;
             padding: 10px 0 20px 0;
         }}
@@ -315,7 +308,7 @@ def get_app_css(dark: bool) -> str:
             line-height: 1.15 !important;
             color: {hero_understand_color} !important;
             letter-spacing: -0.02em !important;
-            text-shadow: 0 4px 28px rgba(30, 27, 75, 0.20), 0 1px 3px rgba(30, 27, 75, 0.14) !important;
+            text-shadow: 0 4px 28px rgba(30, 27, 75, 0.15) !important;
             display: block !important;
             margin-bottom: 6px !important;
             padding: 4px 10px !important;
@@ -365,7 +358,7 @@ def get_app_css(dark: bool) -> str:
             background: var(--apple-card) !important;
             backdrop-filter: blur(20px) saturate(180%) !important;
             -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-            border-radius: 28px !important;
+            border-radius: 26px !important;
             border: 1px solid var(--apple-card-border) !important;
             box-shadow: var(--apple-shadow-soft) !important;
             padding: 26px 28px !important;
@@ -374,7 +367,7 @@ def get_app_css(dark: bool) -> str:
 
         .apple-upload-card {{
             background: var(--apple-card) !important;
-            border-radius: 28px !important;
+            border-radius: 26px !important;
             padding: 28px 24px 20px 24px !important;
             box-shadow: var(--apple-shadow-soft) !important;
             border: 1px solid var(--apple-card-border) !important;
@@ -382,7 +375,9 @@ def get_app_css(dark: bool) -> str:
             margin-bottom: 20px !important;
         }}
 
-        /* Apple iOS Segmented Control (Radio Pill Selector) */
+        /* ========================================================
+           Figma-Grade Human-Designed Pill Option Selector (Screenshot 1)
+           ======================================================== */
         [data-testid="stElementContainer"]:has([data-testid="stRadio"]) {{
             display: flex !important;
             justify-content: center !important;
@@ -410,23 +405,37 @@ def get_app_css(dark: bool) -> str:
             flex-wrap: wrap !important;
             justify-content: center !important;
             align-items: center !important;
-            background: {radio_bg} !important;
-            padding: 6px 8px !important;
-            border-radius: 9999px !important;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05) !important;
-            border: 1px solid var(--apple-border) !important;
-            gap: 6px !important;
+            background: transparent !important;
+            padding: 4px !important;
+            border: none !important;
+            box-shadow: none !important;
+            gap: 12px !important;
             width: auto !important;
             max-width: 100% !important;
             margin: 0 auto !important;
         }}
 
+        /* Completely hide the browser/Streamlit radio circles */
+        div[data-testid="stRadio"] [data-baseweb="radio"] input[type="radio"],
+        div[data-testid="stRadio"] [data-baseweb="radio"] input[type="radio"] + div,
+        div[data-testid="stRadio"] [data-baseweb="radio"] > div:first-of-type,
+        div[data-testid="stRadio"] [data-baseweb="radio"] svg {{
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            opacity: 0 !important;
+        }}
+
+        /* Human Tactile Pill Buttons */
         div[data-testid="stRadio"] div[role="radiogroup"] > label,
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] {{
-            background: transparent !important;
-            border: none !important;
+            background: {radio_bg} !important;
+            border: 1.5px solid {radio_border} !important;
             border-radius: 9999px !important;
-            padding: 10px 22px !important;
+            padding: 12px 28px !important;
             cursor: pointer !important;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
             white-space: normal !important;
@@ -436,43 +445,88 @@ def get_app_css(dark: bool) -> str:
             align-items: center !important;
             justify-content: center !important;
             margin: 0 !important;
-            box-shadow: none !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
         }}
 
-        div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] > div:first-child {{
-            display: none !important;
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:hover,
+        div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:hover {{
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08) !important;
         }}
 
         div[data-testid="stRadio"] div[role="radiogroup"] > label *,
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"] * {{
             font-size: 15px !important;
             font-weight: 600 !important;
-            color: {radio_text} !important;
+            color: {text_color} !important;
             transition: color 0.2s ease !important;
         }}
 
-        div[data-testid="stRadio"] div[role="radiogroup"] > label:hover,
-        div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:hover {{
-            background: rgba(255, 255, 255, 0.12) !important;
-        }}
-
+        /* Active / Selected Figma Pill (Matching Screenshot 1) */
         div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked),
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:has(input:checked) {{
-            background: {radio_active_bg} !important;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A855F7 100%) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
             border-radius: 9999px !important;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12) !important;
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.38) !important;
+            transform: translateY(-1px) scale(1.02) !important;
         }}
 
         div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) *,
         div[data-testid="stRadio"] div[role="radiogroup"] [data-baseweb="radio"]:has(input:checked) * {{
-            color: {radio_active_color} !important;
+            color: #FFFFFF !important;
             font-weight: 700 !important;
+        }}
+
+        /* SVG Icons inside the three Pill Buttons */
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(1) [data-testid="stMarkdownContainer"] p::before {{
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 9px;
+            vertical-align: -3px;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366F1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 10v3'/%3E%3Cpath d='M6 6v11'/%3E%3Cpath d='M10 3v18'/%3E%3Cpath d='M14 8v7'/%3E%3Cpath d='M18 5v13'/%3E%3Cpath d='M22 10v3'/%3E%3C/svg%3E");
+        }}
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(1):has(input:checked) [data-testid="stMarkdownContainer"] p::before {{
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 10v3'/%3E%3Cpath d='M6 6v11'/%3E%3Cpath d='M10 3v18'/%3E%3Cpath d='M14 8v7'/%3E%3Cpath d='M18 5v13'/%3E%3Cpath d='M22 10v3'/%3E%3C/svg%3E");
+        }}
+
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(2) [data-testid="stMarkdownContainer"] p::before {{
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 9px;
+            vertical-align: -3px;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B5CF6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E");
+        }}
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(2):has(input:checked) [data-testid="stMarkdownContainer"] p::before {{
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E");
+        }}
+
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(3) [data-testid="stMarkdownContainer"] p::before {{
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin-right: 9px;
+            vertical-align: -3px;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A855F7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='22'/%3E%3C/svg%3E");
+        }}
+        div[data-testid="stRadio"] div[role="radiogroup"] > label:nth-of-type(3):has(input:checked) [data-testid="stMarkdownContainer"] p::before {{
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z'/%3E%3Cpath d='M19 10v2a7 7 0 0 1-14 0v-2'/%3E%3Cline x1='12' y1='19' x2='12' y2='22'/%3E%3C/svg%3E");
         }}
 
         /* Buttons & Action Pills */
         .stButton > button {{
-            background: var(--apple-blue) !important;
-            background-image: linear-gradient(180deg, #3894FF 0%, #007AFF 100%) !important;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%) !important;
             color: #FFFFFF !important;
             border: none !important;
             border-radius: 9999px !important;
@@ -480,40 +534,61 @@ def get_app_css(dark: bool) -> str:
             font-size: 15px !important;
             font-weight: 600 !important;
             letter-spacing: -0.01em !important;
-            box-shadow: 0 8px 22px rgba(0, 122, 255, 0.28) !important;
+            box-shadow: 0 8px 22px rgba(139, 92, 246, 0.28) !important;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
             cursor: pointer !important;
         }}
 
         .stButton > button:hover {{
-            background: var(--apple-blue-hover) !important;
-            box-shadow: 0 10px 28px rgba(0, 122, 255, 0.38) !important;
             transform: translateY(-1px) !important;
+            box-shadow: 0 10px 28px rgba(139, 92, 246, 0.38) !important;
         }}
 
         .stButton > button * {{
             color: #FFFFFF !important;
         }}
 
-        /* Dropzone */
+        /* Clean Streamlined File Uploader: Single Action, No Awkward Secondary Buttons */
         [data-testid="stFileUploaderDropzone"] {{
             background: {dropzone_bg} !important;
             border: 2px dashed {dropzone_border} !important;
             border-radius: 24px !important;
-            padding: 32px 24px !important;
+            padding: 28px 24px !important;
             text-align: center !important;
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }}
 
         [data-testid="stFileUploaderDropzone"] button {{
-            background: var(--apple-blue) !important;
-            background-image: linear-gradient(180deg, #3894FF 0%, #007AFF 100%) !important;
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%) !important;
             color: #FFFFFF !important;
             border-radius: 9999px !important;
-            padding: 10px 30px !important;
+            padding: 10px 28px !important;
             font-size: 14.5px !important;
             font-weight: 600 !important;
             border: none !important;
+            box-shadow: 0 4px 14px rgba(139, 92, 246, 0.28) !important;
+        }}
+
+        /* Keep remove/delete file button as minimal subtle icon button (eliminates dual button glitch) */
+        [data-testid="stFileUploader"] button[aria-label*="Delete"],
+        [data-testid="stFileUploader"] button[aria-label*="Remove"],
+        [data-testid="stFileUploaderFile"] button {{
+            background: transparent !important;
+            background-image: none !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 4px !important;
+            border-radius: 50% !important;
+            color: #8E8E93 !important;
+            width: 28px !important;
+            height: 28px !important;
+            min-width: 28px !important;
+        }}
+        [data-testid="stFileUploader"] button[aria-label*="Delete"]:hover,
+        [data-testid="stFileUploader"] button[aria-label*="Remove"]:hover,
+        [data-testid="stFileUploaderFile"] button:hover {{
+            background: rgba(239, 68, 68, 0.15) !important;
+            color: #EF4444 !important;
         }}
 
         /* Audio Input */
@@ -536,12 +611,12 @@ def get_app_css(dark: bool) -> str:
             color: {select_text} !important;
         }}
 
-        /* Segmented Tabs: Zero overlap, clean wrap */
+        /* Segmented Tabs */
         .stTabs [data-baseweb="tab-list"] {{
             background: {tab_bg} !important;
             padding: 6px 12px !important;
             border-radius: 9999px !important;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06) !important;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.04) !important;
             border: 1px solid var(--apple-border) !important;
             display: flex !important;
             justify-content: center !important;
@@ -569,7 +644,7 @@ def get_app_css(dark: bool) -> str:
             background: {tab_active_bg} !important;
             color: {tab_active_color} !important;
             font-weight: 700 !important;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.12) !important;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08) !important;
         }}
 
         .stTabs [data-baseweb="tab-highlight"],
@@ -624,7 +699,7 @@ def get_app_css(dark: bool) -> str:
             font-weight: 700;
         }}
 
-        /* Species Card Avatar (Matching Milou Pet Card in Reference Pic) */
+        /* Species Card Avatar */
         .apple-pet-card {{
             background: var(--apple-card);
             border-radius: 26px;
@@ -638,12 +713,12 @@ def get_app_css(dark: bool) -> str:
             flex-wrap: wrap;
         }}
         .apple-avatar {{
-            width: 92px;
-            height: 92px;
+            width: 88px;
+            height: 88px;
             border-radius: 50%;
             object-fit: cover;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-            border: 3px solid #FFFFFF;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+            border: 3px solid rgba(255, 255, 255, 0.8);
         }}
 
         /* Audio Console */
@@ -674,12 +749,12 @@ def get_app_css(dark: bool) -> str:
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #007AFF 0%, #0056D2 100%);
+            background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #FFFFFF;
-            box-shadow: 0 4px 14px rgba(0, 122, 255, 0.35);
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
             flex-shrink: 0;
         }}
 
@@ -730,7 +805,7 @@ def get_app_css(dark: bool) -> str:
 
         .waveform-bar:hover {{
             opacity: 1;
-            background: #0056D2;
+            background: #4F46E5;
             transform: scaleY(1.2);
         }}
 
@@ -754,7 +829,7 @@ def get_app_css(dark: bool) -> str:
 
         .eq-bar {{
             width: 3px;
-            background: #34C759;
+            background: #10B981;
             border-radius: 2px;
             animation: eqWave 1.2s ease-in-out infinite alternate;
         }}
@@ -770,8 +845,8 @@ def get_app_css(dark: bool) -> str:
             font-weight: 700;
             letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: #34C759;
-            background: rgba(52, 199, 89, 0.15);
+            color: #10B981;
+            background: rgba(16, 185, 129, 0.15);
             padding: 5px 12px;
             border-radius: 9999px;
             display: inline-flex;
@@ -780,16 +855,16 @@ def get_app_css(dark: bool) -> str:
         }}
 
         @keyframes pulseGlow {{
-            0% {{ box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.5); }}
-            70% {{ box-shadow: 0 0 0 7px rgba(52, 199, 89, 0); }}
-            100% {{ box-shadow: 0 0 0 0 rgba(52, 199, 89, 0); }}
+            0% {{ box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }}
+            70% {{ box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }}
+            100% {{ box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }}
         }}
 
         .pulse-dot {{
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background-color: #34C759;
+            background-color: #10B981;
             display: inline-block;
             animation: pulseGlow 1.8s infinite;
             vertical-align: middle;
@@ -874,8 +949,8 @@ def create_gauge_chart(adi_score: float, threat_color: str, is_dark: bool = Fals
         }
     ))
     fig.update_layout(
-        height=265,
-        margin={"l": 15, "r": 15, "t": 32, "b": 10},
+        margin={"l": 20, "r": 20, "t": 62, "b": 12},
+        height=295,
         paper_bgcolor='rgba(0,0,0,0)',
         font={"family": "Times New Roman, Times, serif", "color": text_color}
     )
@@ -994,7 +1069,7 @@ def plot_waveform_and_dynamics(y: np.ndarray, sr: int, features: dict, is_dark: 
 
     text_color = "#F8FAFC" if is_dark else "#111827"
     axis_color = "#94A3B8" if is_dark else "#475569"
-    plot_bg = "#0B0F1D" if is_dark else "#FFFFFF"
+    plot_bg = "#000000" if is_dark else "#EFF3F8"
     grid_col = "rgba(255, 255, 255, 0.08)" if is_dark else "#ECEFF4"
 
     fig = make_subplots(
@@ -1056,7 +1131,7 @@ def plot_temporal_distress_curve(timeline_info: dict, is_dark: bool = False) -> 
 
     text_color = "#F8FAFC" if is_dark else "#111827"
     axis_color = "#94A3B8" if is_dark else "#475569"
-    plot_bg = "#0B0F1D" if is_dark else "#FFFFFF"
+    plot_bg = "#000000" if is_dark else "#EFF3F8"
     grid_col = "rgba(255, 255, 255, 0.08)" if is_dark else "#ECEFF4"
 
     fig = go.Figure()
@@ -1140,7 +1215,7 @@ with col_mh_left:
     """, unsafe_allow_html=True)
 with col_mh_right:
     st.markdown("<div style='height: 6px;'></div>", unsafe_allow_html=True)
-    st.toggle("🌙 Midnight Canopy" if is_dark else "☀️ Daylight Sky", key="dark_mode_toggle")
+    st.toggle("OLED Pitch Black" if is_dark else "Soft Fog Mist", key="dark_mode_toggle")
 
 # --- HUMAN EDITORIAL HERO (PROJECT CETI ART DIRECTION) ---
 st.markdown("""
@@ -1329,7 +1404,7 @@ if processed_payload is not None:
     if consensus_type == "macro_ecological_panic":
         st.markdown(f"""
         <div style="background: #FFF5F5; border: 1.5px solid #FF3B30; border-radius: 20px; padding: 18px 24px; margin-bottom: 24px; box-shadow: 0 6px 20px rgba(255, 59, 48, 0.12); display: flex; align-items: center; gap: 14px;">
-            <div style="font-size: 24px;">🚨</div>
+            <div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
             <div>
                 <div style="font-size: 15px; font-weight: 800; color: #FF3B30; letter-spacing: -0.01em;">
                     {cons_status}
@@ -1343,7 +1418,7 @@ if processed_payload is not None:
     elif consensus_type == "localized_sentinel_alert":
         st.markdown(f"""
         <div style="background: #FFFBF0; border: 1.5px solid #FF9500; border-radius: 20px; padding: 18px 24px; margin-bottom: 24px; box-shadow: 0 6px 20px rgba(255, 149, 0, 0.12); display: flex; align-items: center; gap: 14px;">
-            <div style="font-size: 24px;">⚠️</div>
+            <div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF9500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></div>
             <div>
                 <div style="font-size: 15px; font-weight: 800; color: #FF9500; letter-spacing: -0.01em;">
                     {cons_status}
@@ -1357,7 +1432,7 @@ if processed_payload is not None:
     else:
         st.markdown(f"""
         <div style="background: #F0FDF4; border: 1.5px solid #34C759; border-radius: 20px; padding: 18px 24px; margin-bottom: 24px; box-shadow: 0 6px 20px rgba(52, 199, 89, 0.10); display: flex; align-items: center; gap: 14px;">
-            <div style="font-size: 22px;">🌿</div>
+            <div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg></div>
             <div>
                 <div style="font-size: 15px; font-weight: 800; color: #34C759; letter-spacing: -0.01em;">
                     {cons_status}
@@ -1474,7 +1549,7 @@ if processed_payload is not None:
             st.markdown(f"""
             <div style="text-align: center; margin-top: -6px; padding-bottom: 8px;">
                 <div style="font-size: 14.5px; font-weight: 800; color: {adi_tier_color}; letter-spacing: -0.01em;">
-                    ● {adi_tier_label}
+                    {adi_tier_label}
                 </div>
                 <div style="font-size: 13px; color: #8E8E93; margin-top: 4px; line-height: 1.5; font-weight: 500;">
                     {adi_tier_desc}
@@ -1683,8 +1758,8 @@ if processed_payload is not None:
             <div style="font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--apple-blue); font-weight: 700;">
                 Acoustic Amplitude & Dynamic Envelope
             </div>
-            <div style="font-size: 1.55rem; font-weight: 800; color: {text_prime_tab}; letter-spacing: -0.02em; margin-top: 2px;">
-                Synchronized Waveform & Spectral Centroid Dynamics
+            <div style="font-size: 1.45rem; font-weight: 800; color: {text_prime_tab}; letter-spacing: -0.015em; margin-top: 2px; word-break: break-word; overflow-wrap: break-word;">
+                Waveform Dynamics & Spectral Trajectory
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1841,7 +1916,7 @@ if processed_payload is not None:
         if spoof_info["is_authentic"]:
             st.markdown(f"""
             <div style="background: rgba(52, 199, 89, 0.12); border: 1.5px solid #34C759; border-radius: 20px; padding: 20px 24px; margin-top: 14px; display: flex; align-items: center; gap: 16px;">
-                <div style="font-size: 28px;">🛡️</div>
+                <div><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg></div>
                 <div>
                     <div style="font-size: 16px; font-weight: 800; color: #34C759; letter-spacing: -0.01em;">
                         AUTHENTIC DUAL SYRINX HARMONICS CONFIRMED
@@ -1856,7 +1931,7 @@ if processed_payload is not None:
             cat_label = html.escape(str(spoof_info.get('detected_category', 'Non-Avian Acoustic Interference')))
             st.markdown(f"""
             <div style="background: rgba(255, 59, 48, 0.12); border: 1.5px solid #FF3B30; border-radius: 20px; padding: 20px 24px; margin-top: 14px; display: flex; align-items: center; gap: 16px;">
-                <div style="font-size: 28px;">⚠️</div>
+                <div><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></div>
                 <div>
                     <div style="font-size: 16px; font-weight: 800; color: #FF3B30; letter-spacing: -0.01em;">
                         BIOMETRIC REJECTION: NON-AVIAN ACOUSTIC INTERFERENCE ({cat_label})
@@ -1943,9 +2018,10 @@ if processed_payload is not None:
         </div>
         """, unsafe_allow_html=True)
 
-        st.text_area("Forensic Telemetry Data Stream", forensic_report, height=340)
+        st.text_area("Forensic Telemetry Data Stream", forensic_report, height=320)
+        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
         st.download_button(
-            label="Download Bioacoustic Forensic Telemetry Report (.md)",
+            label="Download Bioacoustic Forensic Report (.md)",
             data=forensic_report,
             file_name=f"intera_bioacoustic_report_{audio_label.replace('.wav', '').replace('.mp3', '')}.md",
             mime="text/markdown"
