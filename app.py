@@ -27,6 +27,9 @@ from src.distress_engine import (
     compute_distress_timeline,
     evaluate_flock_consensus,
     generate_forensic_report,
+    generate_telemetry_csv,
+    generate_telemetry_geojson,
+    generate_telemetry_json,
 )
 from src.image_fetcher import fetch_bird_visuals
 from src.species_classifier import identify_species
@@ -733,6 +736,22 @@ def get_app_css() -> str:
             display: none !important;
         }
 
+        /* EMERGENCY CRITICAL THREAT GLOW PULSE */
+        @keyframes alertPulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 16px rgba(255, 77, 0, 0.25);
+                border-color: rgba(255, 77, 0, 0.45) !important;
+            }
+            50% {
+                box-shadow: 0 0 32px rgba(255, 77, 0, 0.55);
+                border-color: rgba(255, 77, 0, 0.95) !important;
+            }
+        }
+
+        .critical-threat-card {
+            animation: alertPulseGlow 2.4s infinite ease-in-out !important;
+        }
+
         /* SMOOTH SCROLLING & TELEMETRY STATIONS FADE-IN */
         @keyframes fadeInStation {
             from {
@@ -1166,6 +1185,58 @@ def plot_temporal_distress_curve(timeline_info: dict, is_dark: bool = True) -> g
 
 
 
+def plot_network_array_map(adi_score: float, threat_level: str) -> go.Figure:
+    """Plot distributed planetary canopy observatory network array with real-time flock panic nodes."""
+    stations = [
+        {"name": "OBS-01 Shenandoah Ridge Array", "lat": 38.5312, "lon": -78.4321, "adi": adi_score, "status": threat_level},
+        {"name": "OBS-02 Allegheny Canopy Node", "lat": 38.8921, "lon": -79.2145, "adi": round(max(15.0, min(100.0, adi_score * 0.88 + 4.2)), 1), "status": "ELEVATED" if adi_score >= 50 else "NORMAL"},
+        {"name": "OBS-03 Blue Ridge Infrasound", "lat": 37.9542, "lon": -79.0512, "adi": round(max(15.0, min(100.0, adi_score * 0.94 - 2.1)), 1), "status": threat_level if adi_score >= 70 else "ELEVATED"},
+        {"name": "OBS-04 Piedmont Sentinel Node", "lat": 38.0293, "lon": -78.4767, "adi": round(max(10.0, min(65.0, adi_score * 0.45)), 1), "status": "NORMAL"}
+    ]
+
+    fig = go.Figure()
+
+    for s in stations:
+        color = "#ff4d00" if s["status"] == "CRITICAL" else ("#78e0ff" if s["status"] == "ELEVATED" else "#34d399")
+        fig.add_trace(go.Scattergeo(
+            lon=[s["lon"]],
+            lat=[s["lat"]],
+            text=f"<b>{s['name']}</b><br>ADI: {s['adi']}% • Status: {s['status']}",
+            mode="markers+text",
+            name=s["name"],
+            textposition="top center",
+            textfont={"family": "'Times New Roman', Times, Georgia, serif", "size": 12, "color": "#f2f2f2"},
+            marker={"size": 13, "color": color, "line": {"width": 1.5, "color": "#ffffff"}}
+        ))
+
+    fig.update_layout(
+        template="plotly_dark",
+        title={
+            "text": "DISTRIBUTED CANOPY SENSOR ARRAY & P-WAVE DETECTION NETWORK",
+            "font": {"size": 14, "color": "#f2f2f2", "family": "'Times New Roman', Times, Georgia, serif"}
+        },
+        geo={
+            "scope": "usa",
+            "projection_type": "albers usa",
+            "showland": True,
+            "landcolor": "#181818",
+            "subunitcolor": "rgba(255, 255, 255, 0.1)",
+            "countrycolor": "rgba(255, 255, 255, 0.15)",
+            "showlakes": True,
+            "lakecolor": "#111111",
+            "bgcolor": "#181818",
+            "center": {"lat": 38.4, "lon": -78.8},
+            "fitbounds": "locations"
+        },
+        paper_bgcolor="#181818",
+        plot_bgcolor="#181818",
+        height=380,
+        margin={"l": 20, "r": 20, "t": 50, "b": 20},
+        showlegend=False
+    )
+    return fig
+
+
 # --- STUDIO TOP NAVIGATION (INTERA Brand & Instant In-Place Reload Home Button) ---
 col_nav_brand, col_nav_btn = st.columns([4, 1.2])
 with col_nav_brand:
@@ -1378,7 +1449,7 @@ if processed_payload is not None:
 
     if consensus_type == "macro_ecological_panic":
         st.markdown(f"""
-        <div style="background: #1a1a1a; border: 1px solid #ff4d00; border-radius: 12px; padding: 18px 22px; margin-bottom: 24px; display: flex; align-items: center; gap: 14px;">
+        <div class="critical-threat-card" style="background: #1a1a1a; border: 1px solid #ff4d00; border-radius: 12px; padding: 18px 22px; margin-bottom: 24px; display: flex; align-items: center; gap: 14px;">
             <div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff4d00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
             <div>
                 <div style="font-size: 14px; font-weight: 600; color: #ff4d00; letter-spacing: 0.02em; text-transform: uppercase;">
@@ -1590,12 +1661,13 @@ if processed_payload is not None:
     st.markdown('<div id="observatory-telemetry" class="section-heading" style="scroll-margin-top: 24px;">Observatory Telemetry Stations</div>', unsafe_allow_html=True)
     # --- CÉDRIC STUDIO SEGMENTED TABS: 7 TELEMETRY STATIONS ---
     st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
-    tab_timeline, tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_table, tab_report = st.tabs([
+    tab_timeline, tab_spec, tab_wave, tab_species, tab_anti_spoof, tab_network, tab_table, tab_report = st.tabs([
         "Threat Timeline & Escalation",
         "Mel Sonogram Spectrograph",
         "Waveform Dynamics",
         "Species Taxonomy",
         "Biometric Shield",
+        "Observatory Network Map",
         "Diagnostic Table",
         "Forensic Telemetry Report"
     ])
@@ -1920,6 +1992,60 @@ if processed_payload is not None:
             """, unsafe_allow_html=True)
 
     # ========================================================
+    # TAB: OBSERVATORY NETWORK MAP & SENSOR ARRAY
+    # ========================================================
+    with tab_network, st.container(border=True):
+        st.markdown(f"""
+        <div style="margin-bottom: 16px;">
+            <div style="font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: #78e0ff; font-weight: 600;">
+                Planetary Bioacoustic Surveillance Grid
+            </div>
+            <div style="font-size: 1.45rem; font-weight: 600; color: {text_prime_tab}; letter-spacing: -0.02em; margin-top: 2px;">
+                Observatory Network Array & Seismic Wavefronts
+            </div>
+            <div style="font-size: 14px; color: {text_sec_tab}; margin-top: 4px;">
+                Cross-station sensor mesh tracking regional avian flight bursts and infrasonic P-wave arrival vectors.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.plotly_chart(plot_network_array_map(results["adi"], results["threat_level"]), width="stretch")
+
+        col_m1, col_m2, col_m3, col_m4 = st.columns(4)
+        with col_m1:
+            st.markdown(f"""
+            <div style="background: #141414; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px; text-align: center;">
+                <div style="font-size: 11px; font-weight: 600; color: {'#ff4d00' if results['adi']>=70 else '#78e0ff'}; text-transform: uppercase;">OBS-01 Shenandoah</div>
+                <div style="font-size: 17px; font-weight: 600; color: #f2f2f2; margin-top: 2px;">{results['adi']:.1f}% ADI</div>
+                <div style="font-size: 12px; color: #878787;">Primary Array (850m)</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with col_m2:
+            st.markdown(f"""
+            <div style="background: #141414; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px; text-align: center;">
+                <div style="font-size: 11px; font-weight: 600; color: #78e0ff; text-transform: uppercase;">OBS-02 Allegheny</div>
+                <div style="font-size: 17px; font-weight: 600; color: #f2f2f2; margin-top: 2px;">{min(100.0, results['adi']*0.88 + 4.2):.1f}% ADI</div>
+                <div style="font-size: 12px; color: #878787;">High Canopy (1120m)</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with col_m3:
+            st.markdown(f"""
+            <div style="background: #141414; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px; text-align: center;">
+                <div style="font-size: 11px; font-weight: 600; color: {'#ff4d00' if results['adi']>=70 else '#78e0ff'}; text-transform: uppercase;">OBS-03 Blue Ridge</div>
+                <div style="font-size: 17px; font-weight: 600; color: #f2f2f2; margin-top: 2px;">{min(100.0, max(15.0, results['adi']*0.94 - 2.1)):.1f}% ADI</div>
+                <div style="font-size: 12px; color: #878787;">Infrasound Array (760m)</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with col_m4:
+            st.markdown(f"""
+            <div style="background: #141414; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px; text-align: center;">
+                <div style="font-size: 11px; font-weight: 600; color: #34d399; text-transform: uppercase;">OBS-04 Piedmont</div>
+                <div style="font-size: 17px; font-weight: 600; color: #f2f2f2; margin-top: 2px;">{min(65.0, max(10.0, results['adi']*0.45)):.1f}% ADI</div>
+                <div style="font-size: 12px; color: #878787;">Foothills Sentinel (240m)</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+    # ========================================================
     # TAB 6: DIAGNOSTIC TABLE (CÉDRIC STUDIO MINIMALIST TABLE)
     # ========================================================
     with tab_table, st.container(border=True):
@@ -1991,9 +2117,36 @@ if processed_payload is not None:
 
         st.text_area("Forensic Telemetry Data Stream", forensic_report, height=320)
         st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
-        st.download_button(
-            label="Download Bioacoustic Forensic Report (.md)",
-            data=forensic_report,
-            file_name=f"intera_bioacoustic_report_{audio_label.replace('.wav', '').replace('.mp3', '')}.md",
-            mime="text/markdown"
-        )
+        col_d1, col_d2, col_d3, col_d4 = st.columns(4)
+        with col_d1:
+            st.download_button(
+                label="📄 Report (.md)",
+                data=forensic_report,
+                file_name=f"intera_report_{audio_label.replace('.wav', '').replace('.mp3', '')}.md",
+                mime="text/markdown",
+                use_container_width=True
+            )
+        with col_d2:
+            st.download_button(
+                label="📊 Telemetry (.json)",
+                data=generate_telemetry_json(audio_label, duration, sr, features, species_info, spoof_info, results, timeline_info, consensus_info),
+                file_name=f"intera_telemetry_{audio_label.replace('.wav', '').replace('.mp3', '')}.json",
+                mime="application/json",
+                use_container_width=True
+            )
+        with col_d3:
+            st.download_button(
+                label="🗺️ GIS Grid (.geojson)",
+                data=generate_telemetry_geojson(audio_label, results, species_info, spoof_info, timeline_info),
+                file_name=f"intera_spatial_{audio_label.replace('.wav', '').replace('.mp3', '')}.geojson",
+                mime="application/geo+json",
+                use_container_width=True
+            )
+        with col_d4:
+            st.download_button(
+                label="📈 Matrix (.csv)",
+                data=generate_telemetry_csv(audio_label, duration, sr, features, species_info, spoof_info, results, timeline_info),
+                file_name=f"intera_matrix_{audio_label.replace('.wav', '').replace('.mp3', '')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )

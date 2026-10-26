@@ -33,6 +33,77 @@ def filter_environmental_noise(y: np.ndarray, sr: int, cutoff_hz: float = 90.0) 
     return filtered_arr
 
 
+def adaptive_spectral_denoise(
+    y: np.ndarray,
+    sr: int = TARGET_SR,
+    noise_reduce_factor: float = 0.65,
+    n_fft: int = 2048,
+    hop_length: int = 512
+) -> np.ndarray:
+    """Apply adaptive spectral noise gating to suppress stationary ambient environmental noise
+    (e.g., wind shear, light rain, leaf rustle) while preserving avian syringeal harmonics.
+    """
+    if len(y) < n_fft:
+        return y
+    stft = librosa.stft(y, n_fft=n_fft, hop_length=hop_length)
+    mag, phase = np.abs(stft), np.angle(stft)
+    
+    # Estimate noise floor using the quietest 15% energy frames
+    frame_energies = np.sum(mag, axis=0)
+    noise_threshold = float(np.percentile(frame_energies, 15))
+    noise_mask = frame_energies <= max(noise_threshold, 1e-6)
+    
+    if np.any(noise_mask):
+        noise_profile = np.mean(mag[:, noise_mask], axis=1, keepdims=True)
+    else:
+        noise_profile = np.min(mag, axis=1, keepdims=True)
+        
+    cleaned_mag = np.maximum(mag - (noise_reduce_factor * noise_profile), 0.15 * mag)
+    cleaned_stft = cleaned_mag * np.exp(1j * phase)
+    y_cleaned = librosa.istft(cleaned_stft, hop_length=hop_length, length=len(y))
+    return np.asarray(y_cleaned, dtype=y.dtype)
+
+
+def estimate_stereo_bearing(
+    stereo_audio: np.ndarray,
+    sr: int = TARGET_SR,
+    mic_distance_meters: float = 0.20
+) -> float | None:
+    """Calculate the spatial bearing angle (azimuth in degrees: -90° to +90°)
+    of an incoming acoustic wavefront using Generalized Cross-Correlation with Phase Transform (GCC-PHAT).
+    """
+    if stereo_audio.ndim != 2:
+        return None
+    if stereo_audio.shape[0] == 2:
+        ch1, ch2 = stereo_audio[0], stereo_audio[1]
+    elif stereo_audio.shape[1] == 2:
+        ch1, ch2 = stereo_audio[:, 0], stereo_audio[:, 1]
+    else:
+        return None
+        
+    n = len(ch1)
+    if n < 512:
+        return None
+        
+    x1 = np.fft.rfft(ch1, n=n)
+    x2 = np.fft.rfft(ch2, n=n)
+    cc = x1 * np.conj(x2)
+    denom = np.abs(cc)
+    denom[denom < 1e-12] = 1e-12
+    cc_norm = cc / denom
+    r = np.fft.irfft(cc_norm, n=n)
+    
+    max_delay = int(np.ceil((mic_distance_meters / 343.0) * sr))
+    r_window = np.concatenate((r[-max_delay:], r[:max_delay + 1]))
+    delay_idx = int(np.argmax(r_window)) - max_delay
+    
+    tau = delay_idx / float(sr)
+    sin_theta = (tau * 343.0) / max(mic_distance_meters, 1e-6)
+    sin_theta = float(np.clip(sin_theta, -1.0, 1.0))
+    azimuth_deg = float(np.degrees(np.arcsin(sin_theta)))
+    return round(azimuth_deg, 1)
+
+
 def load_audio(
     file_source: Any,
     target_sr: int = TARGET_SR,

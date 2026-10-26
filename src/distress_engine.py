@@ -513,3 +513,134 @@ def generate_forensic_report(
     lines.append("")
     lines.append("# ================= END OF FORENSIC TELEMETRY CERTIFICATE =================")
     return "\n".join(lines)
+
+
+def generate_telemetry_json(
+    sample_label: str,
+    duration: float,
+    sr: int,
+    features: dict[str, Any],
+    species_info: dict[str, Any],
+    spoof_info: dict[str, Any],
+    distress_info: dict[str, Any],
+    timeline_info: dict[str, Any],
+    consensus_info: dict[str, Any]
+) -> str:
+    """Generate a machine-readable JSON telemetry stream for seismological observatory APIs."""
+    import json
+    now_utc = datetime.datetime.now(datetime.UTC).isoformat()
+    prim = species_info.get("primary_species", {})
+    payload = {
+        "schema_version": "2.4.0",
+        "observatory_id": "INTERA-GLOBAL-01",
+        "timestamp_utc": now_utc,
+        "stream_id": sample_label,
+        "signal_metadata": {
+            "duration_sec": round(duration, 3),
+            "sampling_rate_hz": sr,
+            "call_rate_bursts_per_sec": round(features.get("call_rate", 0.0), 2),
+            "spectral_centroid_mean_hz": round(features.get("spectral_centroid", {}).get("mean", 0.0), 1),
+            "spectral_flatness_mean": round(features.get("spectral_flatness", {}).get("mean", 0.0), 5)
+        },
+        "biometric_shield": {
+            "syrinx_verified": spoof_info.get("is_authentic", True),
+            "spoof_score_pct": spoof_info.get("spoof_score", 0.0),
+            "suppress_civil_alarm": spoof_info.get("suppress_alarm", False),
+            "detected_category": spoof_info.get("detected_category", "")
+        },
+        "species_taxonomy": {
+            "common_name": prim.get("common_name", ""),
+            "scientific_name": prim.get("scientific_name", ""),
+            "match_confidence_pct": prim.get("confidence", 0.0),
+            "baseline_family": distress_info.get("baseline_profile", {}).get("family_label", "")
+        },
+        "early_warning_distress": {
+            "adi_score": distress_info.get("adi", 0.0),
+            "threat_level": distress_info.get("threat_level", "NORMAL"),
+            "escalation_velocity_pct_per_sec": timeline_info.get("escalation_rate", 0.0),
+            "pre_seismic_shockwave": timeline_info.get("shockwave_detected", False),
+            "peak_adi_pct": timeline_info.get("peak_adi", 0.0),
+            "peak_timestamp_sec": timeline_info.get("peak_time", 0.0),
+            "multi_species_consensus": consensus_info.get("status", "NOMINAL")
+        }
+    }
+    return json.dumps(payload, indent=2)
+
+
+def generate_telemetry_geojson(
+    sample_label: str,
+    distress_info: dict[str, Any],
+    species_info: dict[str, Any],
+    spoof_info: dict[str, Any],
+    timeline_info: dict[str, Any],
+    station_lat: float = 38.531,
+    station_lon: float = -78.432,
+    station_alt: float = 850.0
+) -> str:
+    """Generate an OGC-compliant GeoJSON spatial telemetry stream for GIS systems."""
+    import json
+    now_utc = datetime.datetime.now(datetime.UTC).isoformat()
+    prim = species_info.get("primary_species", {})
+    adi = distress_info.get("adi", 0.0)
+    
+    feature = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [station_lon, station_lat, station_alt]
+                },
+                "properties": {
+                    "station_id": "INTERA-CANOPY-NODE-01",
+                    "station_label": "Shenandoah Ridge Acoustic Array",
+                    "timestamp_utc": now_utc,
+                    "specimen_label": sample_label,
+                    "adi_distress_index": adi,
+                    "threat_level": distress_info.get("threat_level", "NORMAL"),
+                    "classified_species": prim.get("common_name", ""),
+                    "syrinx_verified": spoof_info.get("is_authentic", True),
+                    "escalation_rate": timeline_info.get("escalation_rate", 0.0),
+                    "shockwave_detected": timeline_info.get("shockwave_detected", False),
+                    "estimated_lead_time_min": 65 if adi >= 70.0 else (35 if adi >= 38.0 else 0)
+                }
+            }
+        ]
+    }
+    return json.dumps(feature, indent=2)
+
+
+def generate_telemetry_csv(
+    sample_label: str,
+    duration: float,
+    sr: int,
+    features: dict[str, Any],
+    species_info: dict[str, Any],
+    spoof_info: dict[str, Any],
+    distress_info: dict[str, Any],
+    timeline_info: dict[str, Any]
+) -> str:
+    """Generate standard tabular CSV telemetry data for scientific data pipelines."""
+    import csv
+    import io
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["parameter", "measured_value", "units", "interpretation"])
+    
+    prim = species_info.get("primary_species", {})
+    writer.writerow(["signal_id", sample_label, "string", "Specimen Acoustic Stream"])
+    writer.writerow(["duration", f"{duration:.2f}", "seconds", "Signal Length"])
+    writer.writerow(["sample_rate", str(sr), "Hz", "Sampling Frequency"])
+    writer.writerow(["primary_species", prim.get("common_name", ""), "taxonomy", prim.get("scientific_name", "")])
+    writer.writerow(["species_confidence", f"{prim.get('confidence', 0.0):.1f}", "percent", "BirdNET Classification Match"])
+    writer.writerow(["syrinx_verified", str(spoof_info.get("is_authentic", True)), "boolean", "Biometric Vocal Organ Authenticity"])
+    writer.writerow(["sub800hz_ratio", f"{spoof_info.get('sub800_ratio', 0.0)*100:.1f}", "percent", "Sub-800Hz Energy Ratio"])
+    writer.writerow(["adi_distress_index", f"{distress_info.get('adi', 0.0):.1f}", "percent", "Composite Acoustic Distress Index"])
+    writer.writerow(["threat_level", distress_info.get("threat_level", ""), "tier", "Disaster Threat Level"])
+    writer.writerow(["pitch_centroid_mean", f"{features.get('spectral_centroid', {}).get('mean', 0.0):.1f}", "Hz", "Center of Acoustic Mass"])
+    writer.writerow(["call_cadence_rate", f"{features.get('call_rate', 0.0):.2f}", "calls/sec", "Call Burst Density"])
+    writer.writerow(["escalation_velocity", f"{timeline_info.get('escalation_rate', 0.0):.1f}", "%/sec", "Threat Acceleration Velocity"])
+    writer.writerow(["infrasound_shockwave", str(timeline_info.get("shockwave_detected", False)), "boolean", "Pre-Seismic P-Wave Trigger"])
+    
+    return output.getvalue()
