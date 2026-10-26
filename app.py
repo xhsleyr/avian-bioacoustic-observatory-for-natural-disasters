@@ -138,31 +138,123 @@ st.markdown("""
         box-sizing: border-box !important;
     }
 
+    @keyframes cetiAuraMovement {
+        0% {
+            background-position:
+                0% 0%,
+                86% 16%,
+                36% 44%,
+                94% 68%,
+                48% 115%,
+                0% 0%;
+        }
+        50% {
+            background-position:
+                0% 0%,
+                92% 22%,
+                32% 48%,
+                88% 74%,
+                50% 112%,
+                0% 0%;
+        }
+        100% {
+            background-position:
+                0% 0%,
+                86% 16%,
+                36% 44%,
+                94% 68%,
+                48% 115%,
+                0% 0%;
+        }
+    }
+
     html, body, .stApp {
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif !important;
-        background-color: var(--apple-bg) !important;
-        background-image: 
-            radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.95) 0px, transparent 55%),
-            radial-gradient(at 100% 0%, rgba(228, 237, 250, 0.55) 0px, transparent 50%),
-            radial-gradient(at 50% 100%, rgba(240, 244, 252, 0.75) 0px, transparent 50%) !important;
-        color: var(--apple-text-primary) !important;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif !important;
+        background-color: #9bb8f5 !important;
+        background-image:
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.052'/%3E%3C/svg%3E"),
+            radial-gradient(ellipse 55% 45% at 86% 16%, rgba(186, 247, 240, 0.92) 0%, rgba(186, 247, 240, 0.45) 45%, transparent 72%),
+            radial-gradient(ellipse 52% 64% at 36% 44%, rgba(88, 56, 248, 0.78) 0%, rgba(109, 40, 217, 0.45) 38%, transparent 68%),
+            radial-gradient(ellipse 50% 50% at 94% 68%, rgba(216, 180, 254, 0.75) 0%, transparent 62%),
+            radial-gradient(ellipse 135% 65% at 48% 115%, #ffffff 0%, #ffffff 52%, transparent 54%),
+            linear-gradient(175deg, #9bb8f5 0%, #b4cef8 30%, #d5e4fd 60%, #edf3fe 100%) !important;
+        background-attachment: fixed !important;
+        background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
+        animation: cetiAuraMovement 24s ease-in-out infinite alternate !important;
+        color: #1e1b4b !important;
         min-height: 100vh !important;
         overflow-x: hidden !important;
     }
 
-    /* Headings: Confident Apple Typography with Tight Letter-Spacing */
-    h1, h2, h3, h4, h5, h6 {
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif !important;
-        font-weight: 800 !important;
-        color: var(--apple-text-primary) !important;
-        letter-spacing: -0.03em !important;
+    /* Editorial Display Serifs: Story Headings, Scientific Nomenclature */
+    h1, h2, h3, h4, h5, h6,
+    .intera-hero-title,
+    .species-hero-title {
+        font-family: -apple-system-ui-serif, 'Newsreader', 'Charter', 'Iowan Old Style', 'Palatino', Georgia, 'Times New Roman', serif !important;
+        font-weight: 600 !important;
+        line-height: 1.18 !important;
+        color: #000000 !important;
+        letter-spacing: -0.025em !important;
     }
 
-    p {
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif !important;
-        font-size: 1.05rem !important;
-        line-height: 1.6 !important;
-        color: var(--apple-text-primary) !important;
+    /* Editorial Narrative & Prose */
+    p, .intera-hero-subtitle, .species-hero-desc, .intera-card p {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", -apple-system-ui-serif, Georgia, serif !important;
+        font-size: 1.15rem !important;
+        line-height: 1.68 !important;
+        color: #000000 !important;
+        font-weight: 450 !important;
+    }
+
+    /* Human Editorial Hero Section */
+    .intera-hero {
+        text-align: center;
+        margin-bottom: 38px;
+        position: relative;
+    }
+
+    .intera-hero-eyebrow {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif !important;
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.18em !important;
+        text-transform: uppercase !important;
+        color: #1e1b4b !important;
+        margin-bottom: 8px !important;
+    }
+
+    .intera-hero-understand {
+        font-family: -apple-system-ui-serif, 'Playfair Display', 'Bodoni MT', 'Didot', 'Times New Roman', serif !important;
+        font-size: clamp(3.8rem, 8vw, 6.4rem) !important;
+        font-weight: 700 !important;
+        line-height: 0.98 !important;
+        color: #ffffff !important;
+        letter-spacing: -0.02em !important;
+        text-shadow: 0 4px 28px rgba(30, 27, 75, 0.20), 0 1px 3px rgba(30, 27, 75, 0.14) !important;
+        display: block !important;
+    }
+
+    .intera-hero-saying {
+        font-family: -apple-system-ui-serif, 'Playfair Display', 'Bodoni MT', 'Times New Roman', serif !important;
+        font-size: clamp(2.9rem, 6.2vw, 5.0rem) !important;
+        font-weight: 800 !important;
+        font-style: italic !important;
+        line-height: 1.05 !important;
+        color: #000000 !important;
+        letter-spacing: -0.015em !important;
+        margin-top: -6px !important;
+        margin-bottom: 22px !important;
+        display: block !important;
+    }
+
+    .intera-hero-subtitle {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif !important;
+        font-size: 1.2rem !important;
+        line-height: 1.68 !important;
+        color: #000000 !important;
+        max-width: 820px !important;
+        margin: 0 auto !important;
+        font-weight: 500 !important;
     }
 
     /* COMPLETELY REMOVE SIDEBAR AND COLLAPSE CONTROLS */
@@ -181,7 +273,9 @@ st.markdown("""
     /* Apple Floating White Card Containers */
     [data-testid="stVerticalBlockBorderWrapper"] > div,
     .intera-card {
-        background: var(--apple-card) !important;
+        background: rgba(255, 255, 255, 0.92) !important;
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
         border-radius: 28px !important;
         border: 1px solid rgba(255, 255, 255, 0.9) !important;
         box-shadow: var(--apple-shadow-soft) !important;
@@ -888,18 +982,15 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- APPLE HERO SECTION ---
+# --- HUMAN EDITORIAL HERO (PROJECT CETI ART DIRECTION) ---
 st.markdown("""
-<div style="text-align: center; margin: 10px auto 34px auto; max-width: 820px;">
-    <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #007AFF; margin-bottom: 8px;">
-        Avian Biosphere Intelligence &bull; Planetary Early Warning
+<div class="intera-hero">
+    <div class="intera-hero-eyebrow">WHAT WOULD IT MEAN TO</div>
+    <div class="intera-hero-understand">Understand</div>
+    <div class="intera-hero-saying">What the Birds are Saying</div>
+    <div class="intera-hero-subtitle">
+        Birds sense approaching storms and earthquakes hours before instruments pick them up. When danger nears, their calls change. Project INTERA listens to these distress patterns to warn communities before disaster strikes.
     </div>
-    <h1 style="font-size: clamp(2.4rem, 4.8vw, 3.8rem); font-weight: 800; line-height: 1.1; margin: 0 0 14px 0; letter-spacing: -0.035em; color: #111827;">
-        Understand What the Birds Are Saying
-    </h1>
-    <p style="font-size: 1.12rem; color: #64748B; line-height: 1.6; margin: 0 auto; max-width: 680px; font-weight: 450;">
-        Birds detect approaching seismic P-waves and severe cyclonic storms hours before human seismometers. INTERA decodes avian panic signals to safeguard communities.
-    </p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1289,7 +1380,9 @@ if processed_payload is not None:
             with col_c2:
                 st.write(f"**{cand['confidence']}%** confidence")
             with col_c3:
-                st.write(f"{cand['pitch_status']} ({cand['detected_pitch']:.0f} Hz)")
+                p_stat = cand.get('pitch_status', prim_sp.get('pitch_status', 'Normal Harmonic Song'))
+                p_pitch = cand.get('detected_pitch', prim_sp.get('detected_pitch', 0.0))
+                st.write(f"{p_stat} ({p_pitch:.0f} Hz)")
             st.divider()
 
     with tab_anti_spoof, st.container(border=True):

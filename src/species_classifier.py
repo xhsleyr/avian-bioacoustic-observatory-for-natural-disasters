@@ -201,6 +201,10 @@ def identify_species(
     else:
         pitch_status = "Normal Harmonic Song Band"
 
+    for cand_item in candidates:
+        cand_item["pitch_status"] = pitch_status
+        cand_item["detected_pitch"] = round(detected_pitch, 0)
+
     return {
         "model_name": "Cornell BirdNET Global v2.4 (6,522 Species)",
         "total_species_supported": 6522,
