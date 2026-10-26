@@ -5,13 +5,12 @@ distress analysis engine and biometric anti-spoofing shield, using voice
 activity masking to ignore ambient silence and adaptive environmental denoising.
 """
 
-from typing import Dict, Any, Tuple
 import io
-import numpy as np
-import librosa
-import soundfile as sf
-import scipy.signal
+from typing import Any
 
+import librosa
+import numpy as np
+import scipy.signal
 
 TARGET_SR = 22050
 
@@ -26,12 +25,12 @@ def filter_environmental_noise(y: np.ndarray, sr: int, cutoff_hz: float = 90.0) 
     if len(y) == 0:
         return y
     sos = scipy.signal.butter(2, cutoff_hz, btype='highpass', fs=sr, output='sos')
-    y_filtered = scipy.signal.sosfilt(sos, y)
-    orig_peak = np.max(np.abs(y))
-    new_peak = np.max(np.abs(y_filtered))
+    filtered_arr = np.asarray(scipy.signal.sosfilt(sos, y), dtype=y.dtype)
+    orig_peak = float(np.max(np.abs(y)))
+    new_peak = float(np.max(np.abs(filtered_arr)))
     if new_peak > 0 and orig_peak > 0:
-        y_filtered = y_filtered * (orig_peak / new_peak)
-    return y_filtered
+        filtered_arr = filtered_arr * (orig_peak / new_peak)
+    return filtered_arr
 
 
 def load_audio(
@@ -39,7 +38,7 @@ def load_audio(
     target_sr: int = TARGET_SR,
     max_duration_sec: float = 60.0,
     apply_denoising: bool = True
-) -> Tuple[np.ndarray, int, float]:
+) -> tuple[np.ndarray, int, float]:
     """Load an audio file or bytes buffer into a standardized mono numpy array.
     
     Args:
@@ -54,22 +53,23 @@ def load_audio(
     if isinstance(file_source, (bytes, bytearray)):
         file_source = io.BytesIO(file_source)
 
-    y, sr = librosa.load(file_source, sr=target_sr, mono=True, duration=max_duration_sec)
-    
+    y, sr_loaded = librosa.load(file_source, sr=target_sr, mono=True, duration=max_duration_sec)
+    sr = int(sr_loaded)
+
     # Adaptive environmental wind/handling rumble filter
     if apply_denoising:
         y = filter_environmental_noise(y, sr, cutoff_hz=90.0)
 
     # Peak normalization to prevent volume bias
-    peak = np.max(np.abs(y))
+    peak = float(np.max(np.abs(y)))
     if peak > 0:
         y = y / peak
         
-    duration = len(y) / sr
+    duration = float(len(y) / sr)
     return y, sr, duration
 
 
-def extract_acoustic_features(y: np.ndarray, sr: int = TARGET_SR) -> Dict[str, Any]:
+def extract_acoustic_features(y: np.ndarray, sr: int = TARGET_SR) -> dict[str, Any]:
     """Extract bioacoustic features correlated with bird vocalization distress
     and non-avian mammalian / smartphone playback discrimination.
     
@@ -173,6 +173,6 @@ def extract_acoustic_features(y: np.ndarray, sr: int = TARGET_SR) -> Dict[str, A
         "sub1k_ratio": sub1k_ratio,
         "sub350_ratio": sub350_ratio,
         "call_rate": float(call_rate),
-        "total_onsets": int(len(onset_frames)),
+        "total_onsets": len(onset_frames),
         "onset_times": onset_times
     }

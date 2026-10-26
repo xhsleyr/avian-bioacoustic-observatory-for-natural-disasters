@@ -5,11 +5,12 @@ across 6,500+ global species, combined with disaster-sensitivity heuristics
 and domestic animal non-avian boundary filtering.
 """
 
-from typing import Dict, Any, List, Tuple
-import os
 import io
-import numpy as np
+import os
+from typing import Any
+
 import librosa
+import numpy as np
 import onnxruntime as ort
 
 MODEL_PATH = "models/birdnet_model.onnx"
@@ -17,14 +18,14 @@ LABELS_PATH = "models/BirdNET_GLOBAL_6K_V2.4_Labels.txt"
 BIRDNET_SR = 48000
 WINDOW_SIZE = 144000  # 3 seconds @ 48kHz
 
-_SESSION = None
-_LABELS = None
+_SESSION: ort.InferenceSession | None = None
+_LABELS: list[str] | None = None
 
 
-def get_birdnet_session() -> Tuple[ort.InferenceSession, List[str]]:
+def get_birdnet_session() -> tuple[ort.InferenceSession, list[str]]:
     """Lazy-load the ONNX session and 6,522 species labels."""
     global _SESSION, _LABELS
-    if _SESSION is None:
+    if _SESSION is None or _LABELS is None:
         if not os.path.exists(MODEL_PATH) or not os.path.exists(LABELS_PATH):
             raise FileNotFoundError(
                 f"BirdNET model or labels missing at {MODEL_PATH} / {LABELS_PATH}"
@@ -33,6 +34,7 @@ def get_birdnet_session() -> Tuple[ort.InferenceSession, List[str]]:
         with open(LABELS_PATH, "r", encoding="utf-8") as f:
             _LABELS = [line.strip() for line in f if line.strip()]
 
+    assert _SESSION is not None and _LABELS is not None
     return _SESSION, _LABELS
 
 
@@ -74,9 +76,9 @@ def infer_disaster_sensitivity(common_name: str, scientific_name: str) -> str:
 
 def identify_species(
     file_source: Any,
-    acoustic_features: Dict[str, Any] = None,
+    acoustic_features: dict[str, Any] | None = None,
     top_k: int = 5
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Identify bird species using the global Cornell BirdNET 6,522 model.
     
     Args:
@@ -93,7 +95,7 @@ def identify_species(
     if isinstance(file_source, (bytes, bytearray)):
         file_source = io.BytesIO(file_source)
 
-    audio, sr = librosa.load(file_source, sr=BIRDNET_SR, mono=True)
+    audio, _sr = librosa.load(file_source, sr=BIRDNET_SR, mono=True)
     if len(audio) == 0:
         raise ValueError("Audio buffer is empty.")
 
@@ -111,7 +113,8 @@ def identify_species(
 
     windows_arr = np.array(windows, dtype=np.float32)
 
-    logits = session.run(['Identity_0'], {'INPUT': windows_arr})[0]
+    raw_output = session.run(['Identity_0'], {'INPUT': windows_arr})[0]
+    logits = np.asarray(raw_output, dtype=np.float32)
     probs = 1.0 / (1.0 + np.exp(-logits))
     max_probs = np.max(probs, axis=0)
 
@@ -140,8 +143,6 @@ def identify_species(
 
     # Check acoustic biometrics if acoustic features are supplied
     sub800 = float(acoustic_features.get("sub800_ratio", 0.0)) if acoustic_features else 0.0
-    sub600 = float(acoustic_features.get("sub600_ratio", 0.0)) if acoustic_features else 0.0
-    sub1k = float(acoustic_features.get("sub1k_ratio", 0.0)) if acoustic_features else 0.0
     centroid_mean = float(acoustic_features.get("spectral_centroid", {}).get("mean", 3000.0)) if acoustic_features else 3000.0
 
     # Distinguish authentic birds from non-bird tokens or sub-threshold ambiguous audio

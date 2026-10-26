@@ -7,15 +7,15 @@ Also computes temporal threat escalation curves (d(ADI)/dt), multi-species
 sentinel flock consensus, and forensic telemetry reports.
 """
 
-from typing import Dict, Any, List, Optional
 import datetime
 import re
-import numpy as np
-import librosa
+from typing import Any
 
+import librosa
+import numpy as np
 
 # Biologically calibrated baselines across avian taxonomic orders
-SPECIES_BASELINES: Dict[str, Dict[str, Any]] = {
+SPECIES_BASELINES: dict[str, dict[str, Any]] = {
     "passerine": {
         "family_label": "Passerine Songbird (Passeriformes)",
         "pitch_min": 3000.0,
@@ -96,7 +96,7 @@ SPECIES_BASELINES: Dict[str, Dict[str, Any]] = {
 }
 
 
-def get_species_baseline(common_name: str, scientific_name: str = "") -> Dict[str, Any]:
+def get_species_baseline(common_name: str, scientific_name: str = "") -> dict[str, Any]:
     """Map identified species common and scientific names to calibrated biological baselines."""
     tokens = set(re.findall(r'[a-z]+', (common_name + " " + scientific_name).lower()))
 
@@ -123,9 +123,9 @@ def get_species_baseline(common_name: str, scientific_name: str = "") -> Dict[st
 
 
 def compute_distress_index(
-    features: Dict[str, Any],
-    species_info: Optional[Dict[str, Any]] = None
-) -> Dict[str, Any]:
+    features: dict[str, Any],
+    species_info: dict[str, Any] | None = None
+) -> dict[str, Any]:
     """Compute the Acoustic Distress Index (ADI) calibrated to species taxonomy."""
     centroid_mean = features["spectral_centroid"]["mean"]
     call_rate = features["call_rate"]
@@ -197,7 +197,7 @@ def compute_distress_index(
             "and clear harmonic balance. No environmental distress markers detected."
         )
 
-    diagnostics: List[Dict[str, Any]] = [
+    diagnostics: list[dict[str, Any]] = [
         {
             "name": "Pitch Elevation Index",
             "score": round(score_pitch, 1),
@@ -249,10 +249,10 @@ def compute_distress_index(
 def compute_distress_timeline(
     y: np.ndarray,
     sr: int,
-    species_info: Optional[Dict[str, Any]] = None,
+    species_info: dict[str, Any] | None = None,
     window_sec: float = 1.8,
     hop_sec: float = 0.4
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Compute rolling temporal distress timeline and threat escalation velocity d(ADI)/dt."""
     duration = len(y) / sr
     if duration < 0.6:
@@ -280,8 +280,8 @@ def compute_distress_timeline(
 
     baseline = get_species_baseline(common_name, scientific_name)
 
-    times: List[float] = []
-    adi_series: List[float] = []
+    times: list[float] = []
+    adi_series: list[float] = []
     hop_length = 512
 
     for start_sample in range(0, len(y) - win_samples + 1, hop_samples):
@@ -345,10 +345,10 @@ def compute_distress_timeline(
 
 
 def evaluate_flock_consensus(
-    species_info: Dict[str, Any],
-    features: Dict[str, Any],
+    species_info: dict[str, Any],
+    features: dict[str, Any],
     adi_score: float
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Evaluate multi-species flock murmuration and sentinel consensus."""
     candidates = species_info.get("top_candidates", [])
     call_rate = features.get("call_rate", 0.0)
@@ -400,15 +400,15 @@ def generate_forensic_report(
     sample_label: str,
     duration: float,
     sr: int,
-    features: Dict[str, Any],
-    species_info: Dict[str, Any],
-    spoof_info: Dict[str, Any],
-    distress_info: Dict[str, Any],
-    timeline_info: Dict[str, Any],
-    consensus_info: Dict[str, Any]
+    features: dict[str, Any],
+    species_info: dict[str, Any],
+    spoof_info: dict[str, Any],
+    distress_info: dict[str, Any],
+    timeline_info: dict[str, Any],
+    consensus_info: dict[str, Any]
 ) -> str:
     """Generate a formal, publication-ready Bioacoustic Forensic Telemetry Report."""
-    now_utc = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    now_utc = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d %H:%M:%S UTC")
     prim = species_info.get("primary_species", {})
     sub_scores = distress_info.get("sub_scores", {})
     base = distress_info.get("baseline_profile", {})

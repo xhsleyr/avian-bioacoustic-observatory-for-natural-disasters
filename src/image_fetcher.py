@@ -4,14 +4,14 @@ Retrieves verified bird photographs and biological descriptions for global speci
 with persistent disk caching, SSRF protection, strict URL validation, and zero-lag local asset fallback.
 """
 
-from typing import Dict, Any
-import os
-import re
 import json
 import logging
-import urllib.request
+import os
+import re
 import urllib.parse
-from urllib.error import URLError, HTTPError
+import urllib.request
+from typing import Any
+from urllib.error import HTTPError, URLError
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ def _is_safe_url(url: str) -> bool:
             return False
         hostname = (parsed.hostname or "").lower()
         return any(hostname == d or hostname.endswith("." + d) for d in ALLOWED_DOMAINS)
-    except Exception:
+    except (ValueError, TypeError, AttributeError):
         return False
 
 
@@ -49,7 +49,7 @@ def _safe_slug(name: str) -> str:
     return cleaned[:64] or "unknown_species"
 
 
-def _load_cache() -> Dict[str, Any]:
+def _load_cache() -> dict[str, Any]:
     """Load cached species metadata from disk safely."""
     if os.path.exists(CACHE_FILE):
         try:
@@ -61,7 +61,7 @@ def _load_cache() -> Dict[str, Any]:
     return {}
 
 
-def _save_cache(cache: Dict[str, Any]):
+def _save_cache(cache: dict[str, Any]):
     """Persist species metadata cache to disk safely."""
     os.makedirs(CACHE_DIR, exist_ok=True)
     try:
@@ -71,7 +71,7 @@ def _save_cache(cache: Dict[str, Any]):
         logger.warning("Cache write failed: %s", e)
 
 
-def fetch_bird_visuals(common_name: str, scientific_name: str) -> Dict[str, Any]:
+def fetch_bird_visuals(common_name: str, scientific_name: str) -> dict[str, Any]:
     """Fetch high-resolution bird photo and biological summary safely.
     
     Args:

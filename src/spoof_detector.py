@@ -5,10 +5,10 @@ smartphone loudspeaker replays, and ambient non-avian noise to prevent
 adversarial false alarms in planetary disaster early-warning systems.
 """
 
-from typing import Dict, Any, List
-import numpy as np
-import librosa
+from typing import Any
 
+import librosa
+import numpy as np
 
 # Prohibited non-avian biological and synthetic class tokens
 NON_BIRD_KEYWORDS = [
@@ -37,9 +37,9 @@ NON_BIRD_KEYWORDS = [
 def evaluate_avian_authenticity(
     y: np.ndarray,
     sr: int,
-    species_info: Dict[str, Any],
-    acoustic_features: Dict[str, Any]
-) -> Dict[str, Any]:
+    species_info: dict[str, Any],
+    acoustic_features: dict[str, Any]
+) -> dict[str, Any]:
     """Evaluate whether an audio signal is an authentic avian vocalization
     or a domestic animal sound (dog/cat), smartphone speaker replay, or human mimicry.
     
@@ -67,7 +67,7 @@ def evaluate_avian_authenticity(
     sub1k_ratio = float(acoustic_features.get("sub1k_ratio", 0.0))
     rolloff_95 = float(acoustic_features.get("spectral_rolloff_95", {}).get("mean", 5000.0))
 
-    spoof_factors: List[str] = []
+    spoof_factors: list[str] = []
     spoof_score = 0.0
     detected_category = "authentic_avian"
 
