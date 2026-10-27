@@ -527,9 +527,18 @@ def get_app_css() -> str:
         }
 
         [data-testid="stFileUploaderDropzone"] button [data-testid="stIconMaterial"] {
-            font-family: 'Material Symbols Rounded', 'Material Symbols Outlined' !important;
-            color: #111111 !important;
-            margin-right: 4px !important;
+            display: none !important;
+        }
+
+        [data-testid="stFileUploaderDropzone"] button::before {
+            content: "" !important;
+            display: inline-block !important;
+            width: 15px !important;
+            height: 15px !important;
+            margin-right: 6px !important;
+            background-color: #111111 !important;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E") no-repeat center / contain !important;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3C/svg%3E") no-repeat center / contain !important;
         }
 
         [data-testid="stFileUploaderDropzoneInstructions"] {
@@ -545,6 +554,10 @@ def get_app_css() -> str:
         /* PITCH-BLACK LIVE AUDIO RECORDING BAR (SCREENSHOT 2 FIX) */
         div[data-testid="stAudioInput"],
         div[data-testid="stAudioInput"] > div,
+        div[data-testid="stAudioInputWaveform"],
+        div[data-testid="stAudioInputRecordingContainer"],
+        div[data-testid="stAudioInput"] div[class*="recording"],
+        div[data-testid="stAudioInput"] div[class*="container"],
         div[data-testid="stAudioInput"] section,
         div[data-testid="stAudioInput"] [data-baseweb="card"],
         div[data-testid="stAudioInput"] [data-baseweb="block"] {

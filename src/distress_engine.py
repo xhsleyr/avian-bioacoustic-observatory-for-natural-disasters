@@ -582,7 +582,16 @@ def generate_telemetry_geojson(
     now_utc = datetime.datetime.now(datetime.UTC).isoformat()
     prim = species_info.get("primary_species", {})
     adi = distress_info.get("adi", 0.0)
-    
+
+    # Adopt detected species geo habitat if provided
+    geo = prim.get("geo_habitat", {})
+    if geo:
+        station_lat = float(geo.get("latitude", station_lat))
+        station_lon = float(geo.get("longitude", station_lon))
+        station_label = f"{geo.get('biome', 'Regional Biome')} ({prim.get('common_name', 'Avian Node')})"
+    else:
+        station_label = "Shenandoah Ridge Acoustic Array"
+
     feature = {
         "type": "FeatureCollection",
         "features": [
@@ -594,7 +603,7 @@ def generate_telemetry_geojson(
                 },
                 "properties": {
                     "station_id": "INTERA-CANOPY-NODE-01",
-                    "station_label": "Shenandoah Ridge Acoustic Array",
+                    "station_label": station_label,
                     "timestamp_utc": now_utc,
                     "specimen_label": sample_label,
                     "adi_distress_index": adi,
