@@ -17,3 +17,13 @@ torch>=2.1.0
 torchaudio>=2.1.0
 transformers>=4.36.0
 onnxruntime>=1.17.0
+
+# Headless REST API & Telemetry Engine
+fastapi>=0.109.0
+uvicorn>=0.27.0
+pydantic>=2.5.0
+python-multipart>=0.0.9
+
+# Testing & Quality Assurance
+pytest>=8.0.0
+httpx>=0.26.0

@@ -1,30 +1,82 @@
-# Python
+# ==============================================================================
+# Avian Bioacoustic Observatory (ABO) — Git Ignore Policy
+# ==============================================================================
+
+# Python Environments & Bytecode
 .venv/
+env/
+venv/
+ENV/
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Mac OS
+# Testing, QA & Linting Caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Operating System Artifacts
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
 
-# IDE / Zed / Antigravity skill injections
+# IDEs, Editors & Workspaces
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.project
+.settings/
+
+# Agent Skills, Traces, Lockfiles & AI Development Metadata
 skills/
-.gemini/
+skills-lock.json
 .agents/
+.gemini/
+DESIGN.md
 
-# Audio / Large Data files
+# Audio Cache & Unsampled Raw Media (keep sample benchmarks)
 data/cache/
 *.wav
 *.mp3
+*.flac
+*.ogg
 !data/samples/*.wav
 !data/samples/*.mp3
 
-# Model Weights (downloaded locally via script)
+# Model Binaries (BirdNET weights are downloaded or pre-cached)
 models/*.onnx
 !models/BirdNET_GLOBAL_6K_V2.4_Labels.txt
 
-# Environment & logs
+# Environment & Sensitive Configs
 *.log
 .env
+.env.*

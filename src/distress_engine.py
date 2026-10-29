@@ -415,13 +415,13 @@ def generate_forensic_report(
 
     lines = [
         "# ==============================================================================",
-        "# PROJECT INTERA: AVIAN BIOACOUSTIC FORENSIC TELEMETRY REPORT",
+        "# AVIAN BIOACOUSTIC OBSERVATORY (ABO): FORENSIC TELEMETRY REPORT",
         "# CLASSIFICATION: CIVIL DISASTER EARLY WARNING INCIDENT CERTIFICATE",
         "# ==============================================================================",
         "",
         "REPORT METADATA:",
         f"- Timestamp: {now_utc}",
-        "- Observatory Node: INTERA-GLOBAL-ACOUSTIC-OBSERVATORY-01",
+        "- Observatory Node: ABO-GLOBAL-ACOUSTIC-OBSERVATORY-01",
         f"- Specimen Stream ID: {sample_label}",
         f"- Signal Duration: {duration:.2f} seconds",
         f"- Ingestion Sampling Rate: {sr:,} Hz",
@@ -532,7 +532,7 @@ def generate_telemetry_json(
     prim = species_info.get("primary_species", {})
     payload = {
         "schema_version": "2.4.0",
-        "observatory_id": "INTERA-GLOBAL-01",
+        "observatory_id": "ABO-GLOBAL-01",
         "timestamp_utc": now_utc,
         "stream_id": sample_label,
         "signal_metadata": {
@@ -602,7 +602,7 @@ def generate_telemetry_geojson(
                     "coordinates": [station_lon, station_lat, station_alt]
                 },
                 "properties": {
-                    "station_id": "INTERA-CANOPY-NODE-01",
+                    "station_id": "ABO-CANOPY-NODE-01",
                     "station_label": station_label,
                     "timestamp_utc": now_utc,
                     "specimen_label": sample_label,

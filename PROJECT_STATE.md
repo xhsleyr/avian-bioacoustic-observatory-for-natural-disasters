@@ -1,4 +1,4 @@
-# Project State & Memory: Project INTERA
+# Project State & Memory: Avian Bioacoustic Observatory (ABO)
 
 **Project Title:** Avian Vocal Bioacoustics for Natural Disaster Early Warning  
 **Target Environment:** Local macOS (Apple Silicon M1)  

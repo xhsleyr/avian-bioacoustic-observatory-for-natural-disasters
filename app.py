@@ -1,4 +1,4 @@
-"""Project INTERA — Avian Bioacoustic Translation & Planetary Early Warning Intelligence.
+"""Avian Bioacoustic Observatory for Natural Disasters (ABO) — Bioacoustic Translation & Planetary Early Warning Intelligence.
 Art-directed in the high-precision, tactile Apple Human Interface & Soft Neumorphic Design System.
 
 Principles:
@@ -1368,7 +1368,7 @@ def plot_network_array_map(
     return fig
 
 
-# --- STUDIO TOP NAVIGATION (INTERA Brand & Instant In-Place Reload Home Button) ---
+# --- STUDIO TOP NAVIGATION (ABO Brand & Instant In-Place Reload Home Button) ---
 col_nav_brand, col_nav_btn = st.columns([4, 1.2])
 with col_nav_brand:
     st.markdown("""
@@ -2291,7 +2291,7 @@ if processed_payload is not None:
             st.download_button(
                 label="📄 Report (.md)",
                 data=forensic_report,
-                file_name=f"intera_report_{audio_label.replace('.wav', '').replace('.mp3', '')}.md",
+                file_name=f"abo_report_{audio_label.replace('.wav', '').replace('.mp3', '')}.md",
                 mime="text/markdown",
                 use_container_width=True
             )
@@ -2299,7 +2299,7 @@ if processed_payload is not None:
             st.download_button(
                 label="📊 Telemetry (.json)",
                 data=generate_telemetry_json(audio_label, duration, sr, features, species_info, spoof_info, results, timeline_info, consensus_info),
-                file_name=f"intera_telemetry_{audio_label.replace('.wav', '').replace('.mp3', '')}.json",
+                file_name=f"abo_telemetry_{audio_label.replace('.wav', '').replace('.mp3', '')}.json",
                 mime="application/json",
                 use_container_width=True
             )
@@ -2307,7 +2307,7 @@ if processed_payload is not None:
             st.download_button(
                 label="🗺️ GIS Grid (.geojson)",
                 data=generate_telemetry_geojson(audio_label, results, species_info, spoof_info, timeline_info),
-                file_name=f"intera_spatial_{audio_label.replace('.wav', '').replace('.mp3', '')}.geojson",
+                file_name=f"abo_spatial_{audio_label.replace('.wav', '').replace('.mp3', '')}.geojson",
                 mime="application/geo+json",
                 use_container_width=True
             )
@@ -2315,7 +2315,7 @@ if processed_payload is not None:
             st.download_button(
                 label="📈 Matrix (.csv)",
                 data=generate_telemetry_csv(audio_label, duration, sr, features, species_info, spoof_info, results, timeline_info),
-                file_name=f"intera_matrix_{audio_label.replace('.wav', '').replace('.mp3', '')}.csv",
+                file_name=f"abo_matrix_{audio_label.replace('.wav', '').replace('.mp3', '')}.csv",
                 mime="text/csv",
                 use_container_width=True
             )

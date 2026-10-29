@@ -113,4 +113,4 @@ def test_telemetry_serializers():
 
     # Forensic Markdown Report
     s_rep = generate_forensic_report("test_stream.wav", 5.0, 22050, features, species_info, spoof_info, distress_info, timeline_info, consensus_info)
-    assert "PROJECT INTERA" in s_rep
+    assert "AVIAN BIOACOUSTIC OBSERVATORY" in s_rep

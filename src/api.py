@@ -1,4 +1,4 @@
-"""Project INTERA — Headless REST Telemetry API (FastAPI).
+"""Avian Bioacoustic Observatory for Natural Disasters (ABO) — Headless REST Telemetry API (FastAPI).
 
 Provides headless high-throughput endpoints for remote IoT bioacoustic canopy nodes,
 Raspberry Pi sensor hubs, and civil disaster warning feeds.
@@ -24,7 +24,7 @@ from src.species_classifier import identify_species
 from src.spoof_detector import evaluate_avian_authenticity
 
 app = FastAPI(
-    title="Project INTERA — Avian Bioacoustic Intelligence API",
+    title="Avian Bioacoustic Observatory for Natural Disasters (ABO) API",
     description="Planetary early-warning bioacoustic analysis and anti-spoofing telemetry engine.",
     version="2.4.0"
 )
