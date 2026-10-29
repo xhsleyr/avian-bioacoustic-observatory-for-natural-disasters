@@ -28,7 +28,6 @@ Birds Interaction and Communication/
 │   └── config.toml             # Streamlit theme configuration (font = "serif")
 ├── PROJECT_STATE.md            # Persistent project memory and version milestones
 ├── README.md                   # First Final Demo comprehensive documentation
-├── DESIGN-projectceti-org.md   # Project CETI design tokens & specifications
 ├── requirements.txt            # Python dependencies
 ├── app.py                      # Bioacoustic Early Warning Web Application
 ├── models/

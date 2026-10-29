@@ -61,7 +61,7 @@ skills/
 skills-lock.json
 .agents/
 .gemini/
-DESIGN.md
+DESIGN*.md
 
 # Audio Cache & Unsampled Raw Media (keep sample benchmarks)
 data/cache/
