@@ -22,7 +22,7 @@ Develop an acoustic early-warning system that captures live microphone environme
 
 ## 2. Directory Structure
 ```
-Birds Interaction and Communication/
+Avian Bioacoustic Observatory for Natural Disasters/
 ├── .gitignore
 ├── .streamlit/
 │   └── config.toml             # Streamlit theme configuration (font = "serif")
