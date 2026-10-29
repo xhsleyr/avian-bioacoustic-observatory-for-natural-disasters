@@ -138,7 +138,7 @@ def generate_waveform_svg_bars(y: np.ndarray, num_bars: int = 42) -> str:
 
 # Page configuration — full-width, clean layout without sidebar
 st.set_page_config(
-    page_title="Project INTERA — Bioacoustic Intelligence",
+    page_title="Avian Bioacoustic Observatory for Natural Disasters",
     page_icon="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645bdf9d4bac53320316d064_CETI-Favicon.png",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -1373,8 +1373,8 @@ col_nav_brand, col_nav_btn = st.columns([4, 1.2])
 with col_nav_brand:
     st.markdown("""
     <div style="display: flex; align-items: center; gap: 12px; padding: 4px 0;">
-        <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645bdf9d4bac53320316d064_CETI-Favicon.png" alt="INTERA" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255, 255, 255, 0.18);" />
-        <span style="font-size: 19px; font-weight: 600; color: #f2f2f2; letter-spacing: -0.01em; font-family: 'Times New Roman', Times, Georgia, serif;">INTERA</span>
+        <img src="https://cdn.prod.website-files.com/643ddd7ffdf12273933a8cec/645bdf9d4bac53320316d064_CETI-Favicon.png" alt="ABO" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255, 255, 255, 0.18);" />
+        <span style="font-size: 19px; font-weight: 600; color: #f2f2f2; letter-spacing: -0.01em; font-family: 'Times New Roman', Times, Georgia, serif;">ABO // Avian Observatory</span>
     </div>
     """, unsafe_allow_html=True)
 with col_nav_btn:
@@ -1386,11 +1386,11 @@ with col_nav_btn:
 st.markdown("""
 <div class="cedric-hero">
     <h1 class="cedric-hero-title">
-        Ayo! I'm INTERA<br>
-        <em>Bioacoustics, early warning, and avian AI.</em>
+        Avian Bioacoustic Observatory<br>
+        <em>for Natural Disasters.</em>
     </h1>
     <p class="cedric-hero-bio">
-        I listen, I decode (agentic), but my real craft is predicting natural hazards before instruments catch them. Birds sense earthquakes and severe weather hours in advance. Today it's our bioacoustic observatory, Cornell BirdNET taxonomy, and dual-syrinx verification.
+        An autonomous planetary bioacoustic surveillance system predicting natural hazards before mechanical instruments catch them. Wild birds detect seismic P-waves and infrasonic micro-baroms hours in advance. Powered by Cornell BirdNET taxonomy, dual-syrinx verification, and real-time distress calculus.
     </p>
 </div>
 """, unsafe_allow_html=True)
