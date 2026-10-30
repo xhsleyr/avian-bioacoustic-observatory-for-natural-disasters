@@ -7,5 +7,12 @@
     "app.py",
     "tests"
   ],
-  "reportMissingTypeStubs": false
+  "typeCheckingMode": "standard",
+  "reportMissingTypeStubs": false,
+  "reportUnknownVariableType": false,
+  "reportUnknownMemberType": false,
+  "reportUnknownArgumentType": false,
+  "reportUnknownParameterType": false,
+  "reportExplicitAny": false,
+  "reportAny": false
 }

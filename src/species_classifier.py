@@ -1,5 +1,3 @@
-import hashlib
-
 """Global Bird Species Classifier powered by Cornell BirdNET v2.4 (6,522 Species).
 
 Performs audio chunking and inference using ONNX Runtime to identify bird species
@@ -7,6 +5,7 @@ across 6,500+ global species, combined with disaster-sensitivity heuristics
 and domestic animal non-avian boundary filtering.
 """
 
+import hashlib
 import io
 import os
 from typing import Any
@@ -20,24 +19,24 @@ LABELS_PATH = "models/BirdNET_GLOBAL_6K_V2.4_Labels.txt"
 BIRDNET_SR = 48000
 WINDOW_SIZE = 144000  # 3 seconds @ 48kHz
 
-_SESSION: ort.InferenceSession | None = None
-_LABELS: list[str] | None = None
+_session: ort.InferenceSession | None = None
+_labels: list[str] | None = None
 
 
 def get_birdnet_session() -> tuple[ort.InferenceSession, list[str]]:
     """Lazy-load the ONNX session and 6,522 species labels."""
-    global _SESSION, _LABELS
-    if _SESSION is None or _LABELS is None:
+    global _session, _labels
+    if _session is None or _labels is None:
         if not os.path.exists(MODEL_PATH) or not os.path.exists(LABELS_PATH):
             raise FileNotFoundError(
                 f"BirdNET model or labels missing at {MODEL_PATH} / {LABELS_PATH}"
             )
-        _SESSION = ort.InferenceSession(MODEL_PATH, providers=['CPUExecutionProvider'])
+        _session = ort.InferenceSession(MODEL_PATH, providers=["CPUExecutionProvider"])
         with open(LABELS_PATH, "r", encoding="utf-8") as f:
-            _LABELS = [line.strip() for line in f if line.strip()]
+            _labels = [line.strip() for line in f if line.strip()]
 
-    assert _SESSION is not None and _LABELS is not None
-    return _SESSION, _LABELS
+    assert _session is not None and _labels is not None
+    return _session, _labels
 
 
 def infer_disaster_sensitivity(common_name: str, scientific_name: str) -> str:
@@ -76,13 +75,11 @@ def infer_disaster_sensitivity(common_name: str, scientific_name: str) -> str:
         return "Avian environmental indicator; collective agitation correlates with approaching weather fronts and environmental shockwaves."
 
 
-
-
 def get_species_geo_habitat(common_name: str, scientific_name: str) -> dict[str, Any]:
     """Resolve authentic global geographic coordinates and biome for any bird species."""
     name_low = (common_name + " " + scientific_name).lower()
 
-    curated = {
+    curated: dict[str, tuple[float, float, str]] = {
         "european robin": (48.8566, 2.3522, "Western European Palearctic"),
         "northern cardinal": (38.5312, -78.4321, "Eastern N. American Deciduous"),
         "song sparrow": (41.8781, -87.6298, "N. American Riparian Brushlands"),
@@ -102,7 +99,7 @@ def get_species_geo_habitat(common_name: str, scientific_name: str) -> dict[str,
         "white-bellied sea eagle": (-6.1021, 105.4230, "Sundaic Coastal Archipelago"),
         "domestic cat": (40.7128, -74.0060, "Urban Domestic Ingestion Node"),
         "domestic dog": (34.0522, -118.2437, "Urban Domestic Ingestion Node"),
-        "human whistling": (51.5074, -0.1278, "Acoustic Laboratory Fixture")
+        "human whistling": (51.5074, -0.1278, "Acoustic Laboratory Fixture"),
     }
 
     for k, v in curated.items():
@@ -120,7 +117,7 @@ def get_species_geo_habitat(common_name: str, scientific_name: str) -> dict[str,
         (["indonesia", "malay", "borneo", "sumatra", "sunda", "philippin"], -0.7, 113.9, "Sundaic Equatorial Rainforest"),
         (["europe", "eurasian", "iberian", "scandinav", "alps", "brit"], 48.2, 11.5, "European Continental Woodlands"),
         (["canada", "alaska", "arctic", "boreal", "tundra"], 61.2, -149.9, "North American Boreal Tundra"),
-        (["america", "carolina", "virginia", "florida", "california", "texas"], 36.7, -95.7, "North American Temperate Biome")
+        (["america", "carolina", "virginia", "florida", "california", "texas"], 36.7, -95.7, "North American Temperate Biome"),
     ]
     for keywords, lat, lon, biome in regions:
         if any(kw in name_low for kw in keywords):
@@ -134,7 +131,7 @@ def get_species_geo_habitat(common_name: str, scientific_name: str) -> dict[str,
         (15.0, 28.0, 72.0, 88.0, "South Asian Monsoon Woodlands"),
         (-20.0, 5.0, -70.0, -45.0, "South American Tropical Canopy"),
         (-10.0, 10.0, 15.0, 38.0, "Equatorial African Savanna"),
-        (25.0, 42.0, 105.0, 135.0, "East Asian Temperate Forest")
+        (25.0, 42.0, 105.0, 135.0, "East Asian Temperate Forest"),
     ]
     box = landmass_boxes[h % len(landmass_boxes)]
     frac_lat = ((h >> 4) % 1000) / 1000.0
@@ -143,18 +140,19 @@ def get_species_geo_habitat(common_name: str, scientific_name: str) -> dict[str,
     lon = round(box[2] + frac_lon * (box[3] - box[2]), 4)
     return {"latitude": lat, "longitude": lon, "biome": box[4]}
 
+
 def identify_species(
     file_source: Any,
     acoustic_features: dict[str, Any] | None = None,
-    top_k: int = 5
+    top_k: int = 5,
 ) -> dict[str, Any]:
     """Identify bird species using the global Cornell BirdNET 6,522 model.
-    
+
     Args:
-        file_source: Audio file path or byte buffer.
+        file_source: Audio file path, bytes, or buffer.
         acoustic_features: Extracted features from audio_processor (optional).
         top_k: Number of top candidate species to return.
-        
+
     Returns:
         Dictionary containing primary species, confidence, candidate list,
         and disaster sensitivity intelligence.
@@ -170,28 +168,28 @@ def identify_species(
 
     step_size = WINDOW_SIZE // 2
     windows = []
-    
+
     if len(audio) < WINDOW_SIZE:
         padded = np.pad(audio, (0, WINDOW_SIZE - len(audio)))
         windows.append(padded)
     else:
         for start in range(0, len(audio) - WINDOW_SIZE + 1, step_size):
-            windows.append(audio[start:start + WINDOW_SIZE])
+            windows.append(audio[start : start + WINDOW_SIZE])
         if len(windows) == 0:
             windows.append(audio[:WINDOW_SIZE])
 
     windows_arr = np.array(windows, dtype=np.float32)
 
-    raw_output = session.run(['Identity_0'], {'INPUT': windows_arr})[0]
+    raw_output = session.run(["Identity_0"], {"INPUT": windows_arr})[0]
     logits = np.asarray(raw_output, dtype=np.float32)
     probs = 1.0 / (1.0 + np.exp(-logits))
     max_probs = np.max(probs, axis=0)
 
     top_indices = np.argsort(max_probs)[::-1][:top_k]
 
-    candidates = []
+    candidates: list[dict[str, Any]] = []
     for idx in top_indices:
-        raw_label = labels[idx]
+        raw_label = labels[int(idx)]
         if "_" in raw_label:
             sci_name, com_name = raw_label.split("_", 1)
         else:
@@ -205,7 +203,7 @@ def identify_species(
             "scientific_name": sci_name.strip(),
             "confidence": round(conf, 1),
             "disaster_sensitivity": infer_disaster_sensitivity(com_name, sci_name),
-            "geo_habitat": geo_data
+            "geo_habitat": geo_data,
         })
 
     primary = candidates[0]
@@ -214,25 +212,33 @@ def identify_species(
 
     # Check acoustic biometrics if acoustic features are supplied
     sub800 = float(acoustic_features.get("sub800_ratio", 0.0)) if acoustic_features else 0.0
-    centroid_mean = float(acoustic_features.get("spectral_centroid", {}).get("mean", 3000.0)) if acoustic_features else 3000.0
+    centroid_mean = (
+        float(acoustic_features.get("spectral_centroid", {}).get("mean", 3000.0))
+        if acoustic_features
+        else 3000.0
+    )
 
     # Distinguish authentic birds from non-bird tokens or sub-threshold ambiguous audio
-    is_explicit_non_bird = any(k in com_lower for k in ["dog", "human", "siren", "engine", "noise", "cat"]) or \
-                           any(k in sci_lower for k in ["canis", "felis", "homo"])
+    is_explicit_non_bird = any(
+        k in com_lower for k in ["dog", "human", "siren", "engine", "noise", "cat"]
+    ) or any(k in sci_lower for k in ["canis", "felis", "homo"])
 
     # Biometric Peafowl vs Domestic Cat Meow Check:
-    # Cat meows share pitch glide with Peafowl, but authentic peafowl syrinx has sub800 < 5.0% and centroid > 1850 Hz.
-    # Cat meow has sub800 > 30% and centroid < 1500 Hz.
     is_cat_meow = False
-    if any(p in com_lower for p in ["peafowl", "pavo"]) and (sub800 > 0.20 or centroid_mean < 1700.0):
+    if any(p in com_lower for p in ["peafowl", "pavo"]) and (
+        sub800 > 0.20 or centroid_mean < 1700.0
+    ):
         is_cat_meow = True
 
     # General mammalian larynx check:
-    # Domestic dogs and cats have heavy laryngeal resonance (> 25% energy below 800 Hz).
-    # Normal wild birds with background air noise have < 8% sub800 energy.
     is_mammal = (sub800 > 0.25) or (sub800 > 0.18 and primary["confidence"] < 35.0)
 
-    is_valid_bird = (not is_explicit_non_bird) and (not is_cat_meow) and (not is_mammal) and (primary["confidence"] >= 25.0)
+    is_valid_bird = (
+        (not is_explicit_non_bird)
+        and (not is_cat_meow)
+        and (not is_mammal)
+        and (primary["confidence"] >= 25.0)
+    )
 
     if is_cat_meow:
         primary["common_name"] = "Domestic Cat (Meow)"
@@ -287,7 +293,10 @@ def identify_species(
             "disaster_sensitivity": primary["disaster_sensitivity"],
             "pitch_status": pitch_status,
             "detected_pitch": round(detected_pitch, 0),
-            "geo_habitat": primary.get("geo_habitat", get_species_geo_habitat(primary["common_name"], primary["scientific_name"]))
+            "geo_habitat": primary.get(
+                "geo_habitat",
+                get_species_geo_habitat(primary["common_name"], primary["scientific_name"]),
+            ),
         },
-        "top_candidates": candidates
+        "top_candidates": candidates,
     }
