@@ -73,7 +73,8 @@ data/cache/
 !data/samples/*.mp3
 
 # Model Binaries (BirdNET weights are downloaded or pre-cached)
-models/*.onnx
+# models/*.onnx (tracked so repo works out-of-the-box)
+!models/birdnet_model.onnx
 !models/BirdNET_GLOBAL_6K_V2.4_Labels.txt
 
 # Environment & Sensitive Configs

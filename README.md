@@ -2,7 +2,7 @@
 ### Autonomous Planetary Bioacoustic Early Warning Intelligence & Avian Distress Telemetry Engine
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![BirdNET Global](https://img.shields.io/badge/Taxonomy-6%2C522%20Global%20Species-orange.svg)](https://birdnet.cornell.edu/)
 [![FastAPI](https://img.shields.io/badge/REST%20API-FastAPI%202.4.0-009688.svg)](https://fastapi.tiangolo.com/)
 [![Streamlit UI](https://img.shields.io/badge/Dashboard-Streamlit-FF4B4B.svg)](https://streamlit.io/)
@@ -24,6 +24,28 @@ The entire pipeline executes **100% locally with zero cloud API dependencies and
 
 ---
 
+## ⚡ Quickstart (Launch in Under 60 Seconds)
+
+If you already have Python 3.10–3.12, Git, and FFmpeg installed on your machine:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/xhsleyr/avian-bioacoustic-observatory-for-natural-disasters.git
+cd avian-bioacoustic-observatory-for-natural-disasters
+
+# 2. Set up virtual environment and install dependencies
+python3 -m venv .venv
+source .venv/bin/activate        # On Windows: .\.venv\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# 3. Launch the Web Observatory Dashboard
+streamlit run app.py
+```
+Open **`http://localhost:8501`** in your browser.
+
+---
+
 ## 🌟 Key Engineering Capabilities
 
 1. **Triple Audio Acquisition Streams:**
@@ -37,7 +59,7 @@ The entire pipeline executes **100% locally with zero cloud API dependencies and
    - Specialized avian disaster-sensitivity heuristics (infrasound reactivity, seismic P-wave sensitivity, storm barometric responsiveness).
 
 3. **Dual-Syrinx Biometric Anti-Spoofing Shield:**
-   - Discriminated against human vocal cords, supraglottal oral cavities, whistles, siren alarms, and phone-speaker replay attacks.
+   - Discriminates against human vocal cords, supraglottal oral cavities, whistles, siren alarms, and phone-speaker replay attacks.
    - Evaluates sub-600 Hz breath turbulence ratio ($R_{\text{breath}}$) and acoustic resonance ceiling ($< 3,000\text{ Hz}$) vs authentic avian dual-syrinx biphonation.
    - **Automated Alarm Suppression:** Automatically engages an interlock suppressing civil panic alerts when non-avian mimicry is detected.
 
@@ -104,183 +126,197 @@ The entire pipeline executes **100% locally with zero cloud API dependencies and
 
 ---
 
-## 💻 Cross-Platform Installation Guide
+## 💻 Step-by-Step Cross-Platform Installation Guide
 
-The observatory is engineered for cross-platform compatibility across **Windows 10/11**, **macOS (Apple Silicon & Intel)**, and **Linux (Ubuntu, Debian, Fedora, Arch)**.
-
-### Prerequisites (All Platforms)
-- **Python:** Version 3.10, 3.11, or 3.12 (Python 3.11 recommended).
-- **Git:** Version 2.30+.
-- **FFmpeg & libsndfile:** Required by `librosa` and `soundfile` for decoding diverse audio codecs (`.wav`, `.mp3`, `.ogg`, `.flac`).
+The observatory is engineered and tested for cross-platform compatibility across **macOS (Apple Silicon & Intel)**, **Windows 10/11**, and **Linux (Ubuntu, Debian, Fedora, Arch, Raspberry Pi OS 64-bit)**.
 
 ---
 
-### 🪟 Windows 10 / 11 Installation
+### 🍎 Option 1: macOS Installation (Apple Silicon M1/M2/M3/M4 & Intel)
 
-Open **PowerShell** (as Administrator or regular user) or **Windows Terminal**:
+#### Step 1: Install System Audio Libraries & Python 3.11
+Open **Terminal** and install the required native audio decoders using [Homebrew](https://brew.sh):
+```bash
+# Install Homebrew if you haven't already:
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-#### 1. Install Prerequisites via Winget (or Chocolatey)
+# Install ffmpeg, libsndfile, git, and python 3.11
+brew install libsndfile ffmpeg git python@3.11
+```
+
+#### Step 2: Clone the Repository
+```bash
+git clone https://github.com/xhsleyr/avian-bioacoustic-observatory-for-natural-disasters.git
+cd avian-bioacoustic-observatory-for-natural-disasters
+```
+
+#### Step 3: Create & Activate Virtual Environment
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate
+```
+*(Your prompt will now show `(.venv)`)*
+
+#### Step 4: Install Dependencies
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+> **Apple Silicon Acceleration:** PyTorch and ONNX Runtime automatically leverage Apple Accelerate and Metal Performance Shaders (MPS) for ~100ms inference with near-zero thermal load.
+
+#### Step 5: Verify the Installation
+```bash
+pytest -v
+```
+All **17 tests** should pass cleanly.
+
+---
+
+### 🪟 Option 2: Windows 10 / 11 Installation
+
+Open **PowerShell** (run as Administrator recommended for initial package installs) or **Windows Terminal**:
+
+#### Step 1: Install Prerequisites via Winget
 ```powershell
 # Install Python 3.11, Git, and FFmpeg via Windows Package Manager
 winget install Python.Python.3.11 Git.Git Gyan.FFmpeg
 
-# Restart PowerShell so PATH updates take effect
+# Important: Close and reopen PowerShell so environment PATH changes take effect!
 ```
 *(Alternative via Chocolatey: `choco install python --version=3.11.8 git ffmpeg`)*
 
-#### 2. Clone the Repository
+#### Step 2: Clone the Repository
 ```powershell
-git clone https://github.com/<your-username>/birds-interaction-and-communication.git
-cd birds-interaction-and-communication
+git clone https://github.com/xhsleyr/avian-bioacoustic-observatory-for-natural-disasters.git
+cd avian-bioacoustic-observatory-for-natural-disasters
 ```
 
-#### 3. Create and Activate Virtual Environment
+#### Step 3: Create & Activate Virtual Environment
 ```powershell
 # Create virtual environment
 python -m venv .venv
 
-# Enable script execution for the current PowerShell session (if restricted)
+# Enable script execution in PowerShell if restricted
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 # Activate virtual environment
 .\.venv\Scripts\Activate.ps1
 ```
-*(If using Command Prompt `cmd.exe`: run `.\.venv\Scripts\activate.bat`)*
+*(If using classic Command Prompt `cmd.exe`, run: `.\.venv\Scripts\activate.bat`)*
 
-#### 4. Install Dependencies
+#### Step 4: Install Dependencies
 ```powershell
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
----
-
-### 🍎 macOS Installation (Apple Silicon M1/M2/M3 & Intel)
-
-Open **Terminal**:
-
-#### 1. Install System Audio Libraries via Homebrew
-```bash
-# Install Homebrew if not already installed (https://brew.sh)
-brew install libsndfile ffmpeg git python@3.11
+#### Step 5: Verify the Installation
+```powershell
+pytest -v
 ```
-
-#### 2. Clone the Repository
-```bash
-git clone https://github.com/<your-username>/birds-interaction-and-communication.git
-cd birds-interaction-and-communication
-```
-
-#### 3. Create and Activate Virtual Environment
-```bash
-# Create virtual environment with Python 3.11
-python3 -m venv .venv
-
-# Activate virtual environment
-source .venv/bin/activate
-```
-
-#### 4. Install Dependencies
-```bash
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-> **Apple Silicon Note:** PyTorch and ONNX Runtime automatically leverage Accelerate and Metal Performance Shaders (MPS) for high-speed local inference with minimal thermal load.
+All **17 tests** should pass cleanly.
 
 ---
 
-### 🐧 Linux Installation (Ubuntu, Debian, Raspberry Pi OS 64-bit)
+### 🐧 Option 3: Linux Installation (Ubuntu, Debian, Fedora, Arch, Raspberry Pi OS)
 
-Open **Bash**:
+#### Step 1: Install Native Libraries & Audio Decoders
+Open a **Bash** shell:
 
-#### 1. Install System Audio Libraries & Build Essentials
 **Ubuntu / Debian / Raspberry Pi OS (64-bit):**
 ```bash
 sudo apt-get update && sudo apt-get install -y \
     libsndfile1 \
     ffmpeg \
-    python3-venv \
+    python3.11 \
+    python3.11-venv \
     python3-pip \
     git \
     build-essential
 ```
 
-**Fedora / RHEL:**
+**Fedora / RHEL / CentOS:**
 ```bash
-sudo dnf install -y libsndfile ffmpeg python3-devel git gcc
+sudo dnf install -y libsndfile ffmpeg python3.11 python3-devel git gcc
 ```
 
-**Arch Linux:**
+**Arch Linux / Manjaro:**
 ```bash
 sudo pacman -S --needed libsndfile ffmpeg python python-pip git base-devel
 ```
 
-#### 2. Clone the Repository
+#### Step 2: Clone the Repository
 ```bash
-git clone https://github.com/<your-username>/birds-interaction-and-communication.git
-cd birds-interaction-and-communication
+git clone https://github.com/xhsleyr/avian-bioacoustic-observatory-for-natural-disasters.git
+cd avian-bioacoustic-observatory-for-natural-disasters
 ```
 
-#### 3. Create and Activate Virtual Environment
+#### Step 3: Create & Activate Virtual Environment
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-#### 4. Install Dependencies
+#### Step 4: Install Dependencies
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+#### Step 5: Verify the Installation
+```bash
+pytest -v
+```
+All **17 tests** should pass cleanly.
+
 ---
 
-### 🐳 Docker & Docker Compose Deployment (Any Platform)
+### 🐳 Option 4: Docker & Docker Compose (Zero Configuration)
 
-Deploy the full observatory (Interactive Dashboard + Headless REST API) with zero manual environment configuration:
+If you prefer running inside an isolated container without installing local Python packages:
 
 ```bash
-# Clone and enter directory
-git clone https://github.com/<your-username>/birds-interaction-and-communication.git
-cd birds-interaction-and-communication
+# 1. Clone the repository
+git clone https://github.com/xhsleyr/avian-bioacoustic-observatory-for-natural-disasters.git
+cd avian-bioacoustic-observatory-for-natural-disasters
 
-# Build and start services
-docker compose up --build
+# 2. Build and launch services in background
+docker compose up --build -d
 ```
 
-- **Interactive Web Observatory:** Open [http://localhost:8501](http://localhost:8501)
-- **Headless REST Telemetry API:** Open [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Interactive Web Observatory:** Navigate to **`http://localhost:8501`**
+- **Headless REST Telemetry API:** Navigate to **`http://localhost:8000/docs`**
 
-To stop services:
+To stop the containers:
 ```bash
 docker compose down
 ```
 
 ---
 
-## 🚀 Running the Observatory
+## 🚀 Running the Application
 
-Ensure your virtual environment is active before running commands:
+Make sure your virtual environment is active:
 - **macOS / Linux:** `source .venv/bin/activate`
 - **Windows:** `.\.venv\Scripts\Activate.ps1`
 
-### 1. Interactive Streamlit Dashboard
+### 1. Launch the Interactive Web Dashboard (Streamlit)
 ```bash
 streamlit run app.py
 ```
-Open your browser at **`http://localhost:8501`**.
+Open **`http://localhost:8501`** in your browser.
 
-### 2. Headless Telemetry REST API (FastAPI)
+### 2. Launch the Headless Telemetry REST API (FastAPI)
 ```bash
 uvicorn src.api:app --host 0.0.0.0 --port 8000 --reload
 ```
 Interactive API documentation:
-- **Swagger UI:** `http://localhost:8000/docs`
-- **ReDoc:** `http://localhost:8000/redoc`
+- **Swagger UI:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- **ReDoc:** [http://localhost:8000/redoc](http://localhost:8000/redoc)
 
-### 3. Automated Test Suite & Code Quality
+### 3. Run Automated Tests & Code Quality
 ```bash
-# Run all unit and integration tests
+# Run all unit and integration tests (17 tests)
 pytest -v
 
 # Run linter checks
@@ -360,19 +396,51 @@ curl -X POST "http://localhost:8000/api/v1/analyze" \
 
 ---
 
+## ❓ Troubleshooting & Frequently Asked Questions
+
+### 1. `soundfile.LibsndfileError: Error opening ...: System error`
+- **Cause:** Missing system audio libraries needed by `soundfile` / `librosa`.
+- **Solution:**
+  - **macOS:** `brew install libsndfile ffmpeg`
+  - **Ubuntu/Debian:** `sudo apt-get install -y libsndfile1 ffmpeg`
+  - **Windows:** `winget install Gyan.FFmpeg` and restart your terminal.
+
+### 2. PowerShell says `cannot be loaded because running scripts is disabled`
+- **Cause:** Windows PowerShell execution policy restricts running unsigned `.ps1` scripts by default.
+- **Solution:** Run this inside PowerShell before activating:
+  ```powershell
+  Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+  .\.venv\Scripts\Activate.ps1
+  ```
+
+### 3. Streamlit says `Port 8501 is already in use`
+- **Cause:** Another instance of Streamlit is already running.
+- **Solution:** Run on an alternate port:
+  ```bash
+  streamlit run app.py --server.port 8502
+  ```
+
+### 4. Live Microphone does not pick up audio on macOS
+- **Cause:** macOS requires explicit microphone permissions for your terminal or IDE (Terminal, iTerm2, Zed, VS Code).
+- **Solution:** Open **System Settings $\rightarrow$ Privacy & Security $\rightarrow$ Microphone**, and ensure your terminal application is toggled **ON**.
+
+---
+
 ## 📂 Repository Directory Layout
 
 ```
-birds-interaction-and-communication/
+avian-bioacoustic-observatory-for-natural-disasters/
 ├── .gitignore                          # Excludes environments, AI traces, caches, and raw audio
 ├── .streamlit/
 │   └── config.toml                     # Streamlit theme configuration (academic serif)
+├── LICENSE                             # MIT Open Source License
 ├── README.md                           # Master documentation and cross-platform installation
 ├── PROJECT_STATE.md                    # Technical memory, version roadmap, and design notes
 ├── Dockerfile                          # Multi-stage production container definition
 ├── docker-compose.yml                  # Service orchestration (UI + REST API)
 ├── requirements.txt                    # Pinned Python dependencies
-├── pytest.ini                          # Pytest configuration
+├── pytest.ini                          # Pytest configuration & warning suppression
+├── pyrightconfig.json                  # Language server virtual environment mapping
 ├── app.py                              # Master Streamlit Web Observatory Dashboard
 ├── src/
 │   ├── __init__.py                     # Package initialization
@@ -399,31 +467,6 @@ birds-interaction-and-communication/
 
 ---
 
-## 📤 Pushing to GitHub
-
-To push your repository to your GitHub account:
-
-### 1. Verify Status & Stage Files
-```bash
-git status
-git add .
-git commit -m "feat(observatory): finalize Avian Bioacoustic Observatory (ABO) v1.0.0"
-```
-
-### 2. Connect Your GitHub Remote & Push
-```bash
-# Rename active branch to main (if not already main)
-git branch -M main
-
-# Link to your GitHub repository (replace with your repo URL)
-git remote add origin https://github.com/<your-username>/<your-repo-name>.git
-
-# Push all commits and set upstream tracking
-git push -u origin main
-```
-
----
-
 ## 📜 Academic References & Citations
 
 If you utilize this observatory or its bioacoustic algorithms in your academic research, please cite:
@@ -438,4 +481,4 @@ If you utilize this observatory or its bioacoustic algorithms in your academic r
 ---
 
 ## 📄 License
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+This project is open-source and licensed under the **[MIT License](LICENSE)**.
